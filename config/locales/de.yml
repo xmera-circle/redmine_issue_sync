@@ -1,0 +1,6 @@
+de: 
+  label_redmine_issue_sync: Ticket-Synchronisation # Plugin name
+  project_module_issue_sync: Ticket-Synchronisation # Project module name
+
+  permission_sync_issues: Tickets synchronisieren
+  label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
