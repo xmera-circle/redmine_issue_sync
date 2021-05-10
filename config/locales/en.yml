@@ -1,6 +1,8 @@
 en: 
   label_redmine_issue_sync: Issue Sync # Plugin name
   project_module_issue_sync: Issue Sync # Project module name
+  tab_issue_sync: Issue Sync # Project module settings tab
 
   permission_sync_issues: Synchronise issues
+  permission_manage_sync_settings: Manage synchronisation settings
   label_redmine_issue_sync_description: Synchronise issues between projects

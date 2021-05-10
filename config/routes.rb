@@ -18,29 +18,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_issue_sync'
-
-Redmine::Plugin.register :redmine_issue_sync do
-  name 'Redmine Issue Sync'
-  author 'Liane Hampe, xmera'
-  description 'Synchronise issues between projects'
-  version '0.0.1'
-  url 'https://circle.xmera.de/projects/redmine-issue-sync'
-  author_url 'http://xmera.de'
-
-  requires_redmine version_or_higher: '4.1.0'
-
-  settings  partial: RedmineIssueSync.partial,
-            default: RedmineIssueSync.defaults
-
-  project_module :issue_sync do
-    permission :sync_issues, {}
-    permission :manage_sync_settings,
-               { sync_issues: %w[settings] },
-               require: :member
+  RedmineApp::Application.routes.draw do
+    post '/projects/:id/issues_sync/settings', controller: 'issues_sync', action: 'settings', as: 'issues_sync_settings'
   end
-end
-
-ActiveSupport::Reloader.to_prepare do
-  ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
-end
