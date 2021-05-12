@@ -10,4 +10,5 @@ de:
   field_root: Systemprojekt
   text_root_field_setting: Einem Systemprojekt werden eigene und Tickets der untergeordneten Projekte zugeordnet.
   error_is_no_boolean: "%{value} muss wahr oder falsch sein."
+  button_synchronise: Synchronisieren
 

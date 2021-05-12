@@ -41,6 +41,13 @@ Redmine::Plugin.register :redmine_issue_sync do
   end
 end
 
+# Adds the redmine issue sync app/overrides directory to Rails' search paths for deface overrides
+Rails.application.paths['app/overrides'] ||= []
+issue_sync_overwrite_dir = "#{Redmine::Plugin.directory}/redmine_issue_sync/app/overrides"
+unless Rails.application.paths['app/overrides'].include?(issue_sync_overwrite_dir)
+  Rails.application.paths['app/overrides'] << issue_sync_overwrite_dir
+end
+
 ActiveSupport::Reloader.to_prepare do
   ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
 end

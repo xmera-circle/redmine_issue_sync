@@ -22,9 +22,13 @@ class SyncIssuesController < ApplicationController
   model_object SynchronisationSetting
 
   before_action :find_model_object, except: %i[settings]
-  before_action :find_project#, only: %i[new create]
+  before_action :find_project
   before_action :find_or_create_settings, only: %i[settings]
   before_action :authorize
+
+  def synchronise
+    head 200
+  end
 
   def settings
     if request.post?

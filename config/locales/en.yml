@@ -10,3 +10,4 @@ en:
   field_root: System project
   text_root_field_setting: A system project gets its own and child project issues.
   error_is_no_boolean: "%{value} needs to be true or false."
+  button_synchronise: Synchronise
