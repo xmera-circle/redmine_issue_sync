@@ -18,8 +18,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class Synchronisation < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :receiver, class_name: 'Project'
-  has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
+class CreateSynchronisationItems < ActiveRecord::Migration[5.2]
+  def change
+    create_table :synchronisation_items do |t|
+      t.integer :synchronisation_id, null: false
+      t.integer :from_issue_id, null: false
+      t.integer :to_issue_id, null: false
+    end
+  end
 end

@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class SynchronisationSetting < ActiveRecord::Base
-  include Redmine::SafeAttributes 
+  include Redmine::SafeAttributes
 
   belongs_to :project
   serialize :settings, Hash
@@ -64,18 +64,16 @@ class SynchronisationSetting < ActiveRecord::Base
 
   private
 
-  def validates_synchronisable(value)
-    unless boolean?(value[:synchronisable])
-      errors.add :synchronisable, l(:error_is_no_boolean, value: l(:field_root))
-    end
-  end
+  # def validates_synchronisable(value)
+  #   return true unless boolean?(value[:synchronisable])
+
+  #   errors.add :synchronisable, l(:error_is_no_boolean, value: l(:field_synchronisable))
+  # end
 
   def validates_root(value)
     return true if value.empty?
 
-    unless boolean?(value[:root])
-      errors.add :base, l(:error_is_no_boolean, value: l(:field_root))
-    end
+    boolean_error_message(l(:field_root)) unless boolean?(value[:root])
   end
 
   def boolean?(value)
@@ -88,4 +86,7 @@ class SynchronisationSetting < ActiveRecord::Base
     ActiveModel::Type::Boolean.new.cast(value)
   end
 
+  def boolean_error_message(field_name)
+    errors.add(:base, l(:error_is_no_boolean, value: field_name))
+  end
 end
