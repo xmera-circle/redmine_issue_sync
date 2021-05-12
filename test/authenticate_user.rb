@@ -19,17 +19,34 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module RedmineIssueSync
-  module Overrides
-    module ProjectsHelperPatch
-      def project_settings_tabs
-        tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
-        ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
-        tabs
-      end
+  ##
+  # Provide user login test
+  #
+  module AuthenticateUser
+    def log_user(login, password)
+      login_page
+      log_user_in(login, password)
+      assert_equal login, User.find(user_session_id).login
+    end
+
+    module_function
+
+    def login_page
+      User.anonymous
+      get '/login'
+      assert_nil user_session_id
+      assert_response :success
+    end
+
+    def user_session_id
+      session[:user_id]
+    end
+
+    def log_user_in(login, password)
+      post '/login', params: {
+        username: login,
+        password: password
+      }
     end
   end
 end

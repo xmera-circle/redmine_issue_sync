@@ -1,8 +1,12 @@
 en: 
   label_redmine_issue_sync: Issue Sync # Plugin name
   project_module_issue_sync: Issue Sync # Project module name
-  tab_issue_sync: Issue Sync # Project module settings tab
+  tab_sync_issues: Synchronisation # Project module settings tab
 
   permission_sync_issues: Synchronise issues
   permission_manage_sync_settings: Manage synchronisation settings
   label_redmine_issue_sync_description: Synchronise issues between projects
+  legend_synchronisation_settings: Synchronisation settings
+  field_root: System project
+  text_root_field_setting: A system project gets its own and child project issues.
+  error_is_no_boolean: "%{value} needs to be true or false."

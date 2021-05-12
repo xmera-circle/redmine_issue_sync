@@ -19,17 +19,27 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module RedmineIssueSync
-  module Overrides
-    module ProjectsHelperPatch
-      def project_settings_tabs
-        tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
-        ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
-        tabs
+ ##
+  # Redmine cannot load plugin fixtures by default.
+  # This module loads first plugin fixtures and then Redmine fixtures
+  # if the listed file does not exist in the plugin fixture directory.
+  #
+  module LoadFixtures
+    def fixtures(*fixture_set_names)
+      dir = File.join(File.dirname(__FILE__), '/fixtures')
+      redmine_fixture_set_names = []
+      fixture_set_names.each do |file|
+        redmine_fixture_set_names << file unless create_fixtures(dir, file)
       end
+      super(fixture_set_names) if redmine_fixture_set_names.any?
+    end
+
+    private
+
+    def create_fixtures(dir, file)
+      return unless File.exist?("#{dir}/#{file}.yml")
+
+      ActiveRecord::FixtureSet.create_fixtures(dir, file)
     end
   end
 end

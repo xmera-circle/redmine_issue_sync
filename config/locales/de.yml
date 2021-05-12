@@ -1,8 +1,13 @@
 de: 
   label_redmine_issue_sync: Ticket-Synchronisation # Plugin name
   project_module_issue_sync: Ticket-Synchronisation # Project module name
-  tab_issue_sync: Ticket-Synchronisation # Project module settings tab
+  tab_sync_issues: Synchronisation # Project module settings tab
 
   permission_sync_issues: Tickets synchronisieren
   permission_manage_sync_settings: Sychronisations-Einstellungen verwalten
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
+  legend_synchronisation_settings: Synchronisations-Einstellungen
+  field_root: Systemprojekt
+  text_root_field_setting: Einem Systemprojekt werden eigene und Tickets der untergeordneten Projekte zugeordnet.
+  error_is_no_boolean: "%{value} muss wahr oder falsch sein."
+

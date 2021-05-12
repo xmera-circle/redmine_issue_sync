@@ -18,18 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+require File.expand_path('../test_helper', __dir__)
+
 module RedmineIssueSync
-  module Overrides
-    module ProjectsHelperPatch
-      def project_settings_tabs
-        tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
-        ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
-        tabs
-      end
+  class SynchronisationTest < ActiveSupport::TestCase
+    test 'should test the truth' do
+      assert true
     end
+
   end
 end

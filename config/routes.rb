@@ -19,5 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
   RedmineApp::Application.routes.draw do
-    post '/projects/:id/issues_sync/settings', controller: 'issues_sync', action: 'settings', as: 'issues_sync_settings'
+    match '/projects/:id/issues_sync/settings',
+          controller: 'sync_issues',
+          action: 'settings',
+          via: %i[get post],
+          as: 'sync_issues_settings'
   end

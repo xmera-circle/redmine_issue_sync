@@ -1,4 +1,3 @@
-<%
 # frozen_string_literal: true
 
 # This file is part of the Plugin Redmine Issue Sync.
@@ -18,6 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-%>
 
-Hello World
+class CreateSynchronisations < ActiveRecord::Migration[5.2]
+  def change
+    create_table :synchronisations do |t|
+      t.integer :receiver_id, null: false
+      t.integer :user_id, null: false
+      t.timestamps null: false
+    end
+  end
+end

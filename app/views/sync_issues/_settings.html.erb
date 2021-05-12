@@ -1,3 +1,4 @@
+<%
 # frozen_string_literal: true
 
 # This file is part of the Plugin Redmine Issue Sync.
@@ -17,19 +18,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
 
-module RedmineIssueSync
-  module Overrides
-    module ProjectsHelperPatch
-      def project_settings_tabs
-        tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
-        ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
-        tabs
-      end
-    end
-  end
-end
+<% @synchronisation_setting ||= 
+  SynchronisationSetting.find_or_create_by(project_id: @project.id) %>
+
+<%= error_messages_for 'synchronisation_setting' %>
+
+<%= form_tag(sync_issues_settings_path(@project), method: :post, class: "tabular") do %>
+  <%= tag.fieldset class: 'box tabular' do %>
+    <%= tag.legend l(:legend_synchronisation_settings) %>
+    <%= tag.p do %>
+      <%= content_tag :label, l(:field_root) %>
+      <%= check_box :synchronisation_setting, :root %>
+      <%= tag.em class: 'info' do %>
+        <%= l(:text_root_field_setting) %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

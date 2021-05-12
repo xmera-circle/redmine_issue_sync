@@ -19,8 +19,42 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class SyncIssuesController < ApplicationController
+  model_object SynchronisationSetting
+
+  before_action :find_model_object, except: %i[settings]
+  before_action :find_project#, only: %i[new create]
+  before_action :find_or_create_settings, only: %i[settings]
+  before_action :authorize
 
   def settings
-    #
+    if request.post?
+      @synchronisation_setting.safe_attributes = params[:synchronisation_setting]
+
+      if @synchronisation_setting.save
+        respond_to do |format|
+          format.html do
+            flash[:notice] = l(:notice_successful_update)
+            redirect_to settings_project_path(@project, tab: 'sync_issues')
+          end
+        end
+      else
+        respond_to do |format|
+          format.html do
+            render action: 'settings'
+          end
+        end
+      end
+    else
+      render action: 'settings'
+    end
+  end
+
+  private
+
+  def find_or_create_settings
+    @synchronisation_setting =
+      SynchronisationSetting.find_or_create_by(project_id: @project.id)
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 end

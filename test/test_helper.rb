@@ -18,18 +18,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-module RedmineIssueSync
-  module Overrides
-    module ProjectsHelperPatch
-      def project_settings_tabs
-        tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
-        ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
-        tabs
-      end
-    end
-  end
-end
+# Suppresses ruby gems warnings when running tests
+$VERBOSE = nil
+
+# Load the Redmine helper
+require File.expand_path('../../../test/test_helper', __dir__)
+require_relative 'load_fixtures'
+require_relative 'authenticate_user'
+# require_relative 'project_type_creator'
+# require_relative 'test_object_creators'
+
+# The gem minitest-reporters gives color to the command-line
+require 'minitest/reporters'
+Minitest::Reporters.use!
+# require "minitest/rails/capybara"
+require 'mocha/minitest'
