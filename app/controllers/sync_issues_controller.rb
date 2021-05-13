@@ -19,15 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class SyncIssuesController < ApplicationController
-  model_object SynchronisationSetting
-
-  before_action :find_model_object, except: %i[settings]
   before_action :find_project
-  before_action :find_or_create_settings, only: %i[settings]
+  before_action :find_or_create_settings
   before_action :authorize
 
   def synchronise
-    head 200
+    @synchronisation = Synchronisation.new(receiver_id: @project.id,
+                                           user_id: User.current.id)
+    setting = Setting.plugin_redmine_issue_sync
+    @source = Project.find_by(id: setting[:source_project].to_i)
+    @trackers = Tracker.where(id: setting[:source_trackers].map(&:to_i))
+    @field = IssueCustomField.find_by(id: setting[:allocation_field])
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def settings

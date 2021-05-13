@@ -21,9 +21,9 @@
 %>
 
 <%= tag.fieldset do %>
-  <%= tag.legend l(:legend_catalog_settings) %>
+  <%= tag.legend l(:legend_catalogue_settings) %>
   <%= tag.p do %>
-    <%= content_tag :label, l(:label_source_project) %>
+    <%= content_tag :label, l(:label_catalogue_source_project) %>
     <%= select_tag(
           'settings[source_project]', 
           options_for_select(
@@ -37,7 +37,6 @@
     <% end %>
   <% end %>
 
-  <%= tag.legend l(:legend_catalog_trackers) %>
   <%= tag.p do %>
     <%= content_tag :label, l(:label_source_trackers) %>
     <%= select_tag(

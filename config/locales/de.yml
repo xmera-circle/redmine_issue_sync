@@ -8,7 +8,15 @@ de:
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
   legend_synchronisation_settings: Synchronisations-Einstellungen
   field_root: Systemprojekt
-  text_root_field_setting: Einem Systemprojekt werden eigene und Tickets der untergeordneten Projekte zugeordnet.
+  text_root_field_setting: Einem Systemprojekt werden eigene Tickets und die der untergeordneten Projekte zugeordnet.
   error_is_no_boolean: "%{value} muss wahr oder falsch sein."
   button_synchronise: Synchronisieren
-
+  label_issue_synchronisation: Ticket-Synchronisation
+  legend_catalogue_settings: Auswahlkriterien
+  label_catalogue_source_project: Quellprojekt
+  text_source_project_setting: Wähle das Projekt, das den Ticket-Katalog beinhaltet.
+  label_source_trackers: Quelltracker
+  text_source_tracker_setting: Wähle die relevanten Ticket-Tracker.
+  legend_allocation_settings: Zuordnungskriterien
+  label_allocation_field: Zuordnungsfeld
+  text_allocation_field_setting: Jedes Ticket mit diesem Zuordnungsfeld wird einem Projekt zugeordnet, bei dem das selbe Feld aktiviert ist.

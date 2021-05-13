@@ -11,3 +11,11 @@ en:
   text_root_field_setting: A system project gets its own and child project issues.
   error_is_no_boolean: "%{value} needs to be true or false."
   button_synchronise: Synchronise
+  label_issue_synchronisation:  Issue Synchronisation
+  legend_catalogue_settings: Issue Catalogue
+  label_catalogue_source_project: Source project
+  text_source_project_setting: Choose the project containing the issue catalogue.
+  label_source_trackers: ''
+  text_source_tracker_settings: Choose relevant issue trackers.
+  legend_allocation_settings: ''
+  text_allocation_field_setting: ''
