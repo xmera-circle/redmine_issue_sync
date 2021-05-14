@@ -23,6 +23,8 @@ class SyncIssuesController < ApplicationController
   before_action :find_or_create_settings
   before_action :authorize
 
+  helper :synchronisation_settings
+
   def synchronise
     @synchronisation = Synchronisation.new(receiver_id: @project.id,
                                            user_id: User.current.id)

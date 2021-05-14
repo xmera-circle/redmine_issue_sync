@@ -35,6 +35,19 @@
         <%= l(:text_root_field_setting) %>
       <% end %>
     <% end %>
+
+    <%= tag.p do %>
+      <%= content_tag :label, l(:field_allocation_criteria) %>
+      <%= select_tag 'synchronisation_setting[allocation_criteria]',
+                     options_for_allocation_criteria_select(
+                      selected: @synchronisation_setting.allocation_criteria
+                     ),
+                     include_blank: true %>
+      <%= tag.em class: 'info' do %>
+        <%= l(:text_allocation_criteria) %>
+      <% end %>
+    <% end %>
+
   <% end %>
   <%= submit_tag l(:button_save) %>
 <% end %>

@@ -24,39 +24,46 @@ module RedmineIssueSync
   class SynchronisationSettingTest < ActiveSupport::TestCase
     include Redmine::I18n
 
-    test 'should test the truth' do
-      assert true
+    fixtures :projects, :members, :member_roles, :roles, :users,
+             :custom_fields, :custom_fields_trackers, :custom_values
+
+    def setup
+      @plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Setting.define_plugin_setting(@plugin)
+      @setting = Setting.plugin_redmine_issue_sync
+      @setting[:allocation_field] = '1'
     end
 
-    # test 'should respond to synchronisable' do
-    #   assert SynchronisationSetting.new.respond_to? :synchronisable
-    # end
+    def teardown
+      @setting = nil
+      @plugin = nil
+    end
+
+    test 'should respond to allocation_criteria' do
+      assert SynchronisationSetting.new.respond_to? :allocation_criteria
+    end
 
     test 'should respond to root' do
       assert SynchronisationSetting.new.respond_to? :root
     end
 
-    # test 'should validate synchronisable' do
-    #   settings = SynchronisationSetting.new(settings: { synchronisable: true })
-    #   assert settings.valid?
-    # end
+    test 'should not validate allocation_criteria if wrong' do
+      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criteria: 'wrong' })
+      assert_not settings.valid?
+      assert_equal l(:error_is_no_allocation_criteria, value: l(:field_allocation_criteria)), settings.errors[:base][0]
+    end
 
-    # test 'should not validate synchronisable' do
-    #   settings = SynchronisationSetting.new(settings: { synchronisable: 'wrong' })
-    #   assert_not settings.valid?
-    #   assert_equal 'needs to be true or false.', settings.errors[:synchronisable][0]
-    # end
-
-    test 'should validate root if value is boolean' do
-      settings = SynchronisationSetting.new(settings: { root: '1' })
-      assert settings.valid?
+    test 'should validate attributes' do
+      assert_equal '1', @setting[:allocation_field]
+      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criteria: 'MySQL' })
+      assert settings.valid?, settings.errors.full_messages
     end
 
     test 'should not validate root with wrong value' do
-      settings = SynchronisationSetting.new(settings: { root: 'wrong' })
+      assert_equal '1', @setting[:allocation_field]
+      settings = SynchronisationSetting.new(settings: { root: 'wrong', allocation_criteria: 'PostgreSQL' })
       assert_not settings.valid?
       assert_equal l(:error_is_no_boolean, value: l(:field_root)), settings.errors[:base][0]
     end
-
   end
 end

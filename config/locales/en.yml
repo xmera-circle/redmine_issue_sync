@@ -8,7 +8,7 @@ en:
   label_redmine_issue_sync_description: Synchronise issues between projects
   legend_synchronisation_settings: Synchronisation settings
   field_root: System project
-  text_root_field_setting: A system project gets its own and child project issues.
+  text_root_field_setting: A system project gets its own and child project issues w.r.t. their criteria.
   error_is_no_boolean: "%{value} needs to be true or false."
   button_synchronise: Synchronise
   label_issue_synchronisation:  Issue Synchronisation
@@ -19,3 +19,8 @@ en:
   text_source_tracker_settings: Choose relevant issue trackers.
   legend_allocation_settings: ''
   text_allocation_field_setting: ''
+  field_allocation_criteria: Allocation criteria
+  text_allocation_criteria: Only those issues fulfilling this criteria will be synchronised for this project. 
+    Each project included in a synchronisation should have its own criteria.
+  error_is_no_allocation_criteria: "%{value} is not valid."
+  error_is_not_present: "%{value} needs to be selected."

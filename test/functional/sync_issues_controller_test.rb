@@ -26,12 +26,16 @@ module RedmineIssueSync
     include RedmineIssueSync::AuthenticateUser
     include Redmine::I18n
 
-    fixtures :projects, :members, :member_roles, :roles, :users
+    fixtures :projects, :members, :member_roles, :roles, :users,
+             :custom_fields, :custom_fields_trackers, :custom_values
 
     def setup
+      Setting.plugin_redmine_issue_sync[:allocation_field] = '1'
+      Setting.plugin_redmine_issue_sync[:source_project] = '4'
       @manager = User.find(2)
       @manager_role = Role.find_by_name('Manager')
       @manager_role.add_permission! :manage_sync_settings
+      @manager_role.add_permission! :sync_issues
       @project = Project.find(1)
       @project.enable_module! :issue_sync
       log_user('jsmith', 'jsmith')
@@ -57,7 +61,7 @@ module RedmineIssueSync
     test 'should update settings' do
       assert_not SynchronisationSetting.find_by(project_id: @project.id)
       post sync_issues_settings_path(@project),
-           params: { synchronisation_setting: { root: '1' } }
+           params: { synchronisation_setting: { root: '1', allocation_criteria: 'MySQL' } }
       assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
       settings = SynchronisationSetting.find_by(project_id: @project.id)
       assert settings.root
@@ -67,7 +71,13 @@ module RedmineIssueSync
       post sync_issues_settings_path(@project),
            params: { synchronisation_setting: { root: 'wrong' } }
       assert_response :success
-      assert_select_error(l(:error_is_no_boolean, value: l(:field_root)))
+      assert_select_error("#{l(:error_is_no_boolean, value: l(:field_root))}
+#{l(:error_is_not_present, value: l(:field_allocation_criteria))}")
+    end
+
+    test 'should sychronise if user allowed to' do
+      get synchronise_project_issues_path(@project), xhr: true
+      assert_response :success
     end
   end
 end

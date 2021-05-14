@@ -34,7 +34,9 @@ Redmine::Plugin.register :redmine_issue_sync do
             default: RedmineIssueSync.defaults
 
   project_module :issue_sync do
-    permission :sync_issues, {}
+    permission :sync_issues,
+               { sync_issues: %w[synchronise] },
+               require: :member
     permission :manage_sync_settings,
                { sync_issues: %w[settings] },
                require: :member
@@ -50,4 +52,5 @@ end
 
 ActiveSupport::Reloader.to_prepare do
   ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
+  ProjectsController.helper(SynchronisationSettingsHelper)
 end

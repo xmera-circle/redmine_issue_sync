@@ -24,29 +24,33 @@ class SynchronisationSetting < ActiveRecord::Base
   belongs_to :project
   serialize :settings, Hash
 
-  validates_each :settings do |record, _attr, value|
+  validates_each :settings do |record, attr, value|
     next unless record.settings.present?
 
-    # record.send :validates_synchronisable, value
-    record.send :validates_root, value
+    if attr == :settings
+      record.send :validates_root, value
+      record.send :validates_allocation_criteria, value
+    end
   end
 
   def initialize(*args)
     super
     self.settings ||= {}
+    @value_object = AllocationCriteria.new
   end
 
   safe_attributes(
-    :root
+    :root,
+    :allocation_criteria
   )
 
-  # def synchronisable
-  #   ActiveModel::Type::Boolean.new.cast(settings[:synchronisable])
-  # end
+  def allocation_criteria
+    settings[:allocation_criteria]
+  end
 
-  # def synchronisable=(value)
-  #   settings[:synchronisable] = value
-  # end
+  def allocation_criteria=(value)
+    settings[:allocation_criteria] = value
+  end
 
   ##
   # @return [Boolean] Either true or false.
@@ -64,11 +68,26 @@ class SynchronisationSetting < ActiveRecord::Base
 
   private
 
-  # def validates_synchronisable(value)
-  #   return true unless boolean?(value[:synchronisable])
+  attr_reader :value_object
 
-  #   errors.add :synchronisable, l(:error_is_no_boolean, value: l(:field_synchronisable))
-  # end
+  def validates_allocation_criteria(value)
+    value = value[:allocation_criteria]
+    label = l(:field_allocation_criteria)
+    return true if allocation_criteria?(value)
+
+    return errors.add(:base, l(:error_is_not_present, value: label)) if value.blank?
+
+    errors.add(:base, l(:error_is_no_allocation_criteria, value: label))
+  end
+
+  def allocation_criteria?(value)
+    values = value_object.possible_values
+    if values.is_a? Array
+      values.include? value
+    else
+      values.map(&:id).flatten.include? value.to_i
+    end
+  end
 
   def validates_root(value)
     return true if value.empty?
