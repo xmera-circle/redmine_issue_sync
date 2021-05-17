@@ -20,6 +20,39 @@
 
 class Synchronisation < ActiveRecord::Base
   belongs_to :user
-  belongs_to :receiver, class_name: 'Project'
+  belongs_to :target, class_name: 'Project'
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
+
+  default_scope { order(created_at: :asc) }
+
+  scope :history, ->(target) { where(target_id: target.id) }
+
+  delegate :projects, to: :@scope
+
+  def synched_from_issue_ids
+    synched_items.map(:from_issue_id)
+  end
+
+  def synched_to_issue_ids
+    synched_items.map(:to_issue_id)
+  end
+
+  def initialize(attributes = nil, *args)
+    super
+    @scope = SynchronisationScope.new(target)
+    @settings = target.synchronisation_setting
+  end
+
+  def run
+    # 
+    projects.map do |project|
+      project.name
+    end
+  end
+
+  private
+
+  def synched_items
+    self.class.history(target).map(&:items)
+  end
 end

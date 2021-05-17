@@ -26,7 +26,7 @@ class SyncIssuesController < ApplicationController
   helper :synchronisation_settings
 
   def synchronise
-    @synchronisation = Synchronisation.new(receiver_id: @project.id,
+    @synchronisation = Synchronisation.new(target_id: @project.id,
                                            user_id: User.current.id)
     setting = Setting.plugin_redmine_issue_sync
     @source = Project.find_by(id: setting[:source_project].to_i)

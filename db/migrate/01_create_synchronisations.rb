@@ -21,7 +21,7 @@
 class CreateSynchronisations < ActiveRecord::Migration[5.2]
   def change
     create_table :synchronisations do |t|
-      t.integer :receiver_id, null: false
+      t.integer :target_id, null: false
       t.integer :user_id, null: false
       t.timestamps null: false
     end
