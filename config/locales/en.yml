@@ -19,8 +19,10 @@ en:
   text_source_tracker_settings: Choose relevant issue trackers.
   legend_allocation_settings: ''
   text_allocation_field_setting: ''
-  field_allocation_criteria: Allocation criteria
-  text_allocation_criteria: Only those issues fulfilling this criteria will be synchronised for this project. 
+  field_allocation_criterion: Allocation criterion
+  text_allocation_criterion: Only those issues fulfilling this criteria will be synchronised for this project. 
     Each project included in a synchronisation should have its own criteria.
-  error_is_no_allocation_criteria: "%{value} is not valid."
+  error_is_no_allocation_criterion: "%{value} is not valid."
   error_is_not_present: "%{value} needs to be selected."
+  error_is_missing: "%{value} needs to be given."
+  notice_location_of_allocation_field: ' (see plugin settings) '

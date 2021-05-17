@@ -21,7 +21,9 @@
 module SynchronisationSettingsHelper
   def options_for_allocation_criteria_select(selected:)
     criteria = AllocationCriteria.new
-    values = criteria.possible_values
+    values = criteria.possible_values.map do |val|
+      val.id ? [val.name, val.id] : val.name
+    end
     options_for_select(values, selected)
   end
 end

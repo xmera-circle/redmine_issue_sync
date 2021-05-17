@@ -20,6 +20,8 @@
 
 class SynchronisationSetting < ActiveRecord::Base
   include Redmine::SafeAttributes
+  after_initialize :setup
+  before_validation :check_allocation_field
 
   belongs_to :project
   serialize :settings, Hash
@@ -29,27 +31,26 @@ class SynchronisationSetting < ActiveRecord::Base
 
     if attr == :settings
       record.send :validates_root, value
-      record.send :validates_allocation_criteria, value
+      record.send :validates_allocation_criterion, value
     end
   end
 
-  def initialize(*args)
-    super
+  def setup
     self.settings ||= {}
-    @value_object = AllocationCriteria.new
+    self.criteria ||= AllocationCriteria.new
   end
 
   safe_attributes(
     :root,
-    :allocation_criteria
+    :allocation_criterion
   )
 
-  def allocation_criteria
-    settings[:allocation_criteria]
+  def allocation_criterion
+    settings[:allocation_criterion]
   end
 
-  def allocation_criteria=(value)
-    settings[:allocation_criteria] = value
+  def allocation_criterion=(value)
+    settings[:allocation_criterion] = value
   end
 
   ##
@@ -68,24 +69,32 @@ class SynchronisationSetting < ActiveRecord::Base
 
   private
 
-  attr_reader :value_object
+  attr_accessor :criteria
 
-  def validates_allocation_criteria(value)
-    value = value[:allocation_criteria]
-    label = l(:field_allocation_criteria)
-    return true if allocation_criteria?(value)
+  def check_allocation_field
+    return if criteria
+
+    label = l(:label_allocation_field).concat(l(:notice_location_of_allocation_field))
+    errors.add(:base, l(:error_is_missing, value: label))
+    raise ActiveRecord::Rollback
+  end
+
+  def validates_allocation_criterion(value)
+    value = value[:allocation_criterion]
+    label = l(:field_allocation_criterion)
+    return true if allocation_criterion?(value)
 
     return errors.add(:base, l(:error_is_not_present, value: label)) if value.blank?
 
-    errors.add(:base, l(:error_is_no_allocation_criteria, value: label))
+    errors.add(:base, l(:error_is_no_allocation_criterion, value: label))
   end
 
-  def allocation_criteria?(value)
-    values = value_object.possible_values
-    if values.is_a? Array
-      values.include? value
+  def allocation_criterion?(value)
+    values = criteria.possible_values
+    if value.to_i > 0
+      values.map(&:id).include? value.to_i
     else
-      values.map(&:id).flatten.include? value.to_i
+      values.map(&:name).include? value
     end
   end
 

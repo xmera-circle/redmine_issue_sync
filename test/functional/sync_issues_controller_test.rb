@@ -61,7 +61,7 @@ module RedmineIssueSync
     test 'should update settings' do
       assert_not SynchronisationSetting.find_by(project_id: @project.id)
       post sync_issues_settings_path(@project),
-           params: { synchronisation_setting: { root: '1', allocation_criteria: 'MySQL' } }
+           params: { synchronisation_setting: { root: '1', allocation_criterion: 'MySQL' } }
       assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
       settings = SynchronisationSetting.find_by(project_id: @project.id)
       assert settings.root
@@ -72,7 +72,7 @@ module RedmineIssueSync
            params: { synchronisation_setting: { root: 'wrong' } }
       assert_response :success
       assert_select_error("#{l(:error_is_no_boolean, value: l(:field_root))}
-#{l(:error_is_not_present, value: l(:field_allocation_criteria))}")
+#{l(:error_is_not_present, value: l(:field_allocation_criterion))}")
     end
 
     test 'should sychronise if user allowed to' do

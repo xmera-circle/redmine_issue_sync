@@ -20,8 +20,10 @@ de:
   legend_allocation_settings: Zuordnungskriterien
   label_allocation_field: Zuordnungsfeld
   text_allocation_field_setting: Jedes Ticket mit diesem Zuordnungsfeld wird einem Projekt zugeordnet, bei dem die Werte zu diesem Feld übereinstimmen.
-  field_allocation_criteria: Zuordnungskriterium
-  text_allocation_criteria: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Zuordnungskriterium berücksichtigt. 
+  field_allocation_criterion: Zuordnungskriterium
+  text_allocation_criterion: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Zuordnungskriterium berücksichtigt. 
     Jedes Projekt wird mit seinem eigenen Kriterium berücksichtigt.
-  error_is_no_allocation_criteria: "%{value} ist nicht gültig."
+  error_is_no_allocation_criterion: "%{value} ist nicht gültig."
   error_is_not_present: "%{value} muss ausgefüllt werden."
+  error_is_missing: "%{value} muss ausgefüllt werden."
+  notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 

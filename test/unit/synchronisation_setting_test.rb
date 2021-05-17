@@ -39,29 +39,29 @@ module RedmineIssueSync
       @plugin = nil
     end
 
-    test 'should respond to allocation_criteria' do
-      assert SynchronisationSetting.new.respond_to? :allocation_criteria
+    test 'should respond to allocation_criterion' do
+      assert SynchronisationSetting.new.respond_to? :allocation_criterion
     end
 
     test 'should respond to root' do
       assert SynchronisationSetting.new.respond_to? :root
     end
 
-    test 'should not validate allocation_criteria if wrong' do
-      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criteria: 'wrong' })
+    test 'should not validate allocation_criterion if wrong' do
+      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criterion: 'wrong' })
       assert_not settings.valid?
-      assert_equal l(:error_is_no_allocation_criteria, value: l(:field_allocation_criteria)), settings.errors[:base][0]
+      assert_equal l(:error_is_no_allocation_criterion, value: l(:field_allocation_criterion)), settings.errors[:base][0]
     end
 
     test 'should validate attributes' do
       assert_equal '1', @setting[:allocation_field]
-      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criteria: 'MySQL' })
+      settings = SynchronisationSetting.new(settings: { root: '1', allocation_criterion: 'MySQL' })
       assert settings.valid?, settings.errors.full_messages
     end
 
     test 'should not validate root with wrong value' do
       assert_equal '1', @setting[:allocation_field]
-      settings = SynchronisationSetting.new(settings: { root: 'wrong', allocation_criteria: 'PostgreSQL' })
+      settings = SynchronisationSetting.new(settings: { root: 'wrong', allocation_criterion: 'PostgreSQL' })
       assert_not settings.valid?
       assert_equal l(:error_is_no_boolean, value: l(:field_root)), settings.errors[:base][0]
     end

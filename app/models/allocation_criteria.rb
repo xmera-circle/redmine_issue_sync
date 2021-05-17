@@ -32,9 +32,17 @@ class AllocationCriteria
   end
 
   def possible_values
-    return @custom_field.possible_values unless enumeration?
-
-    @custom_field.enumerations.where(active: true).pluck(:name, :id)
+    values = []
+    if enumeration?
+      values = @custom_field.enumerations.where(active: true).each_with_object([]) do |enum, array|
+        array << Entry.new(name: enum.name, id: enum.id)
+      end
+    else
+      values = @custom_field.possible_values.each_with_object([]) do |value, array|
+        array << Entry.new(name: value)
+      end
+    end
+    values
   end
 
   private
