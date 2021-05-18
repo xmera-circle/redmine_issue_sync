@@ -18,19 +18,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class NullCustomField
-  def name
-    ''
-  end
-  def field_format
-    ''
+require 'forwardable'
+
+class IssueCatalogue
+  extend Forwardable
+
+  def_delegators :@setting, :source, :tracker_ids
+
+  def initialize
+    @setting = PluginSetting.new
   end
 
-  def possible_values
-    CustomField.none
+  ##
+  # A list of issues of the source project filtered by the given trackers.
+  #
+  def list
+    source.issues.where(tracker_id: tracker_ids)
   end
 
-  def enumerations
-    CustomFieldEnumeration.none
+  def list_ids
+    list.map(&:id)
   end
 end

@@ -18,19 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class NullCustomField
-  def name
-    ''
+module RedmineIssueSync
+  module Extensions
+    module ProjectPatch 
+      def self.included(base)
+        base.class_eval do
+          has_one :synchronisation_setting, dependent: :destroy
+        end
+      end
+    end
   end
-  def field_format
-    ''
-  end
+end
 
-  def possible_values
-    CustomField.none
-  end
-
-  def enumerations
-    CustomFieldEnumeration.none
+# Apply patch
+Rails.configuration.to_prepare do
+  unless Project.included_modules.include?(RedmineIssueSync::Extensions::ProjectPatch)
+    Project.include(RedmineIssueSync::Extensions::ProjectPatch)
   end
 end

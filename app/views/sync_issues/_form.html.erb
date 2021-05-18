@@ -1,0 +1,31 @@
+<%= form_for @synchronisation, url: project_sync_issues_path(@project), remote: true do |f| %>
+  <%= error_messages_for @synchronisation %>
+
+  <%= render_flash_messages %>
+  <% if @synchronisation.valid? %>
+    <div style='text-align:center' >
+      <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
+      <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
+      <p><%= "#{l(:label_filter_plural)}: #{@field.name}" %>
+      <% @trackers.each do |tracker| %>
+        <p><strong><%= @synchronisation.list.count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
+      <% end %>
+
+      <p>
+        <%= submit_tag l(:button_synchronise) %>
+        <%= link_to_function l(:button_cancel), "hideModal(this);" %>
+      </p>    
+    </div>
+
+
+    <%=tag.fieldset class: "collapsible collapsed" do %>
+      <%=tag.legend l(:label_details), onclick: "toggleFieldset(this);", class: "icon icon-collapsed" %>
+      <%=tag.div do %>
+        <%= render partial: 'details' %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= error_messages_for @synchronisation %>
+    <%= link_to_function l(:button_ok), "hideModal(this);" %>
+  <% end %>
+<% end %>

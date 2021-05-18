@@ -23,11 +23,15 @@ class Synchronisation < ActiveRecord::Base
   belongs_to :target, class_name: 'Project'
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
 
+  validate :requirements
+
   default_scope { order(created_at: :asc) }
 
   scope :history, ->(target) { where(target_id: target.id) }
 
-  delegate :projects, to: :@scope
+  delegate :projects, :criteria, to: :@scope
+  delegate :list, :list_ids, :criteria, to: :@catalogue
+  delegate :trackers, :custom_field, :source, to: :@global_settings
 
   def synched_from_issue_ids
     synched_items.map(:from_issue_id)
@@ -40,17 +44,34 @@ class Synchronisation < ActiveRecord::Base
   def initialize(attributes = nil, *args)
     super
     @scope = SynchronisationScope.new(target)
-    @settings = target.synchronisation_setting
+    @catalogue = IssueCatalogue.new
+    @global_settings = PluginSetting.new
+    @target_settings = target.synchronisation_setting
   end
 
-  def run
-    # 
+  def exec
+    # Prepare issues
+    #  - issue catalogue
+    #  - historical synchronisations
+    #  - backlog
+    #
+    # Copy issues
+    #  - copy from backlog
+    #  - create synchronisation item
+    #
     projects.map do |project|
       project.name
     end
   end
 
   private
+
+  def requirements
+    errors.add(:base, @global_settings.errors.full_messages) unless @global_settings.valid?
+    projects.to_a.prepend(target).each do |project|
+      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.synchronisation_setting
+    end
+  end
 
   def synched_items
     self.class.history(target).map(&:items)

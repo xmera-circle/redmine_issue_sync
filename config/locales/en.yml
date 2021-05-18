@@ -11,6 +11,7 @@ en:
   text_root_field_setting: A system project gets its own and child project issues w.r.t. their criteria.
   error_is_no_boolean: "%{value} needs to be true or false."
   button_synchronise: Synchronise
+  button_ok: Ok
   label_issue_synchronisation:  Issue Synchronisation
   legend_catalogue_settings: Issue Catalogue
   label_catalogue_source_project: Source project
@@ -26,3 +27,4 @@ en:
   error_is_not_present: "%{value} needs to be selected."
   error_is_missing: "%{value} needs to be given."
   notice_location_of_allocation_field: ' (see plugin settings) '
+  error_no_settings: "%{value} has no settings."

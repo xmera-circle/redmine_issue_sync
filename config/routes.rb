@@ -18,15 +18,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-  RedmineApp::Application.routes.draw do
-    match '/projects/:id/issues_sync/settings',
-          controller: 'sync_issues',
-          action: 'settings',
-          via: %i[get post],
-          as: 'sync_issues_settings'
-
-    get 'projects/:id/issues/synchronise',
+RedmineApp::Application.routes.draw do
+  match '/projects/:id/issues_sync/settings',
         controller: 'sync_issues',
-        action: 'synchronise',
-        as: 'synchronise_project_issues'
+        action: 'settings',
+        via: %i[get post],
+        as: 'sync_issues_settings'
+
+  resources :projects do
+    resources :sync_issues, only: %w[new create show]
   end
+end

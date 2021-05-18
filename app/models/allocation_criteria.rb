@@ -22,23 +22,22 @@ require 'forwardable'
 
 class AllocationCriteria
   extend Forwardable
-  attr_reader :name
 
   def_delegators :custom_field, :field_format
+  def_delegators :@setting, :custom_field
 
   def initialize
-    @custom_field_id = Setting.plugin_redmine_issue_sync.fetch(:allocation_field).to_i
-    self.custom_field = find_custom_field
+    @setting = PluginSetting.new
   end
 
   def possible_values
     values = []
     if enumeration?
-      values = @custom_field.enumerations.where(active: true).each_with_object([]) do |enum, array|
+      values = custom_field.enumerations.where(active: true).each_with_object([]) do |enum, array|
         array << Entry.new(name: enum.name, id: enum.id)
       end
     else
-      values = @custom_field.possible_values.each_with_object([]) do |value, array|
+      values = custom_field.possible_values.each_with_object([]) do |value, array|
         array << Entry.new(name: value)
       end
     end
@@ -46,12 +45,6 @@ class AllocationCriteria
   end
 
   private
-
-  attr_accessor :custom_field
-
-  def find_custom_field
-    IssueCustomField.find_by(id: @custom_field_id) || NullCustomField.new
-  end
 
   def enumeration?
     field_format == 'enumeration'

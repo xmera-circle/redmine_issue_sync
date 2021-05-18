@@ -1,0 +1,7 @@
+<%=tag.ul do %>
+    <% @synchronisation.items.each do |item| %>
+        <%=tag.li do %>
+            <%= "#{item.subject}" %>
+        <% end %>
+    <% end %>
+<% end %>

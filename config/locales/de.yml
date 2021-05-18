@@ -11,6 +11,7 @@ de:
   text_root_field_setting: Einem Systemprojekt werden eigene Tickets und die der untergeordneten Projekte entsprechend ihrer jeweiligen Kriterien zugeordnet.
   error_is_no_boolean: "%{value} muss wahr oder falsch sein."
   button_synchronise: Synchronisieren
+  button_ok: Ok
   label_issue_synchronisation: Ticket-Synchronisation
   legend_catalogue_settings: Auswahlkriterien
   label_catalogue_source_project: Quellprojekt
@@ -27,3 +28,4 @@ de:
   error_is_not_present: "%{value} muss ausgefüllt werden."
   error_is_missing: "%{value} muss ausgefüllt werden."
   notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 
+  error_no_settings: "%{value} hat keine Einstellungen."

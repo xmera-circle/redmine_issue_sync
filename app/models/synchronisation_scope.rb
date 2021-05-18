@@ -18,19 +18,36 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class NullCustomField
-  def name
-    ''
-  end
-  def field_format
-    ''
+##
+# Determines whether to synchronisation scope w.r.t. issues
+#
+class SynchronisationScope
+  attr_reader :target
+
+  ##
+  # @params target [Project] The project which is the synchronisation target.
+  #
+  def initialize(target)
+    @target = target
   end
 
-  def possible_values
-    CustomField.none
+  ##
+  # Find the projects involved in the synchronisation
+  #
+  # TODO: Check wether a child is a root project for synchronisation itself?s
+  def projects
+    include_sub_projects? ? target.children : [target]
   end
 
-  def enumerations
-    CustomFieldEnumeration.none
+  def criteria
+    projects.map do |project|
+      project.synchronisation_setting.allocation_criterion
+    end
+  end
+
+  private
+
+  def include_sub_projects?
+    target.synchronisation_setting.root
   end
 end
