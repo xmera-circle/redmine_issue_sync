@@ -27,19 +27,11 @@ class Synchronisation < ActiveRecord::Base
 
   default_scope { order(created_at: :asc) }
 
-  scope :history, ->(target) { where(target_id: target.id) }
+  scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :projects, :criteria, to: :@scope
   delegate :list, :list_ids, :criteria, to: :@catalogue
   delegate :trackers, :custom_field, :source, to: :@global_settings
-
-  def synched_from_issue_ids
-    synched_items.map(:from_issue_id)
-  end
-
-  def synched_to_issue_ids
-    synched_items.map(:to_issue_id)
-  end
 
   def initialize(attributes = nil, *args)
     super
@@ -50,30 +42,59 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def exec
-    # Prepare issues
-    #  - issue catalogue
-    #  - historical synchronisations
-    #  - backlog
-    #
-    # Copy issues
-    #  - copy from backlog
-    #  - create synchronisation item
-    #
-    projects.map do |project|
-      project.name
+    Synchronisation.transaction do
+      prepare_target
+      mapping = copy_issues
+      log_issues(mapping)
+      create_issue_relations(mapping)
     end
+  end
+
+  def backlog_count
+    backlog_ids.count
   end
 
   private
 
+  def prepare_target
+    # Enable required tracker and custom_fields if necessary
+  end
+
+  def backlog_ids
+    @backlog_ids ||= list_ids - copied_ids
+  end
+
+  def copied_ids
+    ids = synched_items.map do |entry|
+      entry.map(&:from_issue_id)
+    end
+    ids.flatten
+  end
+
+  def copy_issues
+    target.copy_selected_issues(source, backlog_ids)
+  end
+
+  def log_issues(mapping)
+    mapping.each_pair do |from_id, to_issue|
+      items << SynchronisationItem.new(from_issue_id: from_id, to_issue_id: to_issue.id)
+    end
+  end
+
+  def create_issue_relations(mapping)
+    # create the relations similar to Project#copy_issues
+  end
+
   def requirements
+    # Global settings
     errors.add(:base, @global_settings.errors.full_messages) unless @global_settings.valid?
+    # Target and included project settings if any
     projects.to_a.prepend(target).each do |project|
       errors.add(:base, l(:error_no_settings, value: project.name)) unless project.synchronisation_setting
     end
   end
 
   def synched_items
-    self.class.history(target).map(&:items)
+    self.class.history(target).map(&:items).reject(&:empty?)
   end
 end

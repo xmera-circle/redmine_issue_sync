@@ -29,3 +29,4 @@ de:
   error_is_missing: "%{value} muss ausgefüllt werden."
   notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 
   error_no_settings: "%{value} hat keine Einstellungen."
+  notice_successful_synchronisation: Erfolgreich synchronisiert.

@@ -7,21 +7,19 @@
       <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
       <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
       <p><%= "#{l(:label_filter_plural)}: #{@field.name}" %>
-      <% @trackers.each do |tracker| %>
-        <p><strong><%= @synchronisation.list.count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
-      <% end %>
-
+      <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
       <p>
-        <%= submit_tag l(:button_synchronise) %>
+        <%= submit_tag l(:button_synchronise) if @synchronisation.backlog_count.positive? %>
         <%= link_to_function l(:button_cancel), "hideModal(this);" %>
       </p>    
     </div>
 
-
-    <%=tag.fieldset class: "collapsible collapsed" do %>
-      <%=tag.legend l(:label_details), onclick: "toggleFieldset(this);", class: "icon icon-collapsed" %>
-      <%=tag.div do %>
-        <%= render partial: 'details' %>
+    <% if @synchronisation.backlog_count.positive? %>
+      <%=tag.fieldset class: "collapsible collapsed" do %>
+        <%=tag.legend l(:label_details), onclick: "toggleFieldset(this);", class: "icon icon-collapsed" %>
+        <%=tag.div do %>
+          <%= render partial: 'details' %>
+        <% end %>
       <% end %>
     <% end %>
   <% else %>

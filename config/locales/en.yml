@@ -28,3 +28,4 @@ en:
   error_is_missing: "%{value} needs to be given."
   notice_location_of_allocation_field: ' (see plugin settings) '
   error_no_settings: "%{value} has no settings."
+  notice_successful_synchronisation: Successfully synchronised.

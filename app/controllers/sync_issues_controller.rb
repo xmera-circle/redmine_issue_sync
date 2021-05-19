@@ -29,7 +29,6 @@ class SyncIssuesController < ApplicationController
   def new
     @synchronisation = Synchronisation.new(target_id: @project.id,
                                            user_id: User.current.id)
-    
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
@@ -41,12 +40,11 @@ class SyncIssuesController < ApplicationController
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
-    if @synchronisation.save
-      ##
-      @synchronisation.exec
-      ##
-      flash[:notice] = l(:notice_successful_create)
+    if @synchronisation.save && @synchronisation.exec
+      flash[:notice] = l(:notice_successful_synchronisation)
       redirect_to project_sync_issue_path(@project, @synchronisation)
+    else
+      render :new
     end
   end
 
