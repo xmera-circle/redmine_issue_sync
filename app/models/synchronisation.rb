@@ -30,7 +30,7 @@ class Synchronisation < ActiveRecord::Base
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :projects, :criteria, to: :@scope
-  delegate :list, :list_ids, :criteria, to: :@catalogue
+  delegate :list, :list_ids, to: :@catalogue
   delegate :trackers, :custom_field, :source, to: :@global_settings
 
   def initialize(attributes = nil, *args)
@@ -39,6 +39,7 @@ class Synchronisation < ActiveRecord::Base
     @catalogue = IssueCatalogue.new
     @global_settings = PluginSetting.new
     @target_settings = target.synchronisation_setting
+    @filter = CustomFieldFilter.new(list, custom_field, criteria)
   end
 
   def exec
@@ -48,6 +49,10 @@ class Synchronisation < ActiveRecord::Base
       log_issues(mapping)
       create_issue_relations(mapping)
     end
+  end
+
+  def backlog
+    Issue.where(id: backlog_ids)
   end
 
   def backlog_count
@@ -61,7 +66,15 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def backlog_ids
-    @backlog_ids ||= list_ids - copied_ids
+    @backlog_ids ||= issue_list_ids - copied_ids
+  end
+
+  def issue_list
+    @filter.apply
+  end
+
+  def issue_list_ids
+    issue_list.map(&:id)
   end
 
   def copied_ids

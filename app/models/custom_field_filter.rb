@@ -20,25 +20,46 @@
 
 require 'forwardable'
 
-class AllocationCriteria
+class FilterByCustomField
   extend Forwardable
   include CustomFieldFormatCheck
 
-  def_delegators :custom_field, :field_format
-  def_delegators :setting, :custom_field
-  def_deletagors :list, :possible_values, :criterion?
+  def_delegators :@field, :field_format, :id
+  alias field_id id
 
-  def initialize
-    @setting = PluginSetting.new
-    self.list = setup_list
+  def initialize(issues, field, criteria)
+    @issues = issues
+    @field = field
+    @criteria = criteria
+  end
+
+  def apply
+    issues.where(id: issue_ids)
   end
 
   private
 
-  attr_accessor :list
-  attr_reader :setting
+  ##
+  # List of issue ids retrieved by field and criteria
+  #
+  def issue_ids
+    criteria.each do |criterium|
+      
+    end
+    # ids = []
+    # criteria.each do |criterium|
+    #   collection = if enumeration?(field_format)
+    #                  CustomFieldEnumeration.where(id: criterium.to_i,
+    #                                               custom_field_id: field_id)
 
-  def setup_list
-    @list = enumeration?(field_format) ? EnumerationList.new(custom_field) : SimpleList.new(custom_field)
+    #                else
+    #                  CustomValue.where(custom_field_id: field_id,
+    #                                    value: criterium)
+    #                end
+    #   ids << collection.map(&:customized_id)
+    # end
+    # ids.flatten
   end
+
+  attr_reader :issues, :field, :criteria
 end

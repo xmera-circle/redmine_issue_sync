@@ -22,13 +22,13 @@ module RedmineIssueSync
   module Extensions
     module ProjectPatch 
       def self.included(base)
-        base.include(IssueMethods)
+        base.include(InstanceMethods)
         base.class_eval do
           has_one :synchronisation_setting, dependent: :destroy
         end
       end
 
-      module IssueMethods
+      module InstanceMethods
         ##
         # Copy selected issues from a given project.
         #

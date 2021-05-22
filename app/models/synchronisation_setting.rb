@@ -35,6 +35,9 @@ class SynchronisationSetting < ActiveRecord::Base
     end
   end
 
+  ##
+  # Runs after initialization
+  #
   def setup
     self.settings ||= {}
     self.criteria ||= AllocationCriteria.new
@@ -90,12 +93,13 @@ class SynchronisationSetting < ActiveRecord::Base
   end
 
   def allocation_criterion?(value)
-    values = criteria.possible_values
-    if value.to_i > 0
-      values.map(&:id).include? value.to_i
-    else
-      values.map(&:name).include? value
-    end
+    criteria.valid?(value)
+    # values = criteria.possible_values
+    # if value.to_i > 0
+    #   values.map(&:id).include? value.to_i
+    # else
+    #   values.map(&:name).include? value
+    # end
   end
 
   def validates_root(value)

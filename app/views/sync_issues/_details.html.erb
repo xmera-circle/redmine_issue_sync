@@ -1,7 +1,7 @@
 <%=tag.ul do %>
-    <% @synchronisation.items.each do |item| %>
+    <% @synchronisation.backlog.each do |item| %>
         <%=tag.li do %>
-            <%= "#{item.subject}" %>
+            <%= link_to_issue(item, project: true) %>
         <% end %>
     <% end %>
 <% end %>
