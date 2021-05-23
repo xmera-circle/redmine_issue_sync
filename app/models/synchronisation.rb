@@ -35,7 +35,7 @@ class Synchronisation < ActiveRecord::Base
 
   attr_reader :issues
 
-  def initialize(attributes = nil, *args)
+  def initialize(attributes = nil, *_args)
     @issues = attributes.delete(:issues)
     super(attributes)
     @global_settings = PluginSetting.new
