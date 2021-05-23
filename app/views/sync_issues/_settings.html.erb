@@ -27,7 +27,8 @@
 
     <%= tag.p do %>
       <%= content_tag :label, l(:field_root) %>
-      <%= check_box :synchronisation_setting, :root %>
+      <%= hidden_field_tag('synchronisation_setting[root]', 'false') %>
+      <%= check_box_tag 'synchronisation_setting[root]', 'true', @project.sync_param.root %>
       <%= tag.em class: 'info' do %>
         <%= l(:text_root_field_setting) %>
       <% end %>

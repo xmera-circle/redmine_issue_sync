@@ -55,6 +55,6 @@ class SynchronisationSetting < ActiveRecord::Base
   #                                              True values: anything else
   #
   def root=(value)
-    settings[:root] = cast(value)
+    settings[:root] = cast(value).to_s
   end
 end
