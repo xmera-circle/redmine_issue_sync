@@ -41,13 +41,13 @@ class SynchronisationScope
 
   def criteria
     projects.map do |project|
-      project.synchronisation_setting.allocation_criterion
+      project.sync_params.filter
     end
   end
 
   private
 
   def include_sub_projects?
-    target.synchronisation_setting.root
+    target.sync_params.root
   end
 end

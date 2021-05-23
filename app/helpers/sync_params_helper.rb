@@ -18,27 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require 'forwardable'
-
-class AllocationCriteria
-  extend Forwardable
-  include CustomFieldFormatCheck
-
-  def_delegators :custom_field, :field_format
-  def_delegators :setting, :custom_field
-  def_deletagors :list, :possible_values, :criterion?
-
-  def initialize
-    @setting = PluginSetting.new
-    self.list = setup_list
-  end
-
-  private
-
-  attr_accessor :list
-  attr_reader :setting
-
-  def setup_list
-    @list = enumeration?(field_format) ? EnumerationList.new(custom_field) : SimpleList.new(custom_field)
+module SyncParamsHelper
+  def options_for_custom_field_values_select(custom_field:, selected:)
+    field_object = FieldObject.new(custom_field).instance
+    values = field_object.possible_values.map(&:select_item)
+    options_for_select(values, selected)
   end
 end

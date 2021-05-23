@@ -18,12 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-module SynchronisationSettingsHelper
-  def options_for_allocation_criteria_select(selected:)
-    criteria = AllocationCriteria.new
-    values = criteria.possible_values.map do |val|
-      val.id ? [val.name, val.id] : val.name
-    end
-    options_for_select(values, selected)
+class BooleanValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    return if %w[TrueClass FalseClass].include? value.class.to_s
+
+    record.errors.add(:base,
+                      l(:error_is_no_boolean, value: attribute))
   end
 end

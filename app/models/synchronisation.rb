@@ -20,7 +20,7 @@
 
 class Synchronisation < ActiveRecord::Base
   belongs_to :user
-  belongs_to :target, class_name: 'Project'
+  belongs_to :target, class_name: 'Project', foreign_key: :target_id
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
 
   validate :requirements
@@ -30,21 +30,22 @@ class Synchronisation < ActiveRecord::Base
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :projects, :criteria, to: :@scope
-  delegate :list, :list_ids, to: :@catalogue
   delegate :trackers, :custom_field, :source, to: :@global_settings
+  delegate :content_ids, to: :@issues
+
+  attr_reader :issues
 
   def initialize(attributes = nil, *args)
-    super
+    @issues = attributes.delete(:issues)
+    super(attributes)
     @scope = SynchronisationScope.new(target)
-    @catalogue = IssueCatalogue.new
     @global_settings = PluginSetting.new
-    @target_settings = target.synchronisation_setting
-    @filter = CustomFieldFilter.new(list, custom_field, criteria)
+    @target_settings = target.sync_params
   end
 
   def exec
     Synchronisation.transaction do
-      prepare_target
+      #prepare_target
       mapping = copy_issues
       log_issues(mapping)
       create_issue_relations(mapping)
@@ -66,15 +67,7 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def backlog_ids
-    @backlog_ids ||= issue_list_ids - copied_ids
-  end
-
-  def issue_list
-    @filter.apply
-  end
-
-  def issue_list_ids
-    issue_list.map(&:id)
+    @backlog_ids ||= content_ids - copied_ids
   end
 
   def copied_ids
@@ -103,7 +96,7 @@ class Synchronisation < ActiveRecord::Base
     errors.add(:base, @global_settings.errors.full_messages) unless @global_settings.valid?
     # Target and included project settings if any
     projects.to_a.prepend(target).each do |project|
-      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.synchronisation_setting
+      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_params
     end
   end
 

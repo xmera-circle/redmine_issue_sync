@@ -21,22 +21,19 @@
 class SyncIssuesController < ApplicationController
   before_action :find_project_by_project_id, except: %w[settings]
   before_action :find_project, only: %w[settings]
-  before_action :find_or_create_settings
   before_action :authorize
 
-  helper :synchronisation_settings
+  helper :sync_params
 
   def new
-    @synchronisation = Synchronisation.new(target_id: @project.id,
-                                           user_id: User.current.id)
+    @synchronisation = @project.synchronise(IssueCatalogue.new(sync_params))
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
   end
 
   def create
-    @synchronisation = Synchronisation.new(target_id: @project.id,
-                                           user_id: User.current.id)
+    @synchronisation = @project.synchronise(IssueCatalogue.new(sync_params))
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
@@ -50,9 +47,9 @@ class SyncIssuesController < ApplicationController
 
   def settings
     if request.post?
-      @synchronisation_setting.safe_attributes = params[:synchronisation_setting]
+      sync_params.safe_attributes = params[:synchronisation_setting]
 
-      if @synchronisation_setting.save
+      if sync_params.save
         respond_to do |format|
           format.html do
             flash[:notice] = l(:notice_successful_update)
@@ -73,10 +70,7 @@ class SyncIssuesController < ApplicationController
 
   private
 
-  def find_or_create_settings
-    @synchronisation_setting =
-      SynchronisationSetting.find_or_create_by(project_id: @project.id)
-  rescue ActiveRecord::RecordNotFound
-    render_404
+  def sync_params
+    @sync_params ||= @project.sync_params
   end
 end

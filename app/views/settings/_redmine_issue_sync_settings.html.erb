@@ -21,9 +21,9 @@
 %>
 
 <%= tag.fieldset do %>
-  <%= tag.legend l(:legend_catalogue_settings) %>
+  <%= tag.legend l(:label_issue_catalogue) %>
   <%= tag.p do %>
-    <%= content_tag :label, l(:label_catalogue_source_project) %>
+    <%= content_tag :label, l(:field_project) %>
     <%= select_tag(
           'settings[source_project]', 
           options_for_select(
@@ -38,7 +38,7 @@
   <% end %>
 
   <%= tag.p do %>
-    <%= content_tag :label, l(:label_source_trackers) %>
+    <%= content_tag :label, l(:label_tracker_plural) %>
     <%= select_tag(
           'settings[source_trackers][]', 
           options_for_select(
@@ -54,20 +54,17 @@
   <% end %>
 <% end %>
 
-<%= tag.fieldset do %>
-  <%= tag.legend l(:legend_allocation_settings) %>
-  <%= tag.p do %>
-    <%= content_tag :label, l(:label_allocation_field) %>
-    <%= select_tag(
-          'settings[allocation_field]', 
-          options_for_select(
-            IssueCustomField.pluck(:name, :id), 
-            { selected: @settings['allocation_field'] }
-          ), 
-          include_blank: true
-        ) %>
-	  <%= tag.em class: 'info' do %>
-      <%= l(:text_allocation_field_setting) %>
-    <% end %>
+<%= tag.p do %>
+  <%= content_tag :label, l(:label_custom_field) %>
+  <%= select_tag(
+        'settings[custom_field]', 
+        options_for_select(
+          IssueCustomField.where(field_format: %w[list enumeration]).pluck(:name, :id), 
+          { selected: @settings['custom_field'] }
+        ), 
+        include_blank: true
+      ) %>
+  <%= tag.em class: 'info' do %>
+    <%= l(:text_custom_field_setting) %>
   <% end %>
 <% end %>

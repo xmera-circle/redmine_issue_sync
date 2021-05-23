@@ -24,11 +24,19 @@ module RedmineIssueSync
       def self.included(base)
         base.include(InstanceMethods)
         base.class_eval do
-          has_one :synchronisation_setting, dependent: :destroy
+          has_one :sync_params, class_name: 'SynchronisationSetting', dependent: :destroy
+          has_many :syncs, class_name: 'Synchronisation', foreign_key: :target_id, dependent: :destroy
         end
       end
 
       module InstanceMethods
+        ##
+        # Synchronise issues according to the project sync_params.
+        #
+        def synchronise(issues)
+          syncs.build(issues: issues, user_id: User.current.id)
+        end
+
         ##
         # Copy selected issues from a given project.
         #

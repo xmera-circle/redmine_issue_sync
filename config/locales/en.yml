@@ -6,24 +6,20 @@ en:
   permission_sync_issues: Synchronise issues
   permission_manage_sync_settings: Manage synchronisation settings
   label_redmine_issue_sync_description: Synchronise issues between projects
-  legend_synchronisation_settings: Synchronisation settings
   field_root: System project
   text_root_field_setting: A system project gets its own and child project issues w.r.t. their criteria.
   error_is_no_boolean: "%{value} needs to be true or false."
   button_synchronise: Synchronise
   button_ok: Ok
   label_issue_synchronisation:  Issue Synchronisation
-  legend_catalogue_settings: Issue Catalogue
-  label_catalogue_source_project: Source project
-  text_source_project_setting: Choose the project containing the issue catalogue.
-  label_source_trackers: ''
-  text_source_tracker_settings: Choose relevant issue trackers.
-  legend_allocation_settings: ''
-  text_allocation_field_setting: ''
-  field_allocation_criterion: Allocation criterion
-  text_allocation_criterion: Only those issues fulfilling this criteria will be synchronised for this project. 
+  label_issue_catalogue: Issue Catalogue
+  text_source_project_setting: Project containing the issue catalogue.
+  text_source_tracker_settings: Optional selection criteria for catalogue items.
+  text_custom_field_setting: Further optional selection criteria for catalogue items.
+  field_filter: Allocation criterion
+  text_filter: Only those issues fulfilling this criteria will be synchronised for this project. 
     Each project included in a synchronisation should have its own criteria.
-  error_is_no_allocation_criterion: "%{value} is not valid."
+  error_is_no_filter: "%{value} is not valid."
   error_is_not_present: "%{value} needs to be selected."
   error_is_missing: "%{value} needs to be given."
   notice_location_of_allocation_field: ' (see plugin settings) '

@@ -20,47 +20,33 @@
 
 class SynchronisationSetting < ActiveRecord::Base
   include Redmine::SafeAttributes
-  after_initialize :setup
-  before_validation :check_allocation_field
 
   belongs_to :project
   serialize :settings, Hash
 
-  validates_each :settings do |record, attr, value|
-    next unless record.settings.present?
+  validates :filter, custom_field_value: true
+  validates :root, boolean: true
 
-    if attr == :settings
-      record.send :validates_root, value
-      record.send :validates_allocation_criterion, value
-    end
-  end
-
-  ##
-  # Runs after initialization
-  #
-  def setup
-    self.settings ||= {}
-    self.criteria ||= AllocationCriteria.new
-  end
+  delegate :cast, to: 'ActiveModel::Type::Boolean.new'
 
   safe_attributes(
     :root,
-    :allocation_criterion
+    :filter
   )
 
-  def allocation_criterion
-    settings[:allocation_criterion]
+  def filter
+    settings[:filter]
   end
 
-  def allocation_criterion=(value)
-    settings[:allocation_criterion] = value
+  def filter=(value)
+    settings[:filter] = value
   end
 
   ##
   # @return [Boolean] Either true or false.
   #
   def root
-    ActiveModel::Type::Boolean.new.cast(settings[:root])
+    cast(settings[:root])
   end
 
   ##
@@ -68,57 +54,5 @@ class SynchronisationSetting < ActiveRecord::Base
   #
   def root=(value)
     settings[:root] = value
-  end
-
-  private
-
-  attr_accessor :criteria
-
-  def check_allocation_field
-    return if criteria
-
-    label = l(:label_allocation_field).concat(l(:notice_location_of_allocation_field))
-    errors.add(:base, l(:error_is_missing, value: label))
-    raise ActiveRecord::Rollback
-  end
-
-  def validates_allocation_criterion(value)
-    value = value[:allocation_criterion]
-    label = l(:field_allocation_criterion)
-    return true if allocation_criterion?(value)
-
-    return errors.add(:base, l(:error_is_not_present, value: label)) if value.blank?
-
-    errors.add(:base, l(:error_is_no_allocation_criterion, value: label))
-  end
-
-  def allocation_criterion?(value)
-    criteria.valid?(value)
-    # values = criteria.possible_values
-    # if value.to_i > 0
-    #   values.map(&:id).include? value.to_i
-    # else
-    #   values.map(&:name).include? value
-    # end
-  end
-
-  def validates_root(value)
-    return true if value.empty?
-
-    boolean_error_message(l(:field_root)) unless boolean?(value[:root])
-  end
-
-  def boolean?(value)
-    return false unless %w[true false 1 0].include?(value)
-
-    boolean(value).is_a?(TrueClass) || boolean(value).is_a?(FalseClass)
-  end
-
-  def boolean(value)
-    ActiveModel::Type::Boolean.new.cast(value)
-  end
-
-  def boolean_error_message(field_name)
-    errors.add(:base, l(:error_is_no_boolean, value: field_name))
   end
 end

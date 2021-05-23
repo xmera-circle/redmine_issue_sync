@@ -23,20 +23,41 @@ require 'forwardable'
 class IssueCatalogue
   extend Forwardable
 
-  def_delegators :@setting, :source, :tracker_ids
+  def_delegators :@setting, :source, :tracker_ids, :trackers, :custom_field_id, :custom_field
+  def_delegators :source, :issues
+  def_delegators :@params, :filter, :project, :root
+  alias root_project? root
 
-  def initialize
+  def initialize(params = nil)
+    @params = params
     @setting = PluginSetting.new
   end
 
   ##
   # A list of issues of the source project filtered by the given trackers.
   #
-  def list
-    source.issues.where(tracker_id: tracker_ids)
+  def content
+    issues
+      .joins(:custom_values)
+      .where(custom_values: { custom_field_id: custom_field_id, value: values })
+      .where(tracker_id: tracker_ids)
   end
 
-  def list_ids
-    list.map(&:id)
+  def content_ids
+    content.pluck(:id)
+  end
+
+  private
+
+  attr_reader :params
+
+  def values
+    projects.map do |project|
+      project.sync_params.filter
+    end
+  end
+
+  def projects
+    root_project? ? project.children : [project]
   end
 end

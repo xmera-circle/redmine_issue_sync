@@ -20,14 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<% @synchronisation_setting ||= 
-  SynchronisationSetting.find_or_create_by(project_id: @project.id) %>
-
 <%= error_messages_for 'synchronisation_setting' %>
 
 <%= form_tag(sync_issues_settings_path(@project), method: :post, class: "tabular") do %>
-  <%= tag.fieldset class: 'box tabular' do %>
-    <%= tag.legend l(:legend_synchronisation_settings) %>
+  <%= tag.div class: 'box tabular' do %>
+
     <%= tag.p do %>
       <%= content_tag :label, l(:field_root) %>
       <%= check_box :synchronisation_setting, :root %>
@@ -36,15 +33,25 @@
       <% end %>
     <% end %>
 
+
+    <% catalogue = IssueCatalogue.new %>
     <%= tag.p do %>
-      <%= content_tag :label, l(:field_allocation_criterion) %>
-      <%= select_tag 'synchronisation_setting[allocation_criterion]',
-                     options_for_allocation_criteria_select(
-                      selected: @synchronisation_setting.allocation_criterion
+      <%= tag.label "#{l(:label_tracker_plural)}: " %>
+      <%= catalogue.trackers.map(&:name).join(', ') %>
+    <% end %>
+    
+    <%= tag.p do %>
+      <%= tag.span catalogue.custom_field.name %>
+      <%= content_tag :label, "#{l(:field_possible_values)}: " %>
+      <%= select_tag 'synchronisation_setting[filter]',
+                     options_for_custom_field_values_select(
+                      custom_field: catalogue.custom_field,
+                      selected: @project.sync_params.filter
                      ),
+                     multiple: true,
                      include_blank: true %>
       <%= tag.em class: 'info' do %>
-        <%= l(:text_allocation_criterion) %>
+        <%= l(:text_filter) %>
       <% end %>
     <% end %>
 

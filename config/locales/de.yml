@@ -6,25 +6,21 @@ de:
   permission_sync_issues: Tickets synchronisieren
   permission_manage_sync_settings: Sychronisations-Einstellungen verwalten
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
-  legend_synchronisation_settings: Synchronisations-Einstellungen
   field_root: Systemprojekt
   text_root_field_setting: Einem Systemprojekt werden eigene Tickets und die der untergeordneten Projekte entsprechend ihrer jeweiligen Kriterien zugeordnet.
   error_is_no_boolean: "%{value} muss wahr oder falsch sein."
   button_synchronise: Synchronisieren
   button_ok: Ok
   label_issue_synchronisation: Ticket-Synchronisation
-  legend_catalogue_settings: Auswahlkriterien
-  label_catalogue_source_project: Quellprojekt
-  text_source_project_setting: Wähle das Projekt, das den Ticket-Katalog beinhaltet.
-  label_source_trackers: Quelltracker
-  text_source_tracker_setting: Wähle die relevanten Ticket-Tracker.
-  legend_allocation_settings: Zuordnungskriterien
+  label_issue_catalogue: Ticket-Katalog
+  text_source_project_setting: Projekt, das den Ticket-Katalog beinhaltet.
+  text_source_tracker_setting: Optionales Kriterium zur Bestimmung des Kataloges.
   label_allocation_field: Zuordnungsfeld
-  text_allocation_field_setting: Jedes Ticket mit diesem Zuordnungsfeld wird einem Projekt zugeordnet, bei dem die Werte zu diesem Feld übereinstimmen.
-  field_allocation_criterion: Zuordnungskriterium
-  text_allocation_criterion: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Zuordnungskriterium berücksichtigt. 
+  text_custom_field_setting: Weiteres optionales Kriterium zur Bestimmung des Kataloges.
+  field_filter: Zuordnungskriterium
+  text_filter: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Zuordnungskriterium berücksichtigt. 
     Jedes Projekt wird mit seinem eigenen Kriterium berücksichtigt.
-  error_is_no_allocation_criterion: "%{value} ist nicht gültig."
+  error_is_no_filter: "%{value} ist nicht gültig."
   error_is_not_present: "%{value} muss ausgefüllt werden."
   error_is_missing: "%{value} muss ausgefüllt werden."
   notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 

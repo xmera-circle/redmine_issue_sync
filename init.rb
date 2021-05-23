@@ -52,5 +52,5 @@ end
 
 ActiveSupport::Reloader.to_prepare do
   ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
-  ProjectsController.helper(SynchronisationSettingsHelper)
+  ProjectsController.helper(SyncParamsHelper)
 end

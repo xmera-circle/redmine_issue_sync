@@ -37,7 +37,7 @@ class PluginSetting
   #
   # @return [Integer] Is 0 if string is empty.
   #
-  def source_project_id
+  def source_id
     @setting.fetch(:source_project).to_i
   end
 
@@ -64,7 +64,7 @@ class PluginSetting
   end
 
   def custom_field_id
-    @setting.fetch(:allocation_field).to_i
+    @setting.fetch(:custom_field).to_i
   end
 
   private
@@ -79,7 +79,7 @@ class PluginSetting
   end
 
   def find_source_project
-    Project.find_by(id: source_project_id) || NullProject.new
+    Project.find_by(id: source_id) || NullProject.new
   end
 
   def find_custom_field

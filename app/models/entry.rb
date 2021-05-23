@@ -25,4 +25,8 @@ class Entry
     @name = name
     @id = id
   end
+
+  def select_item
+    [name, id]
+  end
 end
