@@ -46,7 +46,11 @@ class SyncIssuesController < ApplicationController
 
     if @synchronisation.exec
       flash[:notice] = l(:notice_successful_synchronisation)
-      redirect_to project_sync_issue_path(@project, @synchronisation)
+      respond_to do |format|
+        format.html do
+          redirect_to project_issues_path(@project), format: :html
+        end
+      end
     else
       render :new
     end
