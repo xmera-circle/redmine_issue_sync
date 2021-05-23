@@ -43,7 +43,8 @@ class SyncIssuesController < ApplicationController
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
     @criteria_names = @synchronisation.criteria_names
-    if @synchronisation.save && @synchronisation.exec
+
+    if @synchronisation.exec
       flash[:notice] = l(:notice_successful_synchronisation)
       redirect_to project_sync_issue_path(@project, @synchronisation)
     else

@@ -48,6 +48,7 @@ class Synchronisation < ActiveRecord::Base
       mapping = copy_issues
       log_issues(mapping)
       create_issue_relations(mapping)
+      save
     end
   end
 
