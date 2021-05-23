@@ -11,6 +11,11 @@ class EnumerationField
     end
   end
 
+  def value_by_name(ids)
+    entries = possible_values.select { |value| ids.include? value.id.to_s }
+    entries.map(&:name)
+  end
+
   def valid?(value)
     possible_values.map(&:id).include? value.to_i
   end

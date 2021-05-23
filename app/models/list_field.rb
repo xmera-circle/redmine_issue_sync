@@ -11,6 +11,11 @@ class ListField
     end
   end
 
+  def value_by_name(names)
+    entries = possible_values.find { |value| names.include? value.name }
+    entries.map(&:name)
+  end
+
   def valid?(value)
     possible_values.map(&:name).include? value
   end

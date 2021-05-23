@@ -31,6 +31,7 @@ class IssueCatalogue
   def initialize(params = nil)
     @params = params
     @setting = PluginSetting.new
+    @field_object = FieldObject.new(custom_field).instance
   end
 
   ##
@@ -47,15 +48,19 @@ class IssueCatalogue
     content.pluck(:id)
   end
 
-  private
-
-  attr_reader :params
+  def values_by_name
+    values.map { |value| field_object.value_by_name(value) }
+  end
 
   def values
     projects.map do |project|
       project.sync_param.filter
     end
   end
+
+  private
+
+  attr_reader :field_object
 
   def projects
     root_project? ? project.children : [project]

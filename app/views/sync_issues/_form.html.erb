@@ -6,7 +6,7 @@
     <div style='text-align:center' >
       <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
       <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
-      <p><%= "#{l(:label_filter_plural)}: #{@field.name}" %>
+      <p><%= "#{@field.name}: #{@criteria_names.join(', ')}" %>
       <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
       <p>
         <%= submit_tag l(:button_synchronise) if @synchronisation.backlog_count.positive? %>

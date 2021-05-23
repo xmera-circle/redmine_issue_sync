@@ -30,7 +30,8 @@ class Synchronisation < ActiveRecord::Base
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :trackers, :custom_field, :source, to: :@global_settings
-  delegate :projects, :content_ids, to: :@issues
+  delegate :projects, :values_by_name, :content_ids, to: :@issues
+  alias criteria_names values_by_name
 
   attr_reader :issues
 
