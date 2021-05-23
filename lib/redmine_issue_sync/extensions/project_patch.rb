@@ -33,9 +33,8 @@ module RedmineIssueSync
         ##
         # Synchronise issues according to the project sync_param.
         #
-        def synchronise(issues:, scope:)
+        def synchronise(issues:)
           syncs.build(issues: issues,
-                      scope: scope,
                       user_id: User.current.id)
         end
 

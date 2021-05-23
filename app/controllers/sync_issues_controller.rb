@@ -27,8 +27,7 @@ class SyncIssuesController < ApplicationController
 
   def new
     @synchronisation = @project.synchronise(
-      issues: IssueCatalogue.new(sync_param),
-      scope: SynchronisationScope.new(@project)
+      issues: IssueCatalogue.new(sync_param)
     )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
@@ -37,8 +36,7 @@ class SyncIssuesController < ApplicationController
 
   def create
     @synchronisation = @project.synchronise(
-      issues: IssueCatalogue.new(sync_param),
-      scope: SynchronisationScope.new(@project)
+      issues: IssueCatalogue.new(sync_param)
     )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
