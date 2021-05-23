@@ -50,9 +50,11 @@ class SynchronisationSetting < ActiveRecord::Base
   end
 
   ##
-  # @param value [String] Either true or false given as String.
+  # @param value [String, TrueClass, FalseClass] False values: 'false', '0', false
+  #                                              Nil values: '', nil
+  #                                              True values: anything else
   #
   def root=(value)
-    settings[:root] = value
+    settings[:root] = cast(value)
   end
 end

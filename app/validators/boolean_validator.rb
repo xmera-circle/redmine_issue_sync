@@ -19,10 +19,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class BooleanValidator < ActiveModel::EachValidator
+  include Redmine::I18n
+
   def validate_each(record, attribute, value)
-    return if %w[TrueClass FalseClass].include? value.class.to_s
+    return true if %w[TrueClass FalseClass].include? value.class.to_s
 
     record.errors.add(:base,
-                      l(:error_is_no_boolean, value: attribute))
+                      l(:error_is_no_boolean, value: l("field_#{attribute}")))
   end
 end

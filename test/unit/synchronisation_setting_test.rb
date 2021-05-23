@@ -31,7 +31,7 @@ module RedmineIssueSync
       @plugin = Redmine::Plugin.find(:redmine_issue_sync)
       Setting.define_plugin_setting(@plugin)
       @setting = Setting.plugin_redmine_issue_sync
-      @setting[:allocation_field] = '1'
+      @setting[:custom_field] = '1'
     end
 
     def teardown
@@ -48,20 +48,21 @@ module RedmineIssueSync
     end
 
     test 'should not validate filter if wrong' do
+      skip
       settings = SynchronisationSetting.new(settings: { root: '1', filter: 'wrong' })
       assert_not settings.valid?
       assert_equal l(:error_is_no_filter, value: l(:field_filter)), settings.errors[:base][0]
     end
 
     test 'should validate attributes' do
-      assert_equal '1', @setting[:allocation_field]
-      settings = SynchronisationSetting.new(settings: { root: '1', filter: 'MySQL' })
+      assert_equal '1', @setting[:custom_field]
+      settings = SynchronisationSetting.new(settings: { root: '1', filter: ['MySQL'] })
       assert settings.valid?, settings.errors.full_messages
     end
 
     test 'should not validate root with wrong value' do
-      assert_equal '1', @setting[:allocation_field]
-      settings = SynchronisationSetting.new(settings: { root: 'wrong', filter: 'PostgreSQL' })
+      assert_equal '1', @setting[:custom_field]
+      settings = SynchronisationSetting.new(settings: { root: nil, filter: ['PostgreSQL'] })
       assert_not settings.valid?
       assert_equal l(:error_is_no_boolean, value: l(:field_root)), settings.errors[:base][0]
     end

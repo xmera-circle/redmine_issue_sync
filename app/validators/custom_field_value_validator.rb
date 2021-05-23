@@ -1,4 +1,6 @@
 class CustomFieldValueValidator < ActiveModel::EachValidator
+  include Redmine::I18n
+
   def validate_each(record, attribute, value)
     #
   end
@@ -15,12 +17,6 @@ class CustomFieldValueValidator < ActiveModel::EachValidator
 
   def filter?(value)
     criteria.valid?(value)
-    # values = criteria.possible_values
-    # if value.to_i > 0
-    #   values.map(&:id).include? value.to_i
-    # else
-    #   values.map(&:name).include? value
-    # end
   end
 
   def check_filter
