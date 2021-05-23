@@ -30,7 +30,7 @@ module RedmineIssueSync
              :custom_fields, :custom_fields_trackers, :custom_values
 
     def setup
-      Setting.plugin_redmine_issue_sync[:allocation_field] = '1'
+      Setting.plugin_redmine_issue_sync[:custom_field] = '1'
       Setting.plugin_redmine_issue_sync[:source_project] = '4'
       @manager = User.find(2)
       @manager_role = Role.find_by_name('Manager')
@@ -38,6 +38,7 @@ module RedmineIssueSync
       @manager_role.add_permission! :sync_issues
       @project = Project.find(1)
       @project.enable_module! :issue_sync
+      @sync_param = @project.create_sync_param(root: false, filter: [''])
       log_user('jsmith', 'jsmith')
     end
 
@@ -59,9 +60,9 @@ module RedmineIssueSync
     end
 
     test 'should update settings' do
-      assert_not SynchronisationSetting.find_by(project_id: @project.id)
+      assert @sync_param.filter.empty? && @sync_param.root.false?
       post sync_issues_settings_path(@project),
-           params: { synchronisation_setting: { root: '1', filter: 'MySQL' } }
+           params: { synchronisation_setting: { root: '1', filter: ['MySQL'] } }
       assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
       settings = SynchronisationSetting.find_by(project_id: @project.id)
       assert settings.root
@@ -76,7 +77,7 @@ module RedmineIssueSync
     end
 
     test 'should sychronise if user allowed to' do
-      get synchronise_project_issues_path(@project), xhr: true
+      get new_project_sync_issue_path(@project), xhr: true
       assert_response :success
     end
   end

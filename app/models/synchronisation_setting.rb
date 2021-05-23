@@ -21,7 +21,7 @@
 class SynchronisationSetting < ActiveRecord::Base
   include Redmine::SafeAttributes
 
-  belongs_to :project
+  belongs_to :project, inverse_of: :sync_param
   serialize :settings, Hash
 
   validates :filter, custom_field_value: true

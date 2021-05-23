@@ -46,7 +46,7 @@
       <%= select_tag 'synchronisation_setting[filter]',
                      options_for_custom_field_values_select(
                       custom_field: catalogue.custom_field,
-                      selected: @project.sync_params.filter
+                      selected: @project.sync_param.filter
                      ),
                      multiple: true,
                      include_blank: true %>

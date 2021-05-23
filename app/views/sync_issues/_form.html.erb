@@ -1,7 +1,7 @@
 <%= form_for @synchronisation, url: project_sync_issues_path(@project), remote: true do |f| %>
   <%= error_messages_for @synchronisation %>
-
   <%= render_flash_messages %>
+  
   <% if @synchronisation.valid? %>
     <div style='text-align:center' >
       <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>

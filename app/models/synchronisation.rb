@@ -23,7 +23,7 @@ class Synchronisation < ActiveRecord::Base
   belongs_to :target, class_name: 'Project', foreign_key: :target_id
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
 
-  validate :requirements
+  #validate :requirements
 
   default_scope { order(created_at: :asc) }
 
@@ -37,15 +37,15 @@ class Synchronisation < ActiveRecord::Base
 
   def initialize(attributes = nil, *args)
     @issues = attributes.delete(:issues)
+    @scope = attributes.delete(:scope)
     super(attributes)
-    @scope = SynchronisationScope.new(target)
     @global_settings = PluginSetting.new
-    @target_settings = target.sync_params
+    @target_settings = target.sync_param
   end
 
   def exec
     Synchronisation.transaction do
-      #prepare_target
+      prepare_target
       mapping = copy_issues
       log_issues(mapping)
       create_issue_relations(mapping)
@@ -96,7 +96,7 @@ class Synchronisation < ActiveRecord::Base
     errors.add(:base, @global_settings.errors.full_messages) unless @global_settings.valid?
     # Target and included project settings if any
     projects.to_a.prepend(target).each do |project|
-      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_params
+      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
     end
   end
 

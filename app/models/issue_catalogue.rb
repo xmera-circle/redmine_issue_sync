@@ -53,7 +53,7 @@ class IssueCatalogue
 
   def values
     projects.map do |project|
-      project.sync_params.filter
+      project.sync_param.filter
     end
   end
 

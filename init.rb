@@ -35,7 +35,7 @@ Redmine::Plugin.register :redmine_issue_sync do
 
   project_module :issue_sync do
     permission :sync_issues,
-               { sync_issues: %w[new create show] },
+               { sync_issues: %w[new create] },
                require: :member
     permission :manage_sync_settings,
                { sync_issues: %w[settings] },

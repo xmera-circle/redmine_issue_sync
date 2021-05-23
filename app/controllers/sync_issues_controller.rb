@@ -26,14 +26,20 @@ class SyncIssuesController < ApplicationController
   helper :sync_params
 
   def new
-    @synchronisation = @project.synchronise(IssueCatalogue.new(sync_params))
+    @synchronisation = @project.synchronise(
+      issues: IssueCatalogue.new(sync_param),
+      scope: SynchronisationScope.new(@project)
+    )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
   end
 
   def create
-    @synchronisation = @project.synchronise(IssueCatalogue.new(sync_params))
+    @synchronisation = @project.synchronise(
+      issues: IssueCatalogue.new(sync_param),
+      scope: SynchronisationScope.new(@project)
+    )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
@@ -47,9 +53,9 @@ class SyncIssuesController < ApplicationController
 
   def settings
     if request.post?
-      sync_params.safe_attributes = params[:synchronisation_setting]
+      sync_param.safe_attributes = params[:synchronisation_setting]
 
-      if sync_params.save
+      if sync_param.save
         respond_to do |format|
           format.html do
             flash[:notice] = l(:notice_successful_update)
@@ -70,7 +76,7 @@ class SyncIssuesController < ApplicationController
 
   private
 
-  def sync_params
-    @sync_params ||= @project.sync_params
+  def sync_param
+    @sync_param ||= @project.sync_param
   end
 end
