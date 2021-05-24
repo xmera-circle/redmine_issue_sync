@@ -15,13 +15,12 @@ de:
   label_issue_catalogue: Ticket-Katalog
   text_source_project_setting: Projekt, das den Ticket-Katalog beinhaltet.
   text_source_tracker_setting: Optionales Kriterium zur Bestimmung des Kataloges.
-  label_allocation_field: Zuordnungsfeld
   text_custom_field_setting: Weiteres optionales Kriterium zur Bestimmung des Kataloges.
-  field_filter: Zuordnungskriterium
-  text_filter: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Zuordnungskriterium berücksichtigt. 
+  field_filter: Wert
+  text_filter: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Wert berücksichtigt. 
     Jedes Projekt wird mit seinem eigenen Kriterium berücksichtigt.
   error_is_no_filter: "%{value} ist nicht gültig."
-  error_is_not_present: "%{value} muss ausgefüllt werden."
+  error_is_not_present: "%{value} muss auswählt werden."
   error_is_missing: "%{value} muss ausgefüllt werden."
   notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 
   error_no_settings: "%{value} hat keine Einstellungen."

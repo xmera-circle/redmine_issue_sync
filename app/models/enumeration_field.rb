@@ -41,5 +41,4 @@ class EnumerationField
   def valid?(value)
     possible_values.map(&:id).include? value.to_i
   end
-
 end

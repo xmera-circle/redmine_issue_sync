@@ -16,9 +16,9 @@ en:
   text_source_project_setting: Project containing the issue catalogue.
   text_source_tracker_settings: Optional selection criteria for catalogue items.
   text_custom_field_setting: Further optional selection criteria for catalogue items.
-  field_filter: Allocation criterion
-  text_filter: Only those issues fulfilling this criteria will be synchronised for this project. 
-    Each project included in a synchronisation should have its own criteria.
+  field_filter: Value
+  text_filter: Only those issues having this value will be synchronised for this project. 
+    Each project included in a synchronisation should have its own values.
   error_is_no_filter: "%{value} is not valid."
   error_is_not_present: "%{value} needs to be selected."
   error_is_missing: "%{value} needs to be given."
