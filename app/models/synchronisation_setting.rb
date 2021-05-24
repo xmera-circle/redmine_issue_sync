@@ -21,10 +21,10 @@
 class SynchronisationSetting < ActiveRecord::Base
   include Redmine::SafeAttributes
 
-  belongs_to :project, inverse_of: :sync_param
+  belongs_to :project, autosave: true, inverse_of: :sync_param
   serialize :settings, Hash
 
-  validates :filter, custom_field_value: true
+  validates :filter, custom_field_value: true, if: PluginSetting.new.custom_field
   validates :root, boolean: true
 
   delegate :cast, to: 'ActiveModel::Type::Boolean.new'

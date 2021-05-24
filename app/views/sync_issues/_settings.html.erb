@@ -20,8 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<%= error_messages_for 'synchronisation_setting' %>
-
 <%= form_tag(sync_issues_settings_path(@project), method: :post, class: "tabular") do %>
   <%= tag.div class: 'box tabular' do %>
 
@@ -34,7 +32,6 @@
       <% end %>
     <% end %>
 
-
     <% catalogue = IssueCatalogue.new %>
     <%= tag.p do %>
       <%= tag.label "#{l(:label_tracker_plural)}: " %>
@@ -44,7 +41,8 @@
     <%= tag.p do %>
       <%= tag.span catalogue.custom_field.name %>
       <%= content_tag :label, "#{l(:field_possible_values)}: " %>
-      <%= select_tag 'synchronisation_setting[filter]',
+      <%= hidden_field_tag('synchronisation_setting[filter][]', '') %>
+      <%= select_tag 'synchronisation_setting[filter][]',
                      options_for_custom_field_values_select(
                       custom_field: catalogue.custom_field,
                       selected: @project.sync_param.filter

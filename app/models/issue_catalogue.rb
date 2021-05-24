@@ -54,15 +54,15 @@ class IssueCatalogue
 
   def values
     projects.map do |project|
-      project.sync_param.filter
+      project.sync_param&.filter
     end
+  end
+
+  def projects
+    root_project? ? project.children : [project]
   end
 
   private
 
   attr_reader :field_object
-
-  def projects
-    root_project? ? project.children : [project]
-  end
 end

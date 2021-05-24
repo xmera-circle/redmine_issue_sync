@@ -23,13 +23,13 @@ class Synchronisation < ActiveRecord::Base
   belongs_to :target, class_name: 'Project', foreign_key: :target_id
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
 
-  #validate :requirements
+  validate :requirements
 
   default_scope { order(created_at: :asc) }
 
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
-  delegate :trackers, :custom_field, :source, to: :@global_settings
+  delegate :trackers, :custom_field, :source, to: :@plugin_settings
   delegate :projects, :values_by_name, :content_ids, to: :@issues
   alias criteria_names values_by_name
 
@@ -38,8 +38,8 @@ class Synchronisation < ActiveRecord::Base
   def initialize(attributes = nil, *_args)
     @issues = attributes.delete(:issues)
     super(attributes)
-    @global_settings = PluginSetting.new
-    @target_settings = target.sync_param
+    @plugin_settings = PluginSetting.new
+    @sync_param = target.sync_param
   end
 
   def exec
@@ -61,6 +61,8 @@ class Synchronisation < ActiveRecord::Base
   end
 
   private
+
+  attr_reader :plugin_settings
 
   def prepare_target
     # Enable required tracker and custom_fields if necessary
@@ -92,15 +94,21 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def requirements
-    # Global settings
-    errors.add(:base, @global_settings.errors.full_messages) unless @global_settings.valid?
-    # Target and included project settings if any
-    projects.to_a.prepend(target).each do |project|
-      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
-    end
+    validate_plugin_settings
+    validate_subproject_settings
   end
 
   def synched_items
     self.class.history(target).map(&:items).reject(&:empty?)
+  end
+
+  def validate_plugin_settings
+    errors.add(:base, plugin_settings.errors.full_messages) unless plugin_settings.valid?
+  end
+
+  def validate_subproject_settings
+    projects.to_a.prepend(target).each do |project|
+      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
+    end
   end
 end

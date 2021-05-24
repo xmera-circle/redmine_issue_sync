@@ -21,6 +21,7 @@
 class SyncIssuesController < ApplicationController
   before_action :find_project_by_project_id, except: %w[settings]
   before_action :find_project, only: %w[settings]
+  before_action :find_or_create_settings, only: %w[settings]
   before_action :authorize
 
   helper :sync_params
@@ -58,28 +59,27 @@ class SyncIssuesController < ApplicationController
 
   def settings
     if request.post?
-      sync_param.safe_attributes = params[:synchronisation_setting]
+      @synchronisation_setting.safe_attributes = params[:synchronisation_setting]
 
-      if sync_param.save
-        respond_to do |format|
-          format.html do
-            flash[:notice] = l(:notice_successful_update)
-            redirect_to settings_project_path(@project, tab: 'sync_issues')
-          end
-        end
+      if @synchronisation_setting.save
+        flash[:notice] = l(:notice_successful_update)
       else
-        respond_to do |format|
-          format.html do
-            render action: 'settings'
-          end
-        end
+        flash[:error] = @synchronisation_setting.errors.full_messages.join(', ')
       end
+      redirect_to settings_project_path(@project, tab: 'sync_issues')
     else
       render action: 'settings'
     end
   end
 
   private
+
+  def find_or_create_settings
+    @synchronisation_setting =
+      SynchronisationSetting.find_or_create_by(project_id: @project.id)
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
 
   def sync_param
     @sync_param ||= @project.sync_param

@@ -22,7 +22,6 @@ class PluginSetting
   include ActiveModel::Validations
 
   validates :source, presence: true
-  validate :check_criteria
 
   def initialize
     @setting = Setting.plugin_redmine_issue_sync
@@ -68,15 +67,6 @@ class PluginSetting
   end
 
   private
-
-  def check_criteria
-    errors.add(:base, 'Zuordnungskriterien fehlen') unless criteria?
-  end
-
-  def criteria?
-    # tracker_ids.any?(&:positive?) || custom_field_id.positive?
-    custom_field_id.positive?
-  end
 
   def find_source_project
     Project.find_by(id: source_id) || NullProject.new

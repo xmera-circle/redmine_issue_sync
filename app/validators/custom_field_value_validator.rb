@@ -2,21 +2,20 @@ class CustomFieldValueValidator < ActiveModel::EachValidator
   include Redmine::I18n
 
   def validate_each(record, attribute, value)
-    #
+    return true if valid?(value)
+
+    return record.errors.add(:base, l(:error_is_not_present, value: l("field_#{attribute}"))) if value.all?(&:blank?)
+
+    record.errors.add(:base, l(:error_is_no_filter, value: l("field_#{attribute}")))
   end
 
-  def validates_filter(value)
-    value = value[:filter]
-    label = l(:field_filter)
-    return true if filter?(value)
-
-    return errors.add(:base, l(:error_is_not_present, value: label)) if value.blank?
-
-    errors.add(:base, l(:error_is_no_filter, value: label))
+  def possible_values
+    field_object = FieldObject.new(PluginSetting.new.custom_field).instance
+    field_object.possible_values
   end
 
-  def filter?(value)
-    criteria.valid?(value)
+  def valid?(value)
+    (possible_values.map(&:id).map(&:to_s) & value).present?
   end
 
   def check_filter
