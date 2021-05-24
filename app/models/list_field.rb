@@ -34,7 +34,7 @@ class ListField
   def values_by_name(names)
     return unless names
 
-    entries = possible_values.find { |value| names.include? value.name }
+    entries = possible_values.select { |value| names.include? value.name }
     entries&.map(&:name)
   end
 

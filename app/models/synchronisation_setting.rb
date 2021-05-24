@@ -35,7 +35,7 @@ class SynchronisationSetting < ActiveRecord::Base
   )
 
   def filter
-    settings[:filter]
+    settings[:filter]&.reject(&:blank?)
   end
 
   def filter=(value)

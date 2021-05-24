@@ -40,7 +40,6 @@
       <%= tag.label "#{l(:label_tracker_plural)}: " %>
       <%= catalogue.trackers.map(&:name).join(', ') %>
     <% end %>
-    
     <%= tag.p do %>
       <%= tag.span catalogue.custom_field.name %>
       <%= content_tag :label, "#{l(:field_possible_values)}: " %>

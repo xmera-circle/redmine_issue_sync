@@ -38,7 +38,7 @@ class SyncScope
   def values
     projects.map do |project|
       project.sync_param&.filter
-    end.flatten.reject!(&:blank?)
+    end.flatten
   end
 
   private
