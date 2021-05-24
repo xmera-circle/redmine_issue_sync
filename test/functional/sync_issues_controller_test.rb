@@ -60,7 +60,7 @@ module RedmineIssueSync
     end
 
     test 'should update settings' do
-      assert @sync_param.filter.any?(&:empty?) && @sync_param.root.is_a?(FalseClass)
+      assert @sync_param.filter.blank? && @sync_param.root.is_a?(FalseClass)
       post sync_issues_settings_path(@project),
            params: { synchronisation_setting: { root: '1', filter: ['MySQL'] } }
       assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
@@ -69,12 +69,11 @@ module RedmineIssueSync
     end
 
     test 'should render errors when setting invalid' do
-      skip
       post sync_issues_settings_path(@project),
-           params: { synchronisation_setting: { root: 'wrong' } }
-      assert_response :success
-      assert_select_error("#{l(:error_is_no_boolean, value: l(:field_root))}
-#{l(:error_is_not_present, value: l(:field_filter))}")
+           params: { synchronisation_setting: { filter: ['wrong'] } }
+      assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
+      follow_redirect!
+      assert_select '#flash_error'
     end
 
     test 'should sychronise if user allowed to' do

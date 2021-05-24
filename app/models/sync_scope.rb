@@ -24,9 +24,7 @@ class SyncScope
   extend Forwardable
 
   def_delegators :@project, :sync_param
-  def_delegators :sync_param, :root
-  alias root_project? root
-
+  
   def initialize(project)
     @project = project
   end
@@ -47,5 +45,9 @@ class SyncScope
 
   def subprojects
     project.children.select { |child| child.module_enabled? :issue_sync }
+  end
+
+  def root_project?
+    sync_param&.root
   end
 end

@@ -48,8 +48,7 @@ module RedmineIssueSync
     end
 
     test 'should not validate filter if wrong' do
-      skip
-      settings = SynchronisationSetting.new(settings: { root: '1', filter: 'wrong' })
+      settings = SynchronisationSetting.new(settings: { root: '1', filter: ['wrong'] })
       assert_not settings.valid?
       assert_equal l(:error_is_no_filter, value: l(:field_filter)), settings.errors[:base][0]
     end

@@ -24,7 +24,7 @@ class PluginSetting
   validates :source, presence: true
 
   def initialize
-    @setting = Setting.plugin_redmine_issue_sync
+    @setting = plugin_settings
   end
 
   def source
@@ -37,7 +37,7 @@ class PluginSetting
   # @return [Integer] Is 0 if string is empty.
   #
   def source_id
-    @setting.fetch(:source_project).to_i
+    setting.fetch(:source_project, '').to_i
   end
 
   def trackers
@@ -50,7 +50,7 @@ class PluginSetting
   # @return [Integer] Is 0 if string is empty.
   #
   def tracker_ids
-    @setting.fetch(:source_trackers).map(&:to_i)
+    setting.fetch(:source_trackers).map(&:to_i)
   end
 
   ##
@@ -63,10 +63,12 @@ class PluginSetting
   end
 
   def custom_field_id
-    @setting.fetch(:custom_field).to_i
+    setting.fetch(:custom_field, '').to_i
   end
 
   private
+
+  attr_reader :setting
 
   def find_source_project
     Project.find_by(id: source_id) || NullProject.new
@@ -80,5 +82,9 @@ class PluginSetting
     return [NullTracker.new] unless tracker_ids.any?(&:positive?)
 
     Tracker.where(id: tracker_ids)
+  end
+
+  def plugin_settings
+    Setting.plugin_redmine_issue_sync
   end
 end

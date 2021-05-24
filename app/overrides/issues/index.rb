@@ -22,7 +22,7 @@
 Deface::Override.new(
   virtual_path: 'issues/index',
   name: 'add-issue-sync-button',
-  replace: "div.contextual",
+  replace: 'div.contextual',
   partial: 'issues/index_action_menu',
   original: '',
   namespaced: true
