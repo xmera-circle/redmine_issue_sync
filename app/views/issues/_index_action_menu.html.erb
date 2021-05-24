@@ -36,7 +36,7 @@
     <%= link_to_if_authorized l(:label_settings),
               {:controller => 'projects', :action => 'settings', :id => @project, :tab => 'issues'},
               :class => 'icon icon-settings' if User.current.allowed_to?(:manage_categories, @project) %>
-    <% if Redmine::Plugin.installed?(:issue_sync) && @project.module_enabled?(:issue_sync) %>
+    <% if Redmine::Plugin.installed?(:redmine_issue_sync) && @project.module_enabled?(:issue_sync) %>
       <%= link_to l(:button_synchronise), new_project_sync_issue_path(@project), class: 'icon icon-reload', remote: true, method: :get %>
     <% end %>
   <% end %>
