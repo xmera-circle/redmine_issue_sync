@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class Entry
-  attr_accessor :name, :id
+  attr_reader :name, :id
 
   def initialize(name: nil, id: nil)
     @name = name

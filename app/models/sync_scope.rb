@@ -20,30 +20,32 @@
 
 require 'forwardable'
 
-class IssueCatalogue
+class SyncScope
   extend Forwardable
 
-  def_delegators :@setting, :source, :tracker_ids, :trackers, :custom_field_id, :custom_field
-  def_delegators :source, :issues
-  def_delegators :@params, :filter, :project, :root
+  def_delegators :@project, :sync_param
+  def_delegators :sync_param, :root
   alias root_project? root
 
-  def initialize(params = nil)
-    @params = params
-    @setting = PluginSetting.new
+  def initialize(project)
+    @project = project
   end
 
-  ##
-  # A list of issues of the source project filtered by the given trackers.
-  #
-  def content(values)
-    issues
-      .joins(:custom_values)
-      .where(custom_values: { custom_field_id: custom_field_id, value: values })
-      .where(tracker_id: tracker_ids)
+  def projects
+    root_project? ? subprojects.prepend(project) : [project]
   end
 
-  def content_ids(values)
-    content(values).pluck(:id)
+  def values
+    projects.map do |project|
+      project.sync_param&.filter
+    end.flatten.reject!(&:blank?)
+  end
+
+  private
+
+  attr_reader :project
+
+  def subprojects
+    project.children.select { |child| child.module_enabled? :issue_sync }
   end
 end

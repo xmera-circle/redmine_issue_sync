@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class Synchronisation < ActiveRecord::Base
+  include NamedValues
+
   belongs_to :user
   belongs_to :target, class_name: 'Project', foreign_key: :target_id
   has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
@@ -30,13 +32,14 @@ class Synchronisation < ActiveRecord::Base
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :trackers, :custom_field, :source, to: :@plugin_settings
-  delegate :projects, :values_by_name, :content_ids, to: :@issues
-  alias criteria_names values_by_name
+  delegate :content_ids, to: :@issues
+  delegate :projects, :values, to: :@scope
 
-  attr_reader :issues
+  attr_reader :issues, :scope
 
   def initialize(attributes = nil, *_args)
     @issues = attributes.delete(:issues)
+    @scope = attributes.delete(:scope)
     super(attributes)
     @plugin_settings = PluginSetting.new
     @sync_param = target.sync_param
@@ -47,7 +50,6 @@ class Synchronisation < ActiveRecord::Base
       prepare_target
       mapping = copy_issues
       log_issues(mapping)
-      create_issue_relations(mapping)
       save
     end
   end
@@ -60,6 +62,10 @@ class Synchronisation < ActiveRecord::Base
     backlog_ids.count
   end
 
+  def value_names
+    names_of(values, custom_field)
+  end
+
   private
 
   attr_reader :plugin_settings
@@ -69,7 +75,7 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def backlog_ids
-    @backlog_ids ||= content_ids - copied_ids
+    @backlog_ids ||= content_ids(values) - copied_ids
   end
 
   def copied_ids
@@ -85,12 +91,9 @@ class Synchronisation < ActiveRecord::Base
 
   def log_issues(mapping)
     mapping.each_pair do |from_id, to_issue|
-      items << SynchronisationItem.new(from_issue_id: from_id, to_issue_id: to_issue.id)
+      items << SynchronisationItem.new(from_issue_id: from_id,
+                                       to_issue_id: to_issue.id)
     end
-  end
-
-  def create_issue_relations(mapping)
-    # create the relations similar to Project#copy_issues
   end
 
   def requirements

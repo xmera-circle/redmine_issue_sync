@@ -28,22 +28,24 @@ class SyncIssuesController < ApplicationController
 
   def new
     @synchronisation = @project.synchronise(
-      issues: IssueCatalogue.new(sync_param)
+      issues: IssueCatalogue.new(sync_param),
+      scope: SyncScope.new(@project)
     )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
-    @criteria_names = @synchronisation.criteria_names
+    @value_names = @synchronisation.value_names
   end
 
   def create
     @synchronisation = @project.synchronise(
-      issues: IssueCatalogue.new(sync_param)
+      issues: IssueCatalogue.new(sync_param),
+      scope: SyncScope.new(@project)
     )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
-    @criteria_names = @synchronisation.criteria_names
+    @value_names = @synchronisation.value_names
 
     if @synchronisation.exec
       flash[:notice] = l(:notice_successful_synchronisation)

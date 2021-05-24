@@ -31,7 +31,7 @@ class EnumerationField
     end
   end
 
-  def value_by_name(ids)
+  def values_by_name(ids)
     return unless ids
 
     entries = possible_values.select { |value| ids.include? value.id.to_s }
@@ -41,4 +41,5 @@ class EnumerationField
   def valid?(value)
     possible_values.map(&:id).include? value.to_i
   end
+
 end

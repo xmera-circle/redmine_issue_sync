@@ -18,32 +18,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require 'forwardable'
+module NamedValues
+  extend ActiveSupport::Concern
 
-class IssueCatalogue
-  extend Forwardable
-
-  def_delegators :@setting, :source, :tracker_ids, :trackers, :custom_field_id, :custom_field
-  def_delegators :source, :issues
-  def_delegators :@params, :filter, :project, :root
-  alias root_project? root
-
-  def initialize(params = nil)
-    @params = params
-    @setting = PluginSetting.new
+  def names_of(values, field)
+    instance_of(field).values_by_name(values)
   end
 
-  ##
-  # A list of issues of the source project filtered by the given trackers.
-  #
-  def content(values)
-    issues
-      .joins(:custom_values)
-      .where(custom_values: { custom_field_id: custom_field_id, value: values })
-      .where(tracker_id: tracker_ids)
-  end
+  module_function
 
-  def content_ids(values)
-    content(values).pluck(:id)
+  def instance_of(field)
+    "#{field.field_format.capitalize}Field".constantize.new(field)
   end
 end

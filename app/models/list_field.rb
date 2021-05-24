@@ -31,7 +31,7 @@ class ListField
     end
   end
 
-  def value_by_name(names)
+  def values_by_name(names)
     return unless names
 
     entries = possible_values.find { |value| names.include? value.name }
