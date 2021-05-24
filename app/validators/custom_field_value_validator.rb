@@ -2,7 +2,7 @@ class CustomFieldValueValidator < ActiveModel::EachValidator
   include Redmine::I18n
 
   def validate_each(record, attribute, value)
-    return true if valid?(value)
+    return true if value.blank? || valid?(value)
 
     return record.errors.add(:base, l(:error_is_not_present, value: l("field_#{attribute}"))) if value.all?(&:blank?)
 

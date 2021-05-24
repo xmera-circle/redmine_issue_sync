@@ -75,8 +75,8 @@ class SyncIssuesController < ApplicationController
   private
 
   def find_or_create_settings
-    @synchronisation_setting =
-      SynchronisationSetting.find_or_create_by(project_id: @project.id)
+    @synchronisation_setting ||=
+      SynchronisationSetting.find_or_initialize_by(project_id: @project.id)
   rescue ActiveRecord::RecordNotFound
     render_404
   end

@@ -20,13 +20,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
+<% @synchronisation_setting ||= 
+    SynchronisationSetting.find_or_initialize_by(project_id: @project.id) %>
+
 <%= form_tag(sync_issues_settings_path(@project), method: :post, class: "tabular") do %>
   <%= tag.div class: 'box tabular' do %>
 
     <%= tag.p do %>
       <%= content_tag :label, l(:field_root) %>
       <%= hidden_field_tag('synchronisation_setting[root]', 'false') %>
-      <%= check_box_tag 'synchronisation_setting[root]', 'true', @project.sync_param.root %>
+      <%= check_box_tag 'synchronisation_setting[root]', 'true', @synchronisation_setting.root %>
       <%= tag.em class: 'info' do %>
         <%= l(:text_root_field_setting) %>
       <% end %>
@@ -45,7 +48,7 @@
       <%= select_tag 'synchronisation_setting[filter][]',
                      options_for_custom_field_values_select(
                       custom_field: catalogue.custom_field,
-                      selected: @project.sync_param.filter
+                      selected: @synchronisation_setting.filter
                      ),
                      multiple: true,
                      include_blank: true %>
