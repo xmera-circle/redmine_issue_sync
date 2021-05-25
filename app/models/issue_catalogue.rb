@@ -37,10 +37,26 @@ class IssueCatalogue
   # A list of issues of the source project filtered by the given trackers.
   #
   def content(values)
+    # issues
+    #   .joins(:custom_values)
+    #   .where(custom_values: { custom_field_id: custom_field_id, value: values })
+    #   .where(tracker_id: tracker_ids)
+    queried_issues = query_custom_values(values)
+    query_trackers(queried_issues)
+  end
+
+  def query_custom_values(values)
+    return issues if values.blank?
+
     issues
       .joins(:custom_values)
       .where(custom_values: { custom_field_id: custom_field_id, value: values })
-      .where(tracker_id: tracker_ids)
+  end
+
+  def query_trackers(queried_issues)
+    return queried_issues unless tracker_ids.all?(&:positive?)
+
+    queried_issues.where(tracker_id: tracker_ids)
   end
 
   def content_ids(values)

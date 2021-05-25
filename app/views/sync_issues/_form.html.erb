@@ -9,7 +9,7 @@
       <p><%= "#{@field.name}: #{@value_names.join(', ')}" %>
       <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
       <p>
-        <%= submit_tag l(:button_synchronise) if @synchronisation.backlog_count.positive? %>
+        <%= submit_tag(l(:button_synchronise),  data: { disable_with: l(:label_synchronising) }) if @synchronisation.backlog_count.positive? %>
         <%= link_to_function l(:button_cancel), "hideModal(this);" %>
       </p>    
     </div>

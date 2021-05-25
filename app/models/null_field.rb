@@ -18,10 +18,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class NullTracker
+class NullField
   include Redmine::I18n
 
-  def name
-    l(:label_blank_value)
+  attr_reader :custom_field
+
+  def initialize(custom_field)
+    @custom_field = custom_field
+  end
+
+  def possible_values
+    [Entry.new(name: l(:label_blank_value), id: '')]
+  end
+
+  def values_by_name(ids)
+    possible_values.map(&:name)
+  end
+
+  def valid?(value)
+    true
   end
 end

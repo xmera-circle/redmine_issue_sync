@@ -25,3 +25,8 @@ de:
   notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 
   error_no_settings: "%{value} hat keine Einstellungen."
   notice_successful_synchronisation: Erfolgreich synchronisiert.
+  label_synchronising: Synchronisiere ...
+  text_reset_custom_field_values: 'Wenn ein anderes Feld ausgewählt wird, dann alle Werte für das vorherige eigene Feld in den entsprechenden Projekten '
+  label_sync_log: Synchronisationsprotokoll
+  text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden. Jedes synchronsierte Ticket wird daher dokumentiert.
+  text_reset_sync_log: 'Protokoll jetzt'

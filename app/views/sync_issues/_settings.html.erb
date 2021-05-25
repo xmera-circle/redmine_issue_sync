@@ -36,26 +36,29 @@
     <% end %>
 
     <% catalogue = IssueCatalogue.new %>
-    <%= tag.p do %>
-      <%= tag.label "#{l(:label_tracker_plural)}: " %>
-      <%= catalogue.trackers.map(&:name).join(', ') %>
-    <% end %>
-    <%= tag.p do %>
-      <%= tag.span catalogue.custom_field.name %>
-      <%= content_tag :label, "#{l(:field_possible_values)}: " %>
-      <%= hidden_field_tag('synchronisation_setting[filter][]', '') %>
-      <%= select_tag 'synchronisation_setting[filter][]',
-                     options_for_custom_field_values_select(
-                      custom_field: catalogue.custom_field,
-                      selected: @synchronisation_setting.filter
-                     ),
-                     multiple: true,
-                     include_blank: true %>
-      <%= tag.em class: 'info' do %>
-        <%= l(:text_filter) %>
+    <% unless catalogue.trackers.first.is_a? NullTracker %>
+      <%= tag.p do %>
+        <%= tag.label "#{l(:label_tracker_plural)}: " %>
+        <%= catalogue.trackers.map(&:name).join(', ') %>
       <% end %>
     <% end %>
-
+    <% unless catalogue.custom_field.is_a? NullCustomField %>
+      <%= tag.p do %>
+        <%= tag.span catalogue.custom_field.name %>
+        <%= content_tag :label, "#{l(:field_possible_values)}: " %>
+        <%= hidden_field_tag('synchronisation_setting[filter][]', '') %>
+        <%= select_tag 'synchronisation_setting[filter][]',
+                      options_for_custom_field_values_select(
+                        custom_field: catalogue.custom_field,
+                        selected: @synchronisation_setting.filter
+                      ),
+                      multiple: true,
+                      include_blank: true %>
+        <%= tag.em class: 'info' do %>
+          <%= l(:text_filter) %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
   <%= submit_tag l(:button_save) %>
 <% end %>

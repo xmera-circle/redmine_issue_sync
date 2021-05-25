@@ -20,6 +20,8 @@
 
 module SyncParamsHelper
   def options_for_custom_field_values_select(custom_field:, selected:)
+    return if custom_field.name.blank?
+
     field_object = FieldObject.new(custom_field).instance
     values = field_object.possible_values.map(&:select_item)
     options_for_select(values, selected)

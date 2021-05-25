@@ -25,3 +25,9 @@ en:
   notice_location_of_allocation_field: ' (see plugin settings) '
   error_no_settings: "%{value} has no settings."
   notice_successful_synchronisation: Successfully synchronised.
+  label_synchronising: Synchronise ...
+  text_reset_custom_field_values: 'When another custom field will be choosen, delete all values of the previous field in the respective projects '
+  label_sync_log: Synchronisation Log
+  text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
+    Therefore, each synchronised issue will be documented.
+  text_reset_sync_log: 'Now log '

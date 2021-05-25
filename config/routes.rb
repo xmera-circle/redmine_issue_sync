@@ -28,4 +28,16 @@ RedmineApp::Application.routes.draw do
   resources :projects do
     resources :sync_issues, only: %w[new create show]
   end
+
+  match '/settings/plugin/redmine_issue_sync/reset_filter',
+        controller: 'sync_issues',
+        action: 'reset_filter',
+        via: %i[get],
+        as: 'reset_sync_issues_settings_filter'
+
+  match '/settings/plugin/redmine_issue_sync/reset_log',
+        controller: 'sync_issues',
+        action: 'reset_log',
+        via: %i[get],
+        as: 'reset_sync_issues_log'
 end

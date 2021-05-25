@@ -19,10 +19,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class SyncIssuesController < ApplicationController
-  before_action :find_project_by_project_id, except: %w[settings]
+  before_action :find_project_by_project_id, except: %w[settings reset_filter reset_log]
   before_action :find_project, only: %w[settings]
   before_action :find_or_create_settings, only: %w[settings]
-  before_action :authorize
+  before_action :authorize, except: %w[reset_filter reset_log]
+  before_action :authorize_global, only: %w[reset_filter reset_log]
 
   helper :sync_params
 
@@ -72,6 +73,16 @@ class SyncIssuesController < ApplicationController
     else
       render action: 'settings'
     end
+  end
+
+  def reset_filter
+    SynchronisationSetting.all.map(&:reset_filter) unless @synchronisation_setting
+    redirect_to plugin_settings_path(:redmine_issue_sync)
+  end
+
+  def reset_log
+    SynchronisationItem.all.delete_all
+    redirect_to plugin_settings_path(:redmine_issue_sync)
   end
 
   private

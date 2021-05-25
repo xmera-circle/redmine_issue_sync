@@ -67,4 +67,17 @@
   <%= tag.em class: 'info' do %>
     <%= l(:text_custom_field_setting) %>
   <% end %>
+  <%= tag.em class: 'info' do %>
+    <%= l(:text_reset_custom_field_values) %>
+    <%= link_to l(:button_clear).downcase, reset_sync_issues_settings_filter_path, method: :get, data: { confirm: l(:text_are_you_sure) } %>
+  <% end %>
+<% end %>
+
+<%= tag.fieldset do %>
+  <%= tag.legend l(:label_sync_log) %>
+  <%= tag.em class: 'info' do %>
+      <%= l(:text_explain_sync_log) %>
+      <%= l(:text_reset_sync_log) %>
+      <%= link_to l(:button_clear).downcase, reset_sync_issues_log_path, method: :get, data: { confirm: l(:text_are_you_sure) } %>
+    <% end %>
 <% end %>

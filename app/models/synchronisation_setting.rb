@@ -57,4 +57,9 @@ class SynchronisationSetting < ActiveRecord::Base
   def root=(value)
     settings[:root] = cast(value).to_s
   end
+
+  def reset_filter
+    settings[:filter] = ['']
+    save
+  end
 end

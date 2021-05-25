@@ -19,11 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class NullCustomField
+  include Redmine::I18n
+
   def name
-    ''
+    l(:label_custom_field)
   end
+
   def field_format
-    ''
+    'null'
   end
 
   def possible_values
@@ -32,5 +35,9 @@ class NullCustomField
 
   def enumerations
     CustomFieldEnumeration.none
+  end
+
+  def validate(_attribute)
+    true
   end
 end
