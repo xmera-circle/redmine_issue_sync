@@ -110,7 +110,7 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def validate_subproject_settings
-    projects.to_a.prepend(target).each do |project|
+    projects.each do |project|
       errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
     end
   end
