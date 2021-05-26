@@ -23,6 +23,7 @@ require 'redmine_issue_sync/extensions/project_patch'
 
 # Overrides
 require 'redmine_issue_sync/overrides/projects_helper_patch'
+require 'redmine_issue_sync/overrides/project_patch'
 
 ##
 # Define plugin default settings

@@ -20,12 +20,13 @@
 
 module RedmineIssueSync
   module Overrides
+    # Adds plugin tabs in project settings
     module ProjectsHelperPatch
       def project_settings_tabs
         tabs = super
         sync_issues_tabs = [
           { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-          partial: 'sync_issues/settings', label: :tab_sync_issues }
+            partial: 'sync_issues/settings', label: :tab_sync_issues }
         ]
         tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
         tabs
