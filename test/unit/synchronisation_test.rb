@@ -22,9 +22,42 @@ require File.expand_path('../test_helper', __dir__)
 
 module RedmineIssueSync
   class SynchronisationTest < ActiveSupport::TestCase
-    test 'should test the truth' do
-      assert true
+    include Redmine::I18n
+
+    fixtures :projects, :members, :member_roles, :roles, :users,
+             :custom_fields, :custom_fields_trackers, :custom_values
+
+    def setup
+      @plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Setting.define_plugin_setting(@plugin)
+      @setting = Setting.plugin_redmine_issue_sync
+      @setting[:custom_field] = '1'
+      @parent = Project.find(4)
+      @parent.enable_module! :issue_sync
+      filter = %w[MySQL PostgreSQL]
+      @parent.build_sync_param({ root: true, filter: filter })
+      @parent.save
     end
 
+    def teardown
+      @setting = nil
+      @plugin = nil
+    end
+
+    test 'should not synchronise children having system object as parent' do
+      project = child_project
+      project.enable_module! :issue_sync
+      sync_param = project.create_sync_param({ root: false, filter: ['MySQL'] })
+      synchronisation = project.synchronise(issues: IssueCatalogue.new(sync_param),
+                                            scope: SyncScope.new(project))
+      assert_not synchronisation.valid?
+      assert_equal l(:error_has_system_object, value: project.name), synchronisation.errors[:base][0]
+    end
+
+    private
+
+    def child_project
+      Project.generate_with_parent!(@parent)
+    end
   end
 end

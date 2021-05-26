@@ -31,3 +31,4 @@ en:
   text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
     Therefore, each synchronised issue will be documented.
   text_reset_sync_log: 'Now log '
+  error_has_system_object: "%{value} will be synchronised via its parent project."

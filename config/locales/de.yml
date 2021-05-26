@@ -30,3 +30,4 @@ de:
   label_sync_log: Synchronisationsprotokoll
   text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden. Jedes synchronsierte Ticket wird daher dokumentiert.
   text_reset_sync_log: 'Protokoll jetzt'
+  error_has_system_object: "%{value} wird über sein übergeordnetes Projekt synchronisiert."

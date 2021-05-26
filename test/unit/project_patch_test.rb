@@ -51,7 +51,7 @@ module RedmineIssueSync
       assert_equal filter, new_project.sync_param.filter
     end
 
-    private 
+    private
 
     def save_project(project)
       project.identifier ||= 'new-project'

@@ -61,7 +61,7 @@ module RedmineIssueSync
 
           # Store status and reopen locked/closed versions
           version_statuses = versions.reject(&:open?).map {|version| [version, version.status]}
-          version_statuses.each do |version, status|
+          version_statuses.each do |version, _status|
             version.update_attribute :status, 'open'
           end
 
@@ -103,7 +103,7 @@ module RedmineIssueSync
             end
             # Parent issue
             if issue.parent_id
-              if copied_parent = issues_map[issue.parent_id]
+              if (copied_parent = issues_map[issue.parent_id])
                 new_issue.parent_issue_id = copied_parent.id
               end
             end

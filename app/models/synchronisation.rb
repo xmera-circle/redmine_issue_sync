@@ -34,6 +34,7 @@ class Synchronisation < ActiveRecord::Base
   delegate :trackers, :custom_field, :source, to: :@plugin_settings
   delegate :content_ids, to: :@issues
   delegate :projects, :values, to: :@scope
+  delegate :parent, to: :target
 
   attr_reader :issues, :scope
 
@@ -47,7 +48,6 @@ class Synchronisation < ActiveRecord::Base
 
   def exec
     Synchronisation.transaction do
-      prepare_target
       mapping = copy_issues
       log_issues(mapping)
       save
@@ -69,10 +69,6 @@ class Synchronisation < ActiveRecord::Base
   private
 
   attr_reader :plugin_settings
-
-  def prepare_target
-    # Enable required tracker and custom_fields if necessary
-  end
 
   def backlog_ids
     @backlog_ids ||= content_ids(values) - copied_ids
@@ -97,6 +93,7 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def requirements
+    validate_target
     validate_plugin_settings
     validate_subproject_settings
   end
@@ -113,5 +110,18 @@ class Synchronisation < ActiveRecord::Base
     projects.each do |project|
       errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
     end
+  end
+
+  def validate_target
+    return unless target.child? || parent_system_object?
+
+    errors.add(:base, l(:error_has_system_object,
+                        value: target.name))
+  end
+
+  def parent_system_object?
+    return false unless parent
+
+    parent.sync_param.root
   end
 end
