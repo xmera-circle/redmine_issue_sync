@@ -25,7 +25,7 @@ module RedmineIssueSync
         base.include(InstanceMethods)
         base.class_eval do
           has_one :sync_param,
-                  class_name: 'SynchronisationSetting',
+                  class_name: 'SyncParam',
                   dependent: :destroy,
                   autosave: true,
                   inverse_of: :project
@@ -157,7 +157,7 @@ module RedmineIssueSync
               new_issue.relations_to << new_issue_relation
             end
           end
-          # Return issues map to be used for logging in SynchronisationItem
+          # Return issues map to be used for logging in SyncItem
           issues_map
         end
       end

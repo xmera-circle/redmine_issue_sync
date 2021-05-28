@@ -76,12 +76,12 @@ class SyncIssuesController < ApplicationController
   end
 
   def reset_filter
-    SynchronisationSetting.all.map(&:reset_filter) unless @synchronisation_setting
+    SyncParam.all.map(&:reset_filter) unless @synchronisation_setting
     redirect_to plugin_settings_path(:redmine_issue_sync)
   end
 
   def reset_log
-    SynchronisationItem.all.delete_all
+    SyncItem.all.delete_all
     redirect_to plugin_settings_path(:redmine_issue_sync)
   end
 
@@ -89,7 +89,7 @@ class SyncIssuesController < ApplicationController
 
   def find_or_create_settings
     @synchronisation_setting ||=
-      SynchronisationSetting.find_or_initialize_by(project_id: @project.id)
+      SyncParam.find_or_initialize_by(project_id: @project.id)
   rescue ActiveRecord::RecordNotFound
     render_404
   end

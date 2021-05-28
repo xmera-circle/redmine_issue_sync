@@ -21,7 +21,7 @@
 require File.expand_path('../test_helper', __dir__)
 
 module RedmineIssueSync
-  class SynchronisationSettingTest < ActiveSupport::TestCase
+  class SyncParamTest < ActiveSupport::TestCase
     include Redmine::I18n
 
     fixtures :projects, :members, :member_roles, :roles, :users,
@@ -40,28 +40,28 @@ module RedmineIssueSync
     end
 
     test 'should respond to filter' do
-      assert SynchronisationSetting.new.respond_to? :filter
+      assert SyncParam.new.respond_to? :filter
     end
 
     test 'should respond to root' do
-      assert SynchronisationSetting.new.respond_to? :root
+      assert SyncParam.new.respond_to? :root
     end
 
     test 'should not validate filter if wrong' do
-      settings = SynchronisationSetting.new(settings: { root: '1', filter: ['wrong'] })
+      settings = SyncParam.new(settings: { root: '1', filter: ['wrong'] })
       assert_not settings.valid?
       assert_equal l(:error_is_no_filter, value: l(:field_filter)), settings.errors[:base][0]
     end
 
     test 'should validate attributes' do
       assert_equal '1', @setting[:custom_field]
-      settings = SynchronisationSetting.new(settings: { root: '1', filter: ['MySQL'] })
+      settings = SyncParam.new(settings: { root: '1', filter: ['MySQL'] })
       assert settings.valid?, settings.errors.full_messages
     end
 
     test 'should not validate root with wrong value' do
       assert_equal '1', @setting[:custom_field]
-      settings = SynchronisationSetting.new(settings: { root: nil, filter: ['PostgreSQL'] })
+      settings = SyncParam.new(settings: { root: nil, filter: ['PostgreSQL'] })
       assert_not settings.valid?
       assert_equal l(:error_is_no_boolean, value: l(:field_root)), settings.errors[:base][0]
     end

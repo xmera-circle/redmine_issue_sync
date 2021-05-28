@@ -18,12 +18,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class CreateSynchronisationSettings < ActiveRecord::Migration[5.2]
-  def change
-    create_table :synchronisation_settings do |t|
-      t.integer :project_id, null: false
-      t.text :settings
-      t.timestamps null: false
-    end
-  end
+class SyncItem < ActiveRecord::Base
+  belongs_to :synchronisation
 end

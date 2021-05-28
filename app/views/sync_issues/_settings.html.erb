@@ -21,7 +21,7 @@
 %>
 
 <% @synchronisation_setting ||= 
-    SynchronisationSetting.find_or_initialize_by(project_id: @project.id) %>
+    SyncParam.find_or_initialize_by(project_id: @project.id) %>
 
 <%= form_tag(sync_issues_settings_path(@project), method: :post, class: "tabular") do %>
   <%= tag.div class: 'box tabular' do %>

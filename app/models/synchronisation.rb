@@ -23,7 +23,7 @@ class Synchronisation < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :target, class_name: 'Project', foreign_key: :target_id
-  has_many :items, class_name: 'SynchronisationItem', dependent: :destroy
+  has_many :items, class_name: 'SyncItem', dependent: :destroy
 
   validate :requirements
 
@@ -87,7 +87,7 @@ class Synchronisation < ActiveRecord::Base
 
   def log_issues(mapping)
     mapping.each_pair do |from_id, to_issue|
-      items << SynchronisationItem.new(from_issue_id: from_id,
+      items << SyncItem.new(from_issue_id: from_id,
                                        to_issue_id: to_issue.id)
     end
   end

@@ -18,9 +18,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class CreateSynchronisationItems < ActiveRecord::Migration[5.2]
+class CreateSyncItems < ActiveRecord::Migration[5.2]
   def change
-    create_table :synchronisation_items do |t|
+    create_table :sync_items do |t|
       t.integer :synchronisation_id, null: false
       t.integer :from_issue_id, null: false
       t.integer :to_issue_id, null: false

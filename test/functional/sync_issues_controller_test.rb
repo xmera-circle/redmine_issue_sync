@@ -72,7 +72,7 @@ module RedmineIssueSync
       post sync_issues_settings_path(@project),
            params: { synchronisation_setting: { root: '1', filter: ['MySQL'] } }
       assert_redirected_to settings_project_path(@project, tab: 'sync_issues')
-      settings = SynchronisationSetting.find_by(project_id: @project.id)
+      settings = SyncParam.find_by(project_id: @project.id)
       assert settings.root
     end
 
