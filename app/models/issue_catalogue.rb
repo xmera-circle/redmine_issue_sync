@@ -33,14 +33,20 @@ class IssueCatalogue
     @setting = PluginSetting.new
   end
 
+  def content_ids(values)
+    content(values).pluck(:id)
+  end
+
+  private
+
   ##
-  # A list of issues of the source project filtered by the given trackers.
+  # A list of issues of the source project filtered by the given trackers and
+  # custom field values.
+  #
+  # @param values [Array(String, Integer)] An array of custom field values which
+  #   can be the value given as name or id of an enumerable.
   #
   def content(values)
-    # issues
-    #   .joins(:custom_values)
-    #   .where(custom_values: { custom_field_id: custom_field_id, value: values })
-    #   .where(tracker_id: tracker_ids)
     queried_issues = query_custom_values(values)
     query_trackers(queried_issues)
   end
@@ -54,12 +60,14 @@ class IssueCatalogue
   end
 
   def query_trackers(queried_issues)
-    return queried_issues unless tracker_ids.all?(&:positive?)
+    return queried_issues unless tracker_ids?
 
     queried_issues.where(tracker_id: tracker_ids)
   end
 
-  def content_ids(values)
-    content(values).pluck(:id)
+  def tracker_ids?
+    return false if tracker_ids.size.zero?
+
+    tracker_ids.all?(&:positive?)
   end
 end

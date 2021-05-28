@@ -20,8 +20,9 @@
 
 class PluginSetting
   include ActiveModel::Validations
+  include Redmine::I18n
 
-  validates :source, presence: true
+  validate :validate_source_project
 
   def initialize
     @setting = plugin_settings
@@ -86,5 +87,9 @@ class PluginSetting
 
   def plugin_settings
     Setting.plugin_redmine_issue_sync
+  end
+
+  def validate_source_project
+    errors.add(:base, l(:error_synchronisation_impossible)) if source.is_a? NullProject
   end
 end

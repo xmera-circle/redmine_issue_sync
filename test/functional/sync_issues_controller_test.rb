@@ -27,11 +27,15 @@ module RedmineIssueSync
     include Redmine::I18n
 
     fixtures :projects, :members, :member_roles, :roles, :users,
-             :custom_fields, :custom_fields_trackers, :custom_values
+             :issues, :issue_statuses, :trackers, :projects_trackers,
+             :custom_fields, :custom_fields_trackers, :custom_values,
+             :custom_fields_projects, :enumerations
 
     def setup
-      Setting.plugin_redmine_issue_sync[:custom_field] = '1'
-      Setting.plugin_redmine_issue_sync[:source_project] = '4'
+      @setting = Setting.plugin_redmine_issue_sync
+      @setting[:source_project] = '4'
+      @setting[:source_trackers] = ['1']
+      @setting[:custom_field] = '1'
       @manager = User.find(2)
       @manager_role = Role.find_by_name('Manager')
       @manager_role.add_permission! :manage_sync_settings
@@ -40,6 +44,10 @@ module RedmineIssueSync
       @project.enable_module! :issue_sync
       @sync_param = @project.create_sync_param(root: false, filter: [''])
       log_user('jsmith', 'jsmith')
+    end
+
+    def teardown
+      @setting = nil
     end
 
     test 'should render settings when user allowed to' do
@@ -76,9 +84,59 @@ module RedmineIssueSync
       assert_select '#flash_error'
     end
 
-    test 'should sychronise if user allowed to' do
+    test 'should prepare synchronisation if user allowed to' do
       get new_project_sync_issue_path(@project), xhr: true
       assert_response :success
+    end
+
+    test 'should sychronise issues with reasonable settings' do
+      @project.sync_param.filter = ['MySQL']
+      @project.sync_param.save
+      source = Project.find(4)
+      create_issues(source)
+      assert_difference '@project.issues.count', 2 do
+        post project_sync_issues_path(@project)
+      end
+      assert_redirected_to project_issues_path(@project)
+    end
+
+    test 'should not synchronise when children have no settings' do
+      @project.sync_param.filter = ['MySQL']
+      @project.sync_param.root = true
+      @project.sync_param.save
+      source = Project.find(4)
+      create_issues(source)
+      child = child_project
+      child.enable_module! :issue_sync
+      assert_no_difference '@project.issues.count' do
+        post project_sync_issues_path(@project)
+      end
+      assert @project.syncs.blank?
+    end
+
+    private
+
+    def create_issues(source)
+      2.times do
+        issue = Issue.generate!(tracker_id: 1,
+                                status_id: 1,
+                                priority_id: 5)
+        issue.custom_field_values = { 1 => 'MySQL' }
+        issue.save
+        source.issues << issue
+      end
+      issue = Issue.generate!(tracker_id: 1,
+                              status_id: 1,
+                              priority_id: 5)
+      issue.custom_field_values = { 1 => 'PostgreSQL' }
+      issue.save
+      source.issues << issue
+
+      source.issues.map(&:reload)
+    end
+
+    def child_project
+      Project.generate_with_parent!(@project, { tracker_ids: ['1'] })
     end
   end
 end

@@ -50,7 +50,7 @@ class Synchronisation < ActiveRecord::Base
     Synchronisation.transaction do
       mapping = copy_issues
       log_issues(mapping)
-      save
+      save!
     end
   end
 
@@ -95,7 +95,7 @@ class Synchronisation < ActiveRecord::Base
   def requirements
     validate_target
     validate_plugin_settings
-    validate_subproject_settings
+    validate_child_project_settings
   end
 
   def synched_items
@@ -106,22 +106,22 @@ class Synchronisation < ActiveRecord::Base
     errors.add(:base, plugin_settings.errors.full_messages) unless plugin_settings.valid?
   end
 
-  def validate_subproject_settings
+  def validate_child_project_settings
     projects.each do |project|
       errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
     end
   end
 
   def validate_target
-    return unless target.child? || parent_system_object?
+    return unless target.child?
 
     errors.add(:base, l(:error_has_system_object,
-                        value: target.name))
+                        value: target.name)) if parent_system_object?
   end
 
   def parent_system_object?
     return false unless parent
 
-    parent.sync_param.root
+    parent.sync_param&.root
   end
 end

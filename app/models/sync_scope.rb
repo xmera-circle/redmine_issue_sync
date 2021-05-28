@@ -24,13 +24,13 @@ class SyncScope
   extend Forwardable
 
   def_delegators :@project, :sync_param
-  
+
   def initialize(project)
     @project = project
   end
 
   def projects
-    root_project? ? subprojects.prepend(project) : [project]
+    root_project? ? subprojects : [project]
   end
 
   def values
@@ -44,7 +44,10 @@ class SyncScope
   attr_reader :project
 
   def subprojects
-    project.children.select { |child| child.module_enabled? :issue_sync }
+    project
+      .self_and_descendants
+      .includes(:sync_param)
+      .select { |child| child.module_enabled? :issue_sync }
   end
 
   def root_project?

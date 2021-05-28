@@ -22,7 +22,6 @@ de:
   error_is_no_filter: "%{value} ist nicht gültig."
   error_is_not_present: "%{value} muss auswählt werden."
   error_is_missing: "%{value} muss ausgefüllt werden."
-  notice_location_of_allocation_field: ' (siehe Plugin Einstellungen) ' 
   error_no_settings: "%{value} hat keine Einstellungen."
   notice_successful_synchronisation: Erfolgreich synchronisiert.
   label_synchronising: Synchronisiere ...
@@ -31,3 +30,4 @@ de:
   text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden. Jedes synchronsierte Ticket wird daher dokumentiert.
   text_reset_sync_log: 'Protokoll jetzt'
   error_has_system_object: "%{value} wird über sein übergeordnetes Projekt synchronisiert."
+  error_synchronisation_impossible: Die Synchronisation kann nicht durchgeführt werden, da kein Quellprojekt angegeben wurde.

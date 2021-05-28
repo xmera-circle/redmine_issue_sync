@@ -18,37 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# Extensions
-require 'redmine_issue_sync/extensions/project_patch'
+require File.expand_path('../test_helper', __dir__)
 
-# Overrides
-require 'redmine_issue_sync/overrides/projects_helper_patch'
-require 'redmine_issue_sync/overrides/project_patch'
-
-##
-# Define plugin default settings
-#
 module RedmineIssueSync
-  module_function
-
-  def partial
-    'settings/redmine_issue_sync_settings'
-  end
-
-  def defaults
-    attr = [source_project, source_trackers, custom_field]
-    attr.inject(&:merge)
-  end
-
-  def source_project
-    { source_project: '' }
-  end
-
-  def source_trackers
-    { source_trackers: [] }
-  end
-
-  def custom_field
-    { custom_field: '' }
+  class FieldObjectTest < ActiveSupport::TestCase
+    test 'should respond to instance' do
+      custom_field = 'anything'
+      assert FieldObject.new(custom_field).respond_to? :instance
+    end
   end
 end
