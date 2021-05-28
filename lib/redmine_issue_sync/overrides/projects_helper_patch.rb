@@ -28,7 +28,9 @@ module RedmineIssueSync
           { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
             partial: 'sync_issues/settings', label: :tab_sync_issues }
         ]
-        tabs.concat(sync_issues_tabs.select { |sync_issues_tab| User.current.allowed_to?(sync_issues_tab[:action], @project) })
+        tabs.concat(sync_issues_tabs.select do |sync_issues_tab|
+                      User.current.allowed_to?(sync_issues_tab[:action], @project)
+                    end)
         tabs
       end
     end

@@ -70,7 +70,8 @@ module RedmineIssueSync
       synchronisation = @project.synchronise(issues: IssueCatalogue.new(sync_param),
                                              scope: SyncScope.new(@project))
       assert_not synchronisation.save
-      assert_equal [l(:error_synchronisation_impossible, value: l(:text_source_project_in_global_settings))], synchronisation.errors[:base][0]
+      assert_equal [l(:error_synchronisation_impossible, value: l(:text_source_project_in_global_settings))],
+                   synchronisation.errors[:base][0]
     end
 
     test 'should not synchronise children having no project settings at all' do

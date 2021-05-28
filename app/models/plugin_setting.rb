@@ -67,6 +67,16 @@ class PluginSetting
     setting.fetch(:custom_field, '').to_i
   end
 
+  ##
+  # To be used via rake task plugins:settings:clear
+  #
+  def clear
+    Setting.find_by(name: 'plugin_redmine_issue_sync').delete
+    puts 'Deleted settings for redmine_issue_sync plugin.'
+  rescue NoMethodError
+    puts 'There are no settings to delete for redmine_issue_sync plugin.'
+  end
+
   private
 
   attr_reader :setting

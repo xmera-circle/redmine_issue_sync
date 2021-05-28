@@ -88,7 +88,7 @@ class Synchronisation < ActiveRecord::Base
   def log_issues(mapping)
     mapping.each_pair do |from_id, to_issue|
       items << SyncItem.new(from_issue_id: from_id,
-                                       to_issue_id: to_issue.id)
+                            to_issue_id: to_issue.id)
     end
   end
 
@@ -115,8 +115,10 @@ class Synchronisation < ActiveRecord::Base
   def validate_target
     return unless target.child?
 
+    return unless parent_system_object?
+
     errors.add(:base, l(:error_has_system_object,
-                        value: target.name)) if parent_system_object?
+                        value: target.name))
   end
 
   def parent_system_object?

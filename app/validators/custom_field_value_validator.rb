@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomFieldValueValidator < ActiveModel::EachValidator
   include Redmine::I18n
 

@@ -53,7 +53,7 @@ module RedmineIssueSync
       assert catalogue.respond_to? :trackers
       assert catalogue.respond_to? :custom_field_id
       assert catalogue.respond_to? :custom_field
-      assert catalogue.respond_to? :issues 
+      assert catalogue.respond_to? :issues
       assert catalogue.respond_to? :filter
       assert catalogue.respond_to? :project
       assert catalogue.respond_to? :root_project?

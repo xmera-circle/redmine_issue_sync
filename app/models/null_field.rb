@@ -31,11 +31,11 @@ class NullField
     [Entry.new(name: l(:label_blank_value), id: '')]
   end
 
-  def values_by_name(ids)
+  def values_by_name(_ids)
     possible_values.map(&:name)
   end
 
-  def valid?(value)
+  def valid?(_value)
     true
   end
 end

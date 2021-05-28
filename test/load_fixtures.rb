@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module RedmineIssueSync
- ##
+  ##
   # Redmine cannot load plugin fixtures by default.
   # This module loads first plugin fixtures and then Redmine fixtures
   # if the listed file does not exist in the plugin fixture directory.
