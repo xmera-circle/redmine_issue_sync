@@ -5,29 +5,32 @@ de:
 
   permission_sync_issues: Tickets synchronisieren
   permission_manage_sync_settings: Sychronisations-Einstellungen verwalten
+
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
-  field_root: Systemprojekt
-  text_root_field_setting: Einem Systemprojekt werden eigene Tickets und die der untergeordneten Projekte entsprechend ihrer jeweiligen Kriterien zugeordnet.
-  error_is_no_boolean: "%{value} muss wahr oder falsch sein."
-  button_synchronise: Synchronisieren
-  button_ok: Ok
-  label_issue_synchronisation: Ticket-Synchronisation
+  label_issue_synchronisation: Ticket-Synchronisation  
+  label_synchronising: Synchronisiere ...  
+  label_sync_log: Synchronisationsprotokoll 
   label_issue_catalogue: Ticket-Katalog
+
+  field_root: Systemprojekt
+  field_filter: Wert
+
+  notice_successful_synchronisation: Erfolgreich synchronisiert.
+  button_synchronise: Synchronisieren
+
+  text_root_field_setting: Einem Systemprojekt werden eigene Tickets und die der untergeordneten Projekte zugeordnet.
   text_source_project_setting: Projekt, das den Ticket-Katalog beinhaltet.
   text_source_tracker_setting: Optionales Kriterium zur Bestimmung des Kataloges.
   text_custom_field_setting: Weiteres optionales Kriterium zur Bestimmung des Kataloges.
-  field_filter: Wert
   text_filter: Während der Synchronisierung werden für dieses Projekt lediglich Tickets mit diesem Wert berücksichtigt. 
-    Jedes Projekt wird mit seinem eigenen Kriterium berücksichtigt.
+  text_reset_custom_field_values: 'Wenn ein anderes Feld ausgewählt wird, dann alle Werte für das vorherige eigene Feld in den entsprechenden Projekten '
+  text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden.
+    Jedes synchronsierte Ticket wird daher dokumentiert.
+  text_reset_sync_log: 'Protokoll jetzt'
+
+  error_is_no_boolean: "%{value} muss wahr oder falsch sein."
   error_is_no_filter: "%{value} ist nicht gültig."
   error_is_not_present: "%{value} muss auswählt werden."
-  error_is_missing: "%{value} muss ausgefüllt werden."
   error_no_settings: "%{value} hat keine Einstellungen."
-  notice_successful_synchronisation: Erfolgreich synchronisiert.
-  label_synchronising: Synchronisiere ...
-  text_reset_custom_field_values: 'Wenn ein anderes Feld ausgewählt wird, dann alle Werte für das vorherige eigene Feld in den entsprechenden Projekten '
-  label_sync_log: Synchronisationsprotokoll
-  text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden. Jedes synchronsierte Ticket wird daher dokumentiert.
-  text_reset_sync_log: 'Protokoll jetzt'
   error_has_system_object: "%{value} wird über sein übergeordnetes Projekt synchronisiert."
   error_synchronisation_impossible: Die Synchronisation kann nicht durchgeführt werden, da kein Quellprojekt angegeben wurde.

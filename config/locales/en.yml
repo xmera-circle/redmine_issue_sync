@@ -5,30 +5,32 @@ en:
 
   permission_sync_issues: Synchronise issues
   permission_manage_sync_settings: Manage synchronisation settings
+
   label_redmine_issue_sync_description: Synchronise issues between projects
-  field_root: System project
-  text_root_field_setting: A system project gets its own and child project issues w.r.t. their criteria.
-  error_is_no_boolean: "%{value} needs to be true or false."
-  button_synchronise: Synchronise
-  button_ok: Ok
   label_issue_synchronisation:  Issue Synchronisation
-  label_issue_catalogue: Issue Catalogue
+  label_synchronising: Synchronise ...  
+  label_sync_log: Synchronisation Log
+  label_issue_catalogue: Issue Catalogue  
+
+  field_root: System project
+  field_filter: Value
+
+  notice_successful_synchronisation: Successfully synchronised.
+  button_synchronise: Synchronise
+
+  text_root_field_setting: A system project gets its own and child project issues.
   text_source_project_setting: Project containing the issue catalogue.
   text_source_tracker_settings: Optional selection criteria for catalogue items.
   text_custom_field_setting: Further optional selection criteria for catalogue items.
-  field_filter: Value
-  text_filter: Only those issues having this value will be synchronised for this project. 
-    Each project included in a synchronisation should have its own values.
-  error_is_no_filter: "%{value} is not valid."
-  error_is_not_present: "%{value} needs to be selected."
-  error_is_missing: "%{value} needs to be given."
-  error_no_settings: "%{value} has no settings."
-  notice_successful_synchronisation: Successfully synchronised.
-  label_synchronising: Synchronise ...
+  text_filter: Only those issues having this value will be synchronised for this project.
   text_reset_custom_field_values: 'When another custom field will be choosen, delete all values of the previous field in the respective projects '
-  label_sync_log: Synchronisation Log
   text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
     Therefore, each synchronised issue will be documented.
   text_reset_sync_log: 'Now log '
+
+  error_is_no_boolean: "%{value} needs to be true or false."
+  error_is_no_filter: "%{value} is not valid."
+  error_is_not_present: "%{value} needs to be selected."
+  error_no_settings: "%{value} has no settings."
   error_has_system_object: "%{value} will be synchronised via its parent project."
   error_synchronisation_impossible: The synchronisation is not possible because there is no source project selected.
