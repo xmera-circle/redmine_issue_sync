@@ -24,11 +24,12 @@ Redmine::Plugin.register :redmine_issue_sync do
   name 'Redmine Issue Sync'
   author 'Liane Hampe, xmera'
   description 'Synchronise issues between projects'
-  version '0.1.0'
+  version '0.1.1'
   url 'https://circle.xmera.de/projects/redmine-issue-sync'
   author_url 'http://xmera.de'
 
   requires_redmine version_or_higher: '4.1.0'
+  requires_redmine_plugin :redmine_base_deface, version_or_higher: '1.6.2'
 
   settings  partial: RedmineIssueSync.partial,
             default: RedmineIssueSync.defaults
@@ -41,13 +42,6 @@ Redmine::Plugin.register :redmine_issue_sync do
                { sync_issues: %w[settings reset_filter reset_log] },
                require: :member
   end
-end
-
-# Adds the redmine issue sync app/overrides directory to Rails' search paths for deface overrides
-Rails.application.paths['app/overrides'] ||= []
-issue_sync_overwrite_dir = "#{Redmine::Plugin.directory}/redmine_issue_sync/app/overrides"
-unless Rails.application.paths['app/overrides'].include?(issue_sync_overwrite_dir)
-  Rails.application.paths['app/overrides'] << issue_sync_overwrite_dir
 end
 
 ActiveSupport::Reloader.to_prepare do

@@ -20,13 +20,13 @@ en:
 
   text_root_field_setting: A system project gets its own and child project issues.
   text_source_project_setting: Project containing the issue catalogue.
-  text_source_tracker_settings: Optional selection criteria for catalogue items.
+  text_source_tracker_setting: Optional selection criteria for catalogue items.
   text_custom_field_setting: Further optional selection criteria for catalogue items.
   text_filter: Only those issues having this value will be synchronised for this project.
-  text_reset_custom_field_values: 'When another custom field will be choosen, delete all values of the previous field in the respective projects '
+  text_reset_custom_field_values: 'When you change this field, you can delete the values belonging to the previous field by clicking '
   text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
     Therefore, each synchronised issue will be documented.
-  text_reset_sync_log: 'Now log '
+  text_reset_sync_log: 'Here you can '
 
   error_is_no_boolean: "%{value} needs to be true or false."
   error_is_no_filter: "%{value} is not valid."
