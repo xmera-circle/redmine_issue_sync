@@ -1,0 +1,6 @@
+
+<p>Quellprojekt: <%= @source&.name || 'unbekannt' %></p>
+<p>Quelltracker: <%= @trackers&.map(&:name).join(', ') %></p>
+<p>Zuordnungskriterium: <%= @field.name %></p>
+<p>Zielprojekt: <%= @synchronisation.receiver.name %></p>
+<p>Systemprojekt: <%= @synchronisation_setting.root %></p>
