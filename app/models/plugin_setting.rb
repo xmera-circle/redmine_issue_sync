@@ -51,7 +51,7 @@ class PluginSetting
   # @return [Integer] Is 0 if string is empty.
   #
   def tracker_ids
-    setting.fetch(:source_trackers, ['']).map(&:to_i)
+    setting.fetch(:source_trackers, []).map(&:to_i)
   end
 
   ##
