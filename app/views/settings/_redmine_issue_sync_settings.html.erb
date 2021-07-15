@@ -59,7 +59,7 @@
   <%= select_tag(
         'settings[custom_field]', 
         options_for_select(
-          IssueCustomField.where(field_format: %w[list enumeration]).pluck(:name, :id), 
+          IssueCustomField.where(field_format: %w[list enumeration project_type_master]).pluck(:name, :id), 
           { selected: @settings['custom_field'] }
         ), 
         include_blank: true
