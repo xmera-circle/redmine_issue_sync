@@ -12,6 +12,8 @@ class CustomFieldValueValidator < ActiveModel::EachValidator
   end
 
   def valid?(value)
+    return unless value
+
     field_object = FieldObject.new(PluginSetting.new.custom_field).instance
     value.all? { |val| field_object.valid?(val) }
   end

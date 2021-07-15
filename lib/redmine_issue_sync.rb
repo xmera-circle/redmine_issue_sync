@@ -45,7 +45,7 @@ module RedmineIssueSync
   end
 
   def source_trackers
-    { source_trackers: [] }
+    { source_trackers: '' }
   end
 
   def custom_field
