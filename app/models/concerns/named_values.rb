@@ -28,6 +28,10 @@ module NamedValues
   module_function
 
   def instance_of(field)
-    "#{field.field_format.capitalize}Field".constantize.new(field)
+    "#{strip_whitespace(field.field_format.titleize)}Field".constantize.new(field)
+  end
+
+  def strip_whitespace(text)
+    text.delete(" \t\r\n")
   end
 end

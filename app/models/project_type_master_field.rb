@@ -18,24 +18,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class FieldObject
+class ProjectTypeMasterField
   attr_reader :custom_field
 
   def initialize(custom_field)
     @custom_field = custom_field
   end
 
-  def instance
-    klass.new(custom_field)
+  def possible_values
+    custom_field.possible_values_options.each_with_object([]) do |value, array|
+      array << Entry.new(name: value.first, id: value.last)
+    end
   end
 
-  private
+  def values_by_name(names)
+    return unless names
 
-  def klass
-    "#{strip_whitespace(custom_field.field_format.titleize)}Field".constantize
+    entries = possible_values.select { |value| names.include? value.name }
+    entries&.map(&:name)
   end
 
-  def strip_whitespace(text)
-    text.delete(" \t\r\n")
+  def valid?(value)
+    possible_values.map(&:id).include? value
   end
 end
