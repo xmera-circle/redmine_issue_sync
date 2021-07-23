@@ -20,6 +20,7 @@
 
 # Extensions
 require 'redmine_issue_sync/extensions/project_patch'
+require 'redmine_issue_sync/extensions/settings_helper_patch'
 
 # Overrides
 require 'redmine_issue_sync/overrides/projects_helper_patch'

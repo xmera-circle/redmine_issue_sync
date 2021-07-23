@@ -27,7 +27,7 @@
     <%= select_tag(
           'settings[source_project]', 
           options_for_select(
-            Project.pluck(:name, :id), 
+            source_project_list_for_select, 
             { selected: @settings['source_project'] }
           ), 
           include_blank: true

@@ -42,6 +42,7 @@ module RedmineIssueSync
     end
 
     def teardown
+      Setting.clear_cache
       @setting = nil
       @plugin = nil
     end
