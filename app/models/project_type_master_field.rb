@@ -31,10 +31,10 @@ class ProjectTypeMasterField
     end
   end
 
-  def values_by_name(names)
-    return unless names
+  def values_by_name(ids)
+    return unless ids
 
-    entries = possible_values.select { |value| names.include? value.name }
+    entries = possible_values.select { |value| ids.include? value.id }
     entries&.map(&:name)
   end
 
