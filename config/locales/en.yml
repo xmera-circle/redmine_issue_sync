@@ -10,7 +10,8 @@ en:
   label_issue_synchronisation:  Issue Synchronisation
   label_synchronising: Synchronise ...  
   label_sync_log: Synchronisation Log
-  label_issue_catalogue: Issue Catalogue  
+  label_issue_catalogue: Issue Catalogue
+  label_undefined_source: unknown
 
   field_root: System project
   field_filter: Value

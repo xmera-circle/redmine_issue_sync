@@ -4,7 +4,7 @@
   
   <% if @synchronisation.valid? %>
     <div style='text-align:center' >
-      <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
+      <h2><%= @source&.name || l(:label_undefined_source) %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
       <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
       <p><%= "#{@field.name}: #{@value_names.join(', ')}" %>
       <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>

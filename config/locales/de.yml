@@ -11,6 +11,7 @@ de:
   label_synchronising: Synchronisiere ...  
   label_sync_log: Synchronisationsprotokoll 
   label_issue_catalogue: Ticket-Katalog
+  label_undefined_source: unbekannt
 
   field_root: Systemprojekt
   field_filter: Wert
