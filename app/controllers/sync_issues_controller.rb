@@ -28,14 +28,21 @@ class SyncIssuesController < ApplicationController
   helper :sync_params
 
   def new
+    selected_trackers_params = params[:sync_issues] ? params[:sync_issues][:selected_trackers] : nil
     @synchronisation = @project.synchronise(
-      issues: IssueCatalogue.new(params: sync_param),
+      issues: IssueCatalogue.new(selected_trackers: selected_trackers_params,
+                                 params: sync_param),
       scope: SyncScope.new(@project)
     )
     @source = @synchronisation.source
     @trackers = @synchronisation.trackers
     @field = @synchronisation.custom_field
     @value_names = @synchronisation.value_names
+    @selected_trackers = selected_trackers
+    respond_to do |format|
+      format.html { render action: 'new', layout: !request.xhr? }
+      format.js
+    end
   end
 
   def create
@@ -97,5 +104,10 @@ class SyncIssuesController < ApplicationController
 
   def sync_param
     @sync_param ||= @project.sync_param
+  end
+
+  def selected_trackers
+    trackers = @synchronisation.issues.selected_trackers
+    trackers.present? ? trackers : []
   end
 end

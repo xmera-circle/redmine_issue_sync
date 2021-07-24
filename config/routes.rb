@@ -25,8 +25,14 @@ RedmineApp::Application.routes.draw do
         via: %i[get post],
         as: 'sync_issues_settings'
 
+  match '/projects/:project_id/sync_issues/new',
+        controller: 'sync_issues',
+        action: 'new',
+        via: %i[get post],
+        as: 'new_project_sync_issue'
+
   resources :projects do
-    resources :sync_issues, only: %w[new create show]
+    resources :sync_issues, only: %w[create]
   end
 
   match '/settings/plugin/redmine_issue_sync/reset_filter',

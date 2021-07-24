@@ -38,11 +38,11 @@ class IssueCatalogue
     content(values).pluck(:id)
   end
 
-  private
-
   def selected_trackers
     @selected_trackers&.map(&:to_i)
   end
+
+  private
 
   ##
   # A list of issues of the source project filtered by the given trackers and
@@ -87,6 +87,6 @@ class IssueCatalogue
   # returning an id of 0.
   #
   def sanitized_trackers
-    selected_trackers_valid? ? selected_trackers : [0]
+    selected_trackers_valid? ? selected_trackers : nil
   end
 end
