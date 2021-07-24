@@ -5,8 +5,10 @@
   <% if @synchronisation.valid? %>
     <div style='text-align:center' >
       <h2><%= @source&.name || l(:label_undefined_source) %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
-      <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
-      <p><%= "#{@field.name}: #{@value_names.join(', ')}" %>
+      <p><%= "#{l(:field_tracker)}:" %>
+        <%= select_tag('sync_issues[selected_trackers][]', options_for_select(@trackers.pluck(:name, :id)), multiple: true) %>
+      </p>
+      <p><%= "#{@field.name}: #{@value_names.join(', ')}" %></p>
       <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
       <p>
         <%= submit_tag(l(:button_synchronise),  data: { disable_with: l(:label_synchronising) }) if @synchronisation.backlog_count.positive? %>

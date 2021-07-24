@@ -23,6 +23,8 @@ require File.expand_path('../test_helper', __dir__)
 module RedmineIssueSync
   class PluginSettingTest < ActiveSupport::TestCase
     def setup
+      Setting.clear_cache
+      Setting.plugin_redmine_issue_sync = {}
       @setting = PluginSetting.new
     end
 

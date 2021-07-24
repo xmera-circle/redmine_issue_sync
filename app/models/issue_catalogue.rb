@@ -28,7 +28,8 @@ class IssueCatalogue
   def_delegators :@params, :filter, :project, :root
   alias root_project? root
 
-  def initialize(params = nil)
+  def initialize(selected_trackers: nil, params: nil)
+    @selected_trackers = selected_trackers
     @params = params
     @setting = PluginSetting.new
   end
@@ -38,6 +39,10 @@ class IssueCatalogue
   end
 
   private
+
+  def selected_trackers
+    @selected_trackers&.map(&:to_i)
+  end
 
   ##
   # A list of issues of the source project filtered by the given trackers and
@@ -62,12 +67,26 @@ class IssueCatalogue
   def query_trackers(queried_issues)
     return queried_issues unless tracker_ids?
 
-    queried_issues.where(tracker_id: tracker_ids)
+    queried_issues.where(tracker_id: sanitized_trackers || tracker_ids)
   end
 
   def tracker_ids?
     return false if tracker_ids.size.zero?
 
     tracker_ids.all?(&:positive?)
+  end
+
+  def selected_trackers_valid?
+    return false if !selected_trackers || !tracker_ids?
+
+    (selected_trackers - tracker_ids).empty?
+  end
+
+  ##
+  # Trackers which are not whitelisted should be normalized by
+  # returning an id of 0.
+  #
+  def sanitized_trackers
+    selected_trackers_valid? ? selected_trackers : [0]
   end
 end
