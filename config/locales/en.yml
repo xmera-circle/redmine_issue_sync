@@ -28,6 +28,7 @@ en:
   text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
     Therefore, each synchronised issue will be documented.
   text_reset_sync_log: 'Here you can '
+  text_could_be_synchronised: could be synchronised
 
   error_is_no_boolean: "%{value} needs to be true or false."
   error_is_no_filter: "%{value} is not valid."

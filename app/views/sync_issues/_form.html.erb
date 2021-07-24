@@ -15,7 +15,7 @@
           <span class="toggle-multiselect icon-only"></span>
         </p>
         <p><%= "#{@field.name}: #{@value_names.join(', ')}" %></p>
-        <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
+        <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> <%= l(:text_could_be_synchronised) %></strong></p>
         <p>
           <%= submit_tag(l(:button_synchronise),  data: { disable_with: l(:label_synchronising) }) if @synchronisation.backlog_count.positive? %>
           <%= link_to_function l(:button_update), "updateIssueBacklog(this);" %>
