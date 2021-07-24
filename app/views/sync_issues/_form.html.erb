@@ -6,7 +6,8 @@
     <div style='text-align:center' >
       <h2><%= @source&.name || l(:label_undefined_source) %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
       <p><%= "#{l(:field_tracker)}:" %>
-        <%= select_tag('sync_issues[selected_trackers][]', options_for_select(@trackers.pluck(:name, :id)), multiple: true) %>
+        <%= select_tag('sync_issues[selected_trackers][]', options_for_select(@trackers.pluck(:name, :id)), size: 1, class: 'expandable') %>
+        <span class="toggle-multiselect icon-only icon-toggle-plus"></span>
       </p>
       <p><%= "#{@field.name}: #{@value_names.join(', ')}" %></p>
       <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
@@ -28,4 +29,20 @@
     <%= error_messages_for @synchronisation %>
     <%= link_to_function l(:button_cancel), "hideModal(this);" %>
   <% end %>
+<% end %>
+
+<%= javascript_tag do %>
+$(".toggle-multiselect").click(function(e){
+  e.preventDefault();
+  var target = $(this).siblings('select');
+  if (target.attr("multiple")) {
+    $(this).switchClass('icon-toggle-minus', 'icon-toggle-plus');
+    target.removeAttr("multiple");
+    target.attr("size", 1);
+  } else {
+    $(this).switchClass('icon-toggle-plus', 'icon-toggle-minus');
+    target.attr("multiple", true);
+    target.attr("size", 4);
+  }
+});
 <% end %>
