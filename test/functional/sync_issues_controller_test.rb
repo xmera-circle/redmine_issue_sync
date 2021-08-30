@@ -95,7 +95,10 @@ module RedmineIssueSync
       source = Project.find(4)
       create_issues(source)
       assert_difference '@project.issues.count', 2 do
-        post project_sync_issues_path(@project)
+        post project_sync_issues_path(
+          @project,
+          params: { sync_issues: { selected_trackers: ['1'] } }
+        )
       end
       assert_redirected_to project_issues_path(@project)
     end
@@ -109,7 +112,10 @@ module RedmineIssueSync
       child = child_project
       child.enable_module! :issue_sync
       assert_no_difference '@project.issues.count' do
-        post project_sync_issues_path(@project)
+        post project_sync_issues_path(
+          @project,
+          params: { sync_issues: { selected_trackers: ['1'] } }
+        )
       end
       assert @project.syncs.blank?
     end

@@ -22,11 +22,16 @@ require File.expand_path('../test_helper', __dir__)
 
 module RedmineIssueSync
   class PluginSettingTest < ActiveSupport::TestCase
+    def setup
+      Setting.clear_cache
+      Setting.plugin_redmine_issue_sync = {}
+      @setting = PluginSetting.new
+    end
+
     test 'should return null objects without settings' do
-      setting = PluginSetting.new
-      assert setting.source.is_a? NullProject
-      assert_equal [true], setting.trackers.map { |tracker| tracker.is_a? NullTracker }
-      assert setting.custom_field.is_a? NullCustomField
+      assert @setting.source.is_a? NullProject
+      assert_equal [true], (@setting.trackers.map { |tracker| tracker.is_a?(NullTracker) })
+      assert @setting.custom_field.is_a? NullCustomField
     end
   end
 end
