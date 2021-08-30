@@ -10,7 +10,8 @@ en:
   label_issue_synchronisation:  Issue Synchronisation
   label_synchronising: Synchronise ...  
   label_sync_log: Synchronisation Log
-  label_issue_catalogue: Issue Catalogue  
+  label_issue_catalogue: Issue Catalogue
+  label_undefined_source: unknown
 
   field_root: System project
   field_filter: Value
@@ -27,6 +28,7 @@ en:
   text_explain_sync_log: Each issue is allowed to be synchronised with a project only once. 
     Therefore, each synchronised issue will be documented.
   text_reset_sync_log: 'Here you can '
+  text_could_be_synchronised: could be synchronised
 
   error_is_no_boolean: "%{value} needs to be true or false."
   error_is_no_filter: "%{value} is not valid."

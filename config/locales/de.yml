@@ -11,6 +11,7 @@ de:
   label_synchronising: Synchronisiere ...  
   label_sync_log: Synchronisationsprotokoll 
   label_issue_catalogue: Ticket-Katalog
+  label_undefined_source: unbekannt
 
   field_root: Systemprojekt
   field_filter: Wert
@@ -27,6 +28,7 @@ de:
   text_explain_sync_log: Jedes Ticket kann nur einmal mit einem Projekt synchronisiert werden.
     Jedes synchronsierte Ticket wird daher dokumentiert.
   text_reset_sync_log: 'Protokoll jetzt'
+  text_could_be_synchronised: können synchronisiert werden
 
   error_is_no_boolean: "%{value} muss wahr oder falsch sein."
   error_is_no_filter: "%{value} ist nicht gültig."
