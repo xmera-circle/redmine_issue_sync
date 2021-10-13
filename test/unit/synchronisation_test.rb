@@ -42,6 +42,7 @@ module RedmineIssueSync
     end
 
     def teardown
+      Setting.clear_cache
       @setting = nil
       @plugin = nil
     end
@@ -67,7 +68,7 @@ module RedmineIssueSync
       @setting[:source_project] = ''
       @project.enable_module! :issue_sync
       sync_param = @project.create_sync_param({ root: false, filter: ['wrong'] })
-      synchronisation = @project.synchronise(issues: IssueCatalogue.new(sync_param),
+      synchronisation = @project.synchronise(issues: IssueCatalogue.new(params: sync_param),
                                              scope: SyncScope.new(@project))
       assert_not synchronisation.save
       assert_equal [l(:error_synchronisation_impossible, value: l(:text_source_project_in_global_settings))],
@@ -80,7 +81,7 @@ module RedmineIssueSync
       @project.sync_param.root = false
       @project.save
       sync_param = project.sync_param
-      synchronisation = project.synchronise(issues: IssueCatalogue.new(sync_param),
+      synchronisation = project.synchronise(issues: IssueCatalogue.new(params: sync_param),
                                             scope: SyncScope.new(project))
       assert_not synchronisation.valid?
       assert_equal l(:error_no_settings, value: project.name), synchronisation.errors[:base][0]
@@ -90,7 +91,7 @@ module RedmineIssueSync
       project = child_project
       project.enable_module! :issue_sync
       sync_param = project.create_sync_param({ root: false, filter: ['MySQL'] })
-      synchronisation = project.synchronise(issues: IssueCatalogue.new(sync_param),
+      synchronisation = project.synchronise(issues: IssueCatalogue.new(params: sync_param),
                                             scope: SyncScope.new(project))
       assert_not synchronisation.valid?
       assert_equal l(:error_has_system_object, value: project.name), synchronisation.errors[:base][0]

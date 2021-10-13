@@ -1,29 +1,60 @@
-<%= form_for @synchronisation, url: project_sync_issues_path(@project) do |f| %>
-  <%= error_messages_for @synchronisation %>
-  <%= render_flash_messages %>
-  
-  <% if @synchronisation.valid? %>
-    <div style='text-align:center' >
-      <h2><%= @source&.name || 'unbekannt' %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
-      <p><%= "#{l(:field_tracker)}: #{@trackers&.map(&:name).join(', ')}" %></p>
-      <p><%= "#{@field.name}: #{@value_names.join(', ')}" %>
-      <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> können synchronisiert werden</strong></p>
-      <p>
-        <%= submit_tag(l(:button_synchronise),  data: { disable_with: l(:label_synchronising) }) if @synchronisation.backlog_count.positive? %>
-        <%= link_to_function l(:button_cancel), "hideModal(this);" %>
-      </p>    
-    </div>
+<%= tag.div id: 'sync_form_content' do %>
+  <%= form_for @synchronisation, url: project_sync_issues_path(@project) do |f| %>
+    <%= error_messages_for @synchronisation %>
+    <%= render_flash_messages %>
+    
+    <% if @synchronisation.valid? %>
+      <div style='text-align:center' >
+        <h2><%= @source&.name || l(:label_undefined_source) %> &#8208&#8208&#8208&#8674 <%= @synchronisation.target.name %></h2>
+        <p><%= "#{l(:field_tracker)}:" %>
+          <%= select_tag('sync_issues[selected_trackers][]', 
+              options_for_select(@trackers.pluck(:name, :id), selected: @selected_trackers),
+              size: (@selected_trackers&.size > 1) ? 4 : 1,
+              class: 'expandable',
+              multiple: @selected_trackers&.size > 1) %>
+          <span class="toggle-multiselect icon-only"></span>
+        </p>
+        <p><%= "#{@field.name}: #{@value_names.join(', ')}" %></p>
+        <p><strong><%= @synchronisation.backlog_count %> <%= l(:label_issue_plural) %> <%= l(:text_could_be_synchronised) %></strong></p>
+        <p>
+          <%= submit_tag(l(:button_synchronise),  data: { disable_with: l(:label_synchronising) }) if @synchronisation.backlog_count.positive? %>
+          <%= link_to_function l(:button_update), "updateIssueBacklog(this);" %>
+        </p>    
+      </div>
 
-    <% if @synchronisation.backlog_count.positive? %>
-      <%=tag.fieldset class: "collapsible collapsed" do %>
-        <%=tag.legend l(:label_details), onclick: "toggleFieldset(this);", class: "icon icon-collapsed" %>
-        <%=tag.div do %>
-          <%= render partial: 'details' %>
+      <% if @synchronisation.backlog_count.positive? %>
+        <%=tag.fieldset class: "collapsible collapsed" do %>
+          <%=tag.legend l(:label_details), onclick: "toggleFieldset(this);", class: "icon icon-collapsed" %>
+          <%=tag.div id: 'issue_backlog' do %>
+            <%= render partial: 'details' %>
+          <% end %>
         <% end %>
       <% end %>
+    <% else %>
+      <%= error_messages_for @synchronisation %>
+      <%= link_to_function l(:button_cancel), "hideModal(this);" %>
     <% end %>
-  <% else %>
-    <%= error_messages_for @synchronisation %>
-    <%= link_to_function l(:button_cancel), "hideModal(this);" %>
   <% end %>
+<% end %>
+<%= javascript_tag do %>
+
+function updateIssueBacklog(el) {
+  updateSyncFrom('<%= "#{escape_javascript new_project_sync_issue_path(@project, format: 'js')}" %>', el);
+}
+
+function updateSyncFrom(url, el) {
+  return $.ajax({
+    url: url,
+    type: 'post',
+    data: $('#sync_issues_selected_trackers_').serialize()
+  });
+}
+
+  $('#sync_form_content').on('click', '.toggle-multiselect', function() {
+    toggleMultiSelect($(this).siblings('select'));
+    $(this).toggleClass('icon-toggle-plus icon-toggle-minus');
+  });
+  toggleMultiSelectIconInit();
+
+
 <% end %>

@@ -24,7 +24,7 @@ module RedmineIssueSync
   class IssueCatalogueTest < ActiveSupport::TestCase
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values,
-             :trackers, :issues
+             :trackers, :issues, :issue_statuses
 
     def setup
       @plugin = Redmine::Plugin.find(:redmine_issue_sync)
@@ -60,10 +60,24 @@ module RedmineIssueSync
     end
 
     test 'should query the issue catalogue contents' do
-      @setting[:source_trackers] = ['1']
+      trackers = ['1']
+      @setting[:source_trackers] = trackers
       issue = Issue.find(3)
-      catalogue = IssueCatalogue.new
+      catalogue = IssueCatalogue.new(selected_trackers: trackers)
       assert_equal issue, catalogue.send(:content, 'MySQL').first
+    end
+
+    test 'should query the issue catalogue contents given a selection of trackers' do
+      project = Project.find(1)
+      project.issue_custom_field_ids << 1
+      trackers = %w[1 2]
+      @setting[:source_trackers] = trackers
+      # Issue.find(3) has tracker 1
+      issue2 = Issue.find(2) # has tracker 2
+      add_custom_field_to(issue2)
+      catalogue = IssueCatalogue.new(selected_trackers: [trackers[1]])
+      assert_equal 1, catalogue.send(:content, 'MySQL').size
+      assert_equal issue2, catalogue.send(:content, 'MySQL').first
     end
 
     test 'should query the issue catalogue contents without given trackers' do
@@ -77,6 +91,20 @@ module RedmineIssueSync
       Issue.find(3)
       catalogue = IssueCatalogue.new
       assert catalogue.send(:content, 'MySQL').size.zero?
+    end
+
+    private
+
+    def add_custom_field_to(issue)
+      tracker = Tracker.find(2)
+      tracker.custom_field_ids = %w[1]
+      tracker.save!
+      issue.custom_field_values = { '1': 'MySQL' }
+      issue.save!
+      #CustomValue.create!(custom_field: IssueCustomField.find(1),
+                          # value: ['MySQL'],
+                          # customized: issue,
+                          # customized_type: Issue)
     end
   end
 end
