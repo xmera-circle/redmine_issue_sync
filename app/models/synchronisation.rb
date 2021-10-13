@@ -59,7 +59,7 @@ class Synchronisation < ActiveRecord::Base
   end
 
   def backlog_count
-    backlog_ids.count
+    backlog_ids.uniq.count
   end
 
   def value_names
