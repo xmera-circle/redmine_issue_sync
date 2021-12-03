@@ -11,6 +11,7 @@
               options_for_select(@trackers.pluck(:name, :id), selected: @selected_trackers),
               size: (@selected_trackers&.size > 1) ? 4 : 1,
               class: 'expandable',
+              prompt: l(:label_all_trackers),
               multiple: @selected_trackers&.size > 1) %>
           <span class="toggle-multiselect icon-only"></span>
         </p>
