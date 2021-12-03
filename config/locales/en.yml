@@ -12,6 +12,7 @@ en:
   label_sync_log: Synchronisation Log
   label_issue_catalogue: Issue Catalogue
   label_undefined_source: unknown
+  label_all_trackers: All
 
   field_root: System project
   field_filter: Value
