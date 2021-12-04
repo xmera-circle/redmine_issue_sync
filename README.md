@@ -1,6 +1,6 @@
 # Redmine Issue Sync
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.2-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.x.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-development-important)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.3-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.x.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
 
 Redmine Issue Sync is a plugin which lets the user synchronise issues between projects.
 
