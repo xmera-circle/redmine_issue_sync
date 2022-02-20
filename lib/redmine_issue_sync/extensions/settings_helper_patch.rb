@@ -22,7 +22,7 @@ module RedmineIssueSync
   module Extensions
     module SettingsHelperPatch
       def self.included(base)
-        base.include(InstanceMethods)
+        base.helper(InstanceMethods)
       end
 
       module InstanceMethods
@@ -52,6 +52,6 @@ end
 # Apply patch
 Rails.configuration.to_prepare do
   unless SettingsHelper.included_modules.include?(RedmineIssueSync::Extensions::SettingsHelperPatch)
-    SettingsHelper.include(RedmineIssueSync::Extensions::SettingsHelperPatch)
+    SettingsController.include(RedmineIssueSync::Extensions::SettingsHelperPatch)
   end
 end
