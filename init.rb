@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_issue_sync do
   name 'Redmine Issue Sync'
   author 'Liane Hampe, xmera'
   description 'Synchronise issues between projects'
-  version '0.1.3'
+  version '0.1.4'
   url 'https://circle.xmera.de/projects/redmine-issue-sync'
   author_url 'http://xmera.de'
 
