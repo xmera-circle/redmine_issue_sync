@@ -1,13 +1,21 @@
 # Redmine Issue Sync
 
+Synchronise issues between projects
+
 ![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.4-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.x.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
 
-Redmine Issue Sync is a plugin which lets the user synchronise issues between projects.
+Redmine Issue Sync is a plugin which lets the user synchronise issues between projects assuming there is a kind of main issue catalogue defined.
 
 ---
 
-More information and screenshots can be found at
-[xmera Circle - the  community website of xmera](https://circle.xmera.de).
+## Context Information
+
+This plugin is part of a plugin selection aiming to provide the information security management system solution xmera Omnia.
+
+All plugins in the selection are compatible with [Redmine 4](https://redmine.org).
+
+More information about xmera Omnia can be found at [xmera](https://xmera.de).
+
 
 ## Installation
 
@@ -17,7 +25,7 @@ Instructions for the installation of this plugin can be found in the [official d
 
 ## Changelog
 
-All notable changes to this plugin will be reported in the [changelog](https://circle.xmera.de/projects/redmine-issue-sync/wiki/Changelog) at xmera Circle.
+All notable changes to this plugin will be reported in the [changelog](https://circle.xmera.de/projects/redmine-issue-sync/repository/redmine_issue_sync/entry/CHANGELOG.md).
 
 ## Licence
 
