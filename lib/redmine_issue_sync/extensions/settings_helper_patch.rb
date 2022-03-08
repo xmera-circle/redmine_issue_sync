@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ module RedmineIssueSync
   module Extensions
     module SettingsHelperPatch
       def self.included(base)
-        base.include(InstanceMethods)
+        base.helper(InstanceMethods)
       end
 
       module InstanceMethods
@@ -52,6 +52,6 @@ end
 # Apply patch
 Rails.configuration.to_prepare do
   unless SettingsHelper.included_modules.include?(RedmineIssueSync::Extensions::SettingsHelperPatch)
-    SettingsHelper.include(RedmineIssueSync::Extensions::SettingsHelperPatch)
+    SettingsController.include(RedmineIssueSync::Extensions::SettingsHelperPatch)
   end
 end
