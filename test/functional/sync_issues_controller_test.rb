@@ -89,6 +89,12 @@ module RedmineIssueSync
       assert_response :success
     end
 
+    test 'should not render syncronisation button if user not allowed to' do
+      @manager_role.remove_permission! :sync_issues
+      get new_project_sync_issue_path(@project), xhr: true
+      assert_response :forbidden
+    end
+
     test 'should sychronise issues with reasonable settings' do
       @project.sync_param.filter = ['MySQL']
       @project.sync_param.save
