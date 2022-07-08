@@ -24,7 +24,6 @@ class BooleanValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return true if %w[TrueClass FalseClass].include? value.class.to_s
 
-    record.errors.add(:base,
-                      l(:error_is_no_boolean, value: l("field_#{attribute}")))
+    record.errors.add(attribute, l(:error_is_no_boolean))
   end
 end
