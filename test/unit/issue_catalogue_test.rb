@@ -24,7 +24,7 @@ module RedmineIssueSync
   class IssueCatalogueTest < ActiveSupport::TestCase
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values,
-             :trackers, :issues, :issue_statuses
+             :trackers, :issues, :issue_statuses, :versions
 
     def setup
       @plugin = Redmine::Plugin.find(:redmine_issue_sync)
@@ -101,10 +101,6 @@ module RedmineIssueSync
       tracker.save!
       issue.custom_field_values = { '1': 'MySQL' }
       issue.save!
-      #CustomValue.create!(custom_field: IssueCustomField.find(1),
-                          # value: ['MySQL'],
-                          # customized: issue,
-                          # customized_type: Issue)
     end
   end
 end
