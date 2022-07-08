@@ -6,9 +6,9 @@ class CustomFieldValueValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return true if valid?(value)
 
-    return record.errors.add(:base, l(:error_is_not_present, value: l("field_#{attribute}"))) if value.blank?
+    return record.errors.add(attribute, l(:error_is_not_present)) if value.blank?
 
-    record.errors.add(:base, l(:error_is_no_filter, value: l("field_#{attribute}")))
+    record.errors.add(attribute, l(:error_is_no_filter))
   end
 
   def valid?(value)
