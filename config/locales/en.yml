@@ -31,9 +31,9 @@ en:
   text_reset_sync_log: 'Here you can '
   text_could_be_synchronised: could be synchronised
 
-  error_is_no_boolean: "%{value} needs to be true or false."
+  error_is_no_boolean: "needs to be true or false."
   error_is_no_filter: "%{value} is not valid."
-  error_is_not_present: "%{value} needs to be selected."
+  error_is_not_present: "needs to be selected."
   error_no_settings: "%{value} has no settings."
   error_has_system_object: "%{value} will be synchronised via its parent project."
   error_synchronisation_impossible: The synchronisation is not possible because there is no source project selected.

@@ -50,7 +50,7 @@ module RedmineIssueSync
     test 'should not validate filter if wrong' do
       settings = SyncParam.new(settings: { root: '1', filter: ['wrong'] })
       assert_not settings.valid?
-      assert_equal l(:error_is_no_filter, value: l(:field_filter)), settings.errors[:base][0]
+      assert_equal [:filter], settings.errors.keys
     end
 
     test 'should validate attributes' do
@@ -63,7 +63,7 @@ module RedmineIssueSync
       assert_equal '1', @setting[:custom_field]
       settings = SyncParam.new(settings: { root: nil, filter: ['PostgreSQL'] })
       assert_not settings.valid?
-      assert_equal l(:error_is_no_boolean, value: l(:field_root)), settings.errors[:base][0]
+      assert_equal [:root], settings.errors.keys
     end
   end
 end
