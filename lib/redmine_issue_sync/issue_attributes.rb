@@ -18,30 +18,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_issue_sync'
+module RedmineIssueSync
+  ##
+  # Collection of attributes which are recommended to be ignored when synching
+  # issues since their values are issue specific.
+  #
+  module IssueAttributes
+    def ignorables
+      ignorables_with_label.keys
+    end
 
-Redmine::Plugin.register :redmine_issue_sync do
-  name 'Redmine Issue Sync'
-  author 'Liane Hampe, xmera'
-  description 'Synchronise issues between projects'
-  version '0.1.6'
-  url 'https://circle.xmera.de/projects/redmine-issue-sync'
-  author_url 'http://xmera.de'
-
-  requires_redmine version_or_higher: '4.1.0'
-  requires_redmine_plugin :redmine_base_deface, version_or_higher: '1.6.2'
-
-  settings  partial: RedmineIssueSync.partial,
-            default: RedmineIssueSync.defaults
-
-  project_module :issue_sync do
-    permission :sync_issues,
-               { sync_issues: %w[new create show] },
-               require: :member
-    permission :manage_sync_settings,
-               { sync_issues: %w[settings reset_filter reset_log] },
-               require: :member
+    ##
+    # @note Associations needs to be listed with their *_ids to be
+    # nillable. Do not add Issue#status attribute since it has to have a value!
+    #
+    def ignorables_with_label
+      {
+        done_ratio: 'field_done_ratio',
+        assigned_to: 'field_assigned_to',
+        due_date: 'field_due_date',
+        start_date: 'field_start_date',
+        attachment_ids: 'label_attachment_plural',
+        watcher_ids: 'label_issue_watchers'
+      }
+    end
   end
 end
-
-RedmineIssueSync.setup
