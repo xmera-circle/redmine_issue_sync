@@ -42,7 +42,7 @@ class Synchronisation < ActiveRecord::Base
     @issues = attributes.delete(:issues)
     @scope = attributes.delete(:scope)
     super(attributes)
-    @plugin_settings = PluginSetting.new
+    @plugin_settings = IssueSyncSetting.new
     @sync_param = target.sync_param
   end
 

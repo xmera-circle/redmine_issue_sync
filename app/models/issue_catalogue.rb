@@ -31,7 +31,7 @@ class IssueCatalogue
   def initialize(selected_trackers: nil, params: nil)
     @selected_trackers = selected_trackers
     @params = params
-    @setting = PluginSetting.new
+    @setting = IssueSyncSetting.new
   end
 
   def content_ids(values)

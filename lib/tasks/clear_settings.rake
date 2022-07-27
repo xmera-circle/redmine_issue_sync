@@ -26,7 +26,7 @@ namespace :plugins do
       # puts '--> Deleted settings for :redmine_issue_sync'
       # rescue NoMethodError
       # puts '--> Nothing to delete'
-      PluginSetting.new.clear
+      IssueSyncSetting.new.clear
     end
   end
 end
