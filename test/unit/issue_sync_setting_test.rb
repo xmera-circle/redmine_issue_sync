@@ -21,17 +21,48 @@
 require File.expand_path('../test_helper', __dir__)
 
 module RedmineIssueSync
-  class PluginSettingTest < ActiveSupport::TestCase
+  class IssueSyncSettingTest < ActiveSupport::TestCase
+    include RedmineIssueSync::IssueAttributes
+
     def setup
       Setting.clear_cache
       Setting.plugin_redmine_issue_sync = {}
-      @setting = PluginSetting.new
+      @setting = IssueSyncSetting.new
     end
 
     test 'should return null objects without settings' do
       assert @setting.source.is_a? NullProject
       assert_equal [true], (@setting.trackers.map { |tracker| tracker.is_a?(NullTracker) })
       assert @setting.custom_field.is_a? NullCustomField
+    end
+
+    test 'should return issue attributes to be ignored by default' do
+      plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Setting.define_plugin_setting(plugin)
+      defaults = plugin.settings[:default]
+      setting = Setting.plugin_redmine_issue_sync
+      defaults.each_key do |key|
+        setting[key.to_s] = '1'
+      end
+      assert_equal ignorables.sort, @setting.attrs_to_be_ignored.sort
+    end
+
+    test 'should return custom ignorables' do
+      plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Setting.define_plugin_setting(plugin)
+      custom = %i[done_ratio assigned_to]
+      setting = Setting.plugin_redmine_issue_sync
+      custom.each do |key|
+        setting[key.to_s] = '1'
+      end
+      assert_equal custom.sort, @setting.attrs_to_be_ignored.sort
+    end
+
+    test 'should return no ignorables when all disabled' do
+      plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Setting.define_plugin_setting(plugin)
+      custom = []
+      assert_equal custom, @setting.attrs_to_be_ignored
     end
   end
 end
