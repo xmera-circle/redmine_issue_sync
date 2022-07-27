@@ -18,20 +18,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path('../test_helper', __dir__)
-
 module RedmineIssueSync
-  class PluginSettingTest < ActiveSupport::TestCase
-    def setup
-      Setting.clear_cache
-      Setting.plugin_redmine_issue_sync = {}
-      @setting = PluginSetting.new
+  ##
+  # Collection of attributes which are recommended to be ignored when synching
+  # issues since their values are issue specific.
+  #
+  module IssueAttributes
+    def ignorables
+      ignorables_with_label.keys
     end
 
-    test 'should return null objects without settings' do
-      assert @setting.source.is_a? NullProject
-      assert_equal [true], (@setting.trackers.map { |tracker| tracker.is_a?(NullTracker) })
-      assert @setting.custom_field.is_a? NullCustomField
+    ##
+    # @note Associations needs to be listed with their *_ids to be
+    # nillable. Do not add Issue#status attribute since it has to have a value!
+    #
+    def ignorables_with_label
+      {
+        done_ratio: 'field_done_ratio',
+        assigned_to: 'field_assigned_to',
+        due_date: 'field_due_date',
+        start_date: 'field_start_date',
+        attachment_ids: 'label_attachment_plural',
+        watcher_ids: 'label_issue_watchers'
+      }
     end
   end
 end

@@ -13,6 +13,7 @@ en:
   label_issue_catalogue: Issue Catalogue
   label_undefined_source: unknown
   label_all_trackers: All
+  label_ignore_attributes: Attributes of tasks to be ignored
 
   field_root: System project
   field_filter: Value
@@ -30,6 +31,7 @@ en:
     Therefore, each synchronised issue will be documented.
   text_reset_sync_log: 'Here you can '
   text_could_be_synchronised: could be synchronised
+  text_ignorable_attributes_setting: "Check those attributes where you don't want their values to be synchronised:"
 
   error_is_no_boolean: "needs to be true or false."
   error_is_no_filter: "%{value} is not valid."

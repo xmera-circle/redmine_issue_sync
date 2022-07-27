@@ -19,6 +19,7 @@ de:
   label_issue_catalogue: Ticket-Katalog
   label_undefined_source: unbekannt
   label_all_trackers: Alle
+  label_ignore_attributes: Zu ignorierende Attribute einer Aufgabe
 
   field_root: Systemprojekt
   field_filter: Wert
@@ -36,6 +37,7 @@ de:
     Jedes synchronsierte Ticket wird daher dokumentiert.
   text_reset_sync_log: 'Protokoll jetzt'
   text_could_be_synchronised: können synchronisiert werden
+  text_ignorable_attributes_setting: 'Attribute ankreuzen, wenn ihre Werte beim Synchronisieren nicht übertragen werden sollen:'
 
   error_is_no_boolean: "muss wahr oder falsch sein."
   error_is_no_filter: "ist nicht gültig."

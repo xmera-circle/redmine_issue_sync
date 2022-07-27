@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,15 +18,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-namespace :plugins do
-  namespace :settings do
-    desc 'Clear plugin settings'
-    task clear: :environment do
-      # Setting.find_by(name: 'plugin_redmine_issue_sync').delete
-      # puts '--> Deleted settings for :redmine_issue_sync'
-      # rescue NoMethodError
-      # puts '--> Nothing to delete'
-      IssueSyncSetting.new.clear
-    end
+##
+# @see http://www.binarywebpark.com/presenter-pattern-poros-rails-applications/
+#   https://blog.revathskumar.com/2014/05/rails-presenters.html
+#
+class BasePresenter < SimpleDelegator
+  include ActionView::Helpers
+  include Redmine::I18n
+
+  delegate_missing_to :view
+
+  def initialize(model, view)
+    @model = model
+    @view = view
+    super(@model)
   end
+
+  private
+
+  attr_reader :model, :view
 end

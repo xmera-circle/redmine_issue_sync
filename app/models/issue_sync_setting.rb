@@ -18,9 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class PluginSetting
+##
+# Access point for plugin settings.
+#
+class IssueSyncSetting
   include ActiveModel::Validations
   include Redmine::I18n
+  include RedmineIssueSync::IssueAttributes
 
   validate :validate_source_project
 
@@ -39,6 +43,16 @@ class PluginSetting
   #
   def source_id
     setting.fetch(:source_project, '').to_i
+  end
+
+  ##
+  # Will be used in ProjectPatch#sanitize_issue_attributes
+  #
+  def attrs_to_be_ignored
+    attrs = ignorables.select do |ignorable|
+      setting[ignorable.to_s].to_s == '1'
+    end
+    attrs || []
   end
 
   def trackers
@@ -80,6 +94,10 @@ class PluginSetting
   private
 
   attr_reader :setting
+
+  def enabled?
+    ActiveRecord::Base.connection.data_source_exists? :settings
+  end
 
   def find_source_project
     Project.find_by(id: source_id) || NullProject.new

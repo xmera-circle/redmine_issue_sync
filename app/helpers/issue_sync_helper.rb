@@ -18,15 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-namespace :plugins do
-  namespace :settings do
-    desc 'Clear plugin settings'
-    task clear: :environment do
-      # Setting.find_by(name: 'plugin_redmine_issue_sync').delete
-      # puts '--> Deleted settings for :redmine_issue_sync'
-      # rescue NoMethodError
-      # puts '--> Nothing to delete'
-      IssueSyncSetting.new.clear
-    end
+module IssueSyncHelper
+  def ignorable_attributes_presenter
+    IgnorableAttributesPresenter.new(@settings, self)
   end
 end

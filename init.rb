@@ -44,7 +44,4 @@ Redmine::Plugin.register :redmine_issue_sync do
   end
 end
 
-ActiveSupport::Reloader.to_prepare do
-  ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
-  ProjectsController.helper(SyncParamsHelper)
-end
+RedmineIssueSync.setup
