@@ -95,10 +95,6 @@ class IssueSyncSetting
 
   attr_reader :setting
 
-  def enabled?
-    ActiveRecord::Base.connection.data_source_exists? :settings
-  end
-
   def find_source_project
     Project.find_by(id: source_id) || NullProject.new
   end
