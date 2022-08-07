@@ -19,31 +19,32 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 RedmineApp::Application.routes.draw do
-  match '/projects/:id/issues_sync/settings',
-        controller: 'sync_issues',
-        action: 'settings',
+  match '/projects/:id/sync_params',
+        controller: 'sync_params',
+        action: 'update',
         via: %i[get post],
-        as: 'sync_issues_settings'
+        as: 'project_sync_params'
 
-  match '/projects/:project_id/sync_issues/new',
-        controller: 'sync_issues',
+  match '/projects/:project_id/issue_sync/new',
+        controller: 'issue_sync',
         action: 'new',
         via: %i[get post],
-        as: 'new_project_sync_issue'
+        as: 'new_project_issue_sync',
+        defaults: { format: 'js' }
 
   resources :projects do
-    resources :sync_issues, only: %w[create]
+    resources :issue_sync, only: %w[create]
   end
 
   match '/settings/plugin/redmine_issue_sync/reset_filter',
-        controller: 'sync_issues',
+        controller: 'issue_sync',
         action: 'reset_filter',
         via: %i[get],
-        as: 'reset_sync_issues_settings_filter'
+        as: 'reset_issue_sync_settings_filter'
 
   match '/settings/plugin/redmine_issue_sync/reset_log',
-        controller: 'sync_issues',
+        controller: 'issue_sync',
         action: 'reset_log',
         via: %i[get],
-        as: 'reset_sync_issues_log'
+        as: 'reset_issue_sync_log'
 end

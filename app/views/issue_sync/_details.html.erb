@@ -1,0 +1,7 @@
+<%=tag.ol do %>
+  <% backlog.each do |item| %>
+    <%=tag.li do %>
+      <%= link_to_issue(item, project: true) %>
+    <% end %>
+  <% end %>
+<% end %>

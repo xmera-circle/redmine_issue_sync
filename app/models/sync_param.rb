@@ -18,16 +18,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+##
+# Saves the project related synchronisation params.
+#
 class SyncParam < ActiveRecord::Base
   include Redmine::SafeAttributes
+  include RedmineIssueSync::Utils::ToBoolean
+  include RedmineIssueSync::Utils::Compact
 
   belongs_to :project, autosave: true, inverse_of: :sync_param
   serialize :settings, Hash
-
-  validates :filter, custom_field_value: true, if: IssueSyncSetting.new.custom_field
-  validates :root, boolean: true
-
-  delegate :cast, to: 'ActiveModel::Type::Boolean.new'
 
   safe_attributes(
     :root,
@@ -35,7 +35,7 @@ class SyncParam < ActiveRecord::Base
   )
 
   def filter
-    settings[:filter]&.reject(&:blank?)
+    compact(settings[:filter])
   end
 
   def filter=(value)

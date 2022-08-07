@@ -18,12 +18,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+##
+# Validates attributes required to be boolean.
+#
 class BooleanValidator < ActiveModel::EachValidator
   include Redmine::I18n
+  include RedmineIssueSync::Utils::ToBoolean
 
   def validate_each(record, attribute, value)
-    return true if %w[TrueClass FalseClass].include? value.class.to_s
+    return true if %w[TrueClass FalseClass].include? cast(value).class.to_s
 
-    record.errors.add(attribute, l(:error_is_no_boolean))
+    record.errors.add(field_name(attribute), l(:error_is_no_boolean))
+  end
+
+  private
+
+  def field_name(attribute)
+    l("field_#{attribute}")
   end
 end

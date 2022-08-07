@@ -40,9 +40,9 @@ module RedmineIssueSync
         ##
         # Synchronise issues according to the project sync_param.
         #
-        def synchronise(issues:, scope:)
-          syncs.build(issues: issues,
-                      scope: scope,
+        def synchronise(issues_catalogue:, sync_scope:)
+          syncs.build(issues_catalogue: issues_catalogue,
+                      sync_scope: sync_scope,
                       user_id: User.current.id)
         end
 
@@ -177,7 +177,7 @@ module RedmineIssueSync
         # should be ignored as defined in plugin setting.
         #
         def sanitize_issue_attributes(new_issue)
-          settings = IssueSyncSetting.new
+          settings = SyncSetting.new
           settings.attrs_to_be_ignored.each do |attr|
             new_issue.send("#{attr}=", nil) unless collection?(new_issue, attr)
           end

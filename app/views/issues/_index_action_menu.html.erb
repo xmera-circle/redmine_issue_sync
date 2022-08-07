@@ -38,7 +38,7 @@
               :class => 'icon icon-settings' if User.current.allowed_to?(:edit_project, @project) %>
 
     <% if Redmine::Plugin.installed?(:redmine_issue_sync) && @project&.module_enabled?(:issue_sync) && User.current.allowed_to?(:sync_issues, @project) %>
-      <%= link_to l(:button_synchronise), new_project_sync_issue_path(@project), class: 'icon icon-reload', remote: true, method: :get %>
+      <%= link_to l(:button_synchronise), new_project_issue_sync_path(@project), class: 'icon icon-reload', remote: true, method: :get %>
     <% end %>
   <% end %>
 </div>

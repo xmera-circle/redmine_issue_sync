@@ -36,10 +36,11 @@ Redmine::Plugin.register :redmine_issue_sync do
 
   project_module :issue_sync do
     permission :sync_issues,
-               { sync_issues: %w[new create show] },
+               { issue_sync: %w[new create show] },
                require: :member
     permission :manage_sync_settings,
-               { sync_issues: %w[settings reset_filter reset_log] },
+               { issue_sync: %w[reset_filter reset_log],
+                 sync_params: %w[update] },
                require: :member
   end
 end

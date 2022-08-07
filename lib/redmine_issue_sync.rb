@@ -22,9 +22,16 @@
 require 'redmine_issue_sync/extensions/project_patch'
 require 'redmine_issue_sync/extensions/settings_helper_patch'
 
+# Hooks
+require 'redmine_issue_sync/hooks/view_layout_hooks'
+
 # Overrides
 require 'redmine_issue_sync/overrides/projects_helper_patch'
 require 'redmine_issue_sync/overrides/project_patch'
+
+# Utils
+require 'redmine_issue_sync/utils/compact'
+require 'redmine_issue_sync/utils/to_boolean'
 
 # Others
 require 'redmine_issue_sync/issue_attributes'
@@ -102,7 +109,7 @@ module RedmineIssueSync
       ActiveSupport::Reloader.to_prepare do
         ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
         ProjectsController.helper(SyncParamsHelper)
-        SettingsController.helper(IssueSyncHelper)
+        SettingsController.helper(SyncSettingHelper)
       end
     end
 
@@ -110,6 +117,9 @@ module RedmineIssueSync
       plugin = Redmine::Plugin.find(:redmine_issue_sync)
       Rails.application.configure do
         config.autoload_paths << "#{plugin.directory}/app/presenters"
+        config.autoload_paths << "#{plugin.directory}/app/null_objects"
+        config.autoload_paths << "#{plugin.directory}/app/services"
+        config.autoload_paths << "#{plugin.directory}/app/forms"
       end
     end
   end
