@@ -18,40 +18,45 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+##
+# Synchronisation meta data.
+#
 class Synchronisation < ActiveRecord::Base
+  include Redmine::SafeAttributes
   include NamedValues
 
   belongs_to :user
   belongs_to :target, class_name: 'Project', foreign_key: :target_id
   has_many :items, class_name: 'SyncItem', dependent: :destroy
 
-  validate :requirements
-
+  safe_attributes :project_id
   default_scope { order(created_at: :asc) }
 
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :trackers, :custom_field, :source, to: :@plugin_settings
-  delegate :content_ids, to: :@issues
-  delegate :projects, :values, to: :@scope
+  delegate :content_ids, to: :@issues_catalogue
+  delegate :projects, :values, to: :@sync_scope
   delegate :parent, to: :target
 
-  attr_reader :issues, :scope
+  attr_reader :issues_catalogue, :sync_scope
 
   def initialize(attributes = nil, *_args)
-    @issues = attributes.delete(:issues)
-    @scope = attributes.delete(:scope)
+    @issues_catalogue = attributes&.delete(:issues_catalogue)
+    @sync_scope = attributes&.delete(:sync_scope)
     super(attributes)
-    @plugin_settings = IssueSyncSetting.new
-    @sync_param = target.sync_param
+    @plugin_settings = SyncSetting.new
+    @sync_param = target&.sync_param
   end
 
   def exec
-    Synchronisation.transaction do
+    transaction do
       mapping = copy_issues
       log_issues(mapping)
-      save!
+
+      raise ActiveRecord::Rollback unless save
     end
+    self
   end
 
   def backlog
@@ -64,6 +69,32 @@ class Synchronisation < ActiveRecord::Base
 
   def value_names
     names_of(values, custom_field)
+  end
+
+  ##
+  # There are no values for custom fields expected when no custom field
+  # is configured in plugin settings.
+  #
+  def values_expected?
+    return false if custom_field.is_a? NullCustomField
+
+    true
+  end
+
+  ##
+  # There are no trackers expected when there are no trackers
+  # configured in plugin settings.
+  #
+  def trackers_expected?
+    return false if trackers.first.is_a? NullTracker
+
+    true
+  end
+
+  def parent_system_project?
+    return false unless parent
+
+    parent.sync_param&.root
   end
 
   private
@@ -92,38 +123,7 @@ class Synchronisation < ActiveRecord::Base
     end
   end
 
-  def requirements
-    validate_target
-    validate_plugin_settings
-    validate_child_project_settings
-  end
-
   def synched_items
     self.class.history(target).map(&:items).reject(&:empty?)
-  end
-
-  def validate_plugin_settings
-    errors.add(:base, plugin_settings.errors.full_messages) unless plugin_settings.valid?
-  end
-
-  def validate_child_project_settings
-    projects.each do |project|
-      errors.add(:base, l(:error_no_settings, value: project.name)) unless project.sync_param
-    end
-  end
-
-  def validate_target
-    return unless target.child?
-
-    return unless parent_system_object?
-
-    errors.add(:base, l(:error_has_system_object,
-                        value: target.name))
-  end
-
-  def parent_system_object?
-    return false unless parent
-
-    parent.sync_param&.root
   end
 end

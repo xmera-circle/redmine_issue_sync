@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deleted
 
-* blank line from select_tag in sync_issues/_settings.html.erb
+* blank line from select_tag in issue_sync/_settings.html.erb
 
 ### Added
 

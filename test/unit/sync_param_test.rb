@@ -23,47 +23,21 @@ require File.expand_path('../test_helper', __dir__)
 module RedmineIssueSync
   class SyncParamTest < ActiveSupport::TestCase
     include Redmine::I18n
+    include RedmineIssueSync::TestObjectHelper
 
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values
 
-    def setup
-      @plugin = Redmine::Plugin.find(:redmine_issue_sync)
-      Setting.define_plugin_setting(@plugin)
-      @setting = Setting.plugin_redmine_issue_sync
-      @setting[:custom_field] = '1'
-    end
-
-    def teardown
-      @setting = nil
-      @plugin = nil
-    end
-
     test 'should respond to filter' do
-      assert SyncParam.new.respond_to? :filter
+      with_plugin_settings(custom_field: '1') do
+        assert SyncParam.new.respond_to? :filter
+      end
     end
 
     test 'should respond to root' do
-      assert SyncParam.new.respond_to? :root
-    end
-
-    test 'should not validate filter if wrong' do
-      settings = SyncParam.new(settings: { root: '1', filter: ['wrong'] })
-      assert_not settings.valid?
-      assert_equal [:filter], settings.errors.keys
-    end
-
-    test 'should validate attributes' do
-      assert_equal '1', @setting[:custom_field]
-      settings = SyncParam.new(settings: { root: '1', filter: ['MySQL'] })
-      assert settings.valid?, settings.errors.full_messages
-    end
-
-    test 'should not validate root with wrong value' do
-      assert_equal '1', @setting[:custom_field]
-      settings = SyncParam.new(settings: { root: nil, filter: ['PostgreSQL'] })
-      assert_not settings.valid?
-      assert_equal [:root], settings.errors.keys
+      with_plugin_settings(custom_field: '1') do
+        assert SyncParam.new.respond_to? :root
+      end
     end
   end
 end

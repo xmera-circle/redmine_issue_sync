@@ -24,12 +24,12 @@ module RedmineIssueSync
     module ProjectsHelperPatch
       def project_settings_tabs
         tabs = super
-        sync_issues_tabs = [
-          { name: 'sync_issues', action: { controller: 'sync_issues', action: 'settings' },
-            partial: 'sync_issues/settings', label: :tab_sync_issues }
+        sync_params_tabs = [
+          { name: 'sync_params', action: { controller: 'sync_params', action: 'update' },
+            partial: 'sync_params/form', label: :tab_sync_params }
         ]
-        tabs.concat(sync_issues_tabs.select do |sync_issues_tab|
-                      User.current.allowed_to?(sync_issues_tab[:action], @project)
+        tabs.concat(sync_params_tabs.select do |sync_params_tab|
+                      User.current.allowed_to?(sync_params_tab[:action], @project)
                     end)
         tabs
       end

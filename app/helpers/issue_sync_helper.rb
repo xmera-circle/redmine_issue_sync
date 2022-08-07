@@ -18,8 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+##
+# Initializes presenters
+#
 module IssueSyncHelper
-  def ignorable_attributes_presenter
-    IgnorableAttributesPresenter.new(@settings, self)
+  ##
+  # Provides an interface for using presenters in views.
+  #
+  # @note redmine_extensions gem uses a similar approach
+  # ApplicationHelper#present. Therefore, this needs to be
+  # named IssueSyncHelper#show.
+  #
+  def show(object, klass = nil)
+    klass ||= "RedmineIssueSync::#{object.class}Presenter".constantize
+    presenter = klass.new(object, self)
+    yield presenter if block_given?
+    presenter
   end
 end

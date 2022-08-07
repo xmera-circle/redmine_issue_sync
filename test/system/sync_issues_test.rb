@@ -61,10 +61,8 @@ class SyncIssuesTest < ApplicationSystemTestCase
       page.first(:css, 'a.icon.icon-reload').click
     end
     page.find('select option', text: Tracker.find(1).name).click
-    page.find('p a', text: l(:button_update)).click
     assert page.has_content? "3 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
     page.find('select option', text: Tracker.find(2).name).click
-    page.find('p a', text: l(:button_update)).click
     assert page.has_content? "1 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
   end
 

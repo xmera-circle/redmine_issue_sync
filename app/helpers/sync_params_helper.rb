@@ -18,12 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+##
+# Helper for SyncParam model.
+#
 module SyncParamsHelper
-  def options_for_custom_field_values_select(custom_field:, selected:)
-    return if custom_field.name.blank?
-
-    field_object = FieldObject.new(custom_field).instance
-    values = field_object.possible_values.map(&:select_item)
-    options_for_select(values, selected)
+  ##
+  # Provides an interface for using presenters in views.
+  #
+  # @note redmine_extensions gem uses a similar approach
+  # ApplicationHelper#present. Therefore, this needs to be
+  # named SyncParamsHelper#show.
+  #
+  def show(object, klass = nil)
+    klass ||= "RedmineIssueSync::#{object.class}Presenter".constantize
+    presenter = klass.new(object, self)
+    yield presenter if block_given?
+    presenter
   end
 end

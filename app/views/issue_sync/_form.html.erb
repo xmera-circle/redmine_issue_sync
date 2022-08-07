@@ -1,0 +1,25 @@
+<%= tag.div id: 'issue-sync-form' do %>
+  <%= form_for @synchronisation, url: project_issue_sync_index_path(@project), 
+        remote: show(@synchronisation).render_js?(@form) do |f| %>
+    <%= error_messages_for 'synchronisation' %>
+    <div class='issue-sync sync-dialog' >
+      <%= show(@synchronisation).headline %>
+      <%= show(@synchronisation).select_trackers %>
+      <%= show(@synchronisation).custom_field_list %>
+      <%= show(@synchronisation).num_of_synchronisable_issues %>
+      <%= show(@synchronisation).action_buttons %>
+    </div>
+    <%= show(@synchronisation).render_details %>
+  <% end %>
+<% end %>
+
+<%= javascript_tag do %>
+function updateIssueBacklog(el) {
+  updateSyncFrom('<%= "#{escape_javascript new_project_issue_sync_path(@project, format: 'js')}" %>', el);
+}
+$('#issue-sync-form').on('click', '.toggle-multiselect', function () {
+  toggleMultiSelectIconInit();
+  toggleMultiSelect($(this).siblings('select'));
+  $(this).toggleClass('icon-toggle-plus icon-toggle-minus');
+});
+<% end %>

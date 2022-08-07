@@ -22,15 +22,15 @@ require File.expand_path('../test_helper', __dir__)
 
 module RedmineIssueSync
   class ProjectPatchTest < ActiveSupport::TestCase
+    include RedmineIssueSync::TestObjectHelper
+
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values
 
     def setup
-      @plugin = Redmine::Plugin.find(:redmine_issue_sync)
-      Setting.define_plugin_setting(@plugin)
-      @setting = Setting.plugin_redmine_issue_sync
-      @setting[:custom_field] = '1'
-      @source_project = Project.find(4)
+      @options = { custom_field: '1' }
+      @source_project = Project.generate!(tracker_ids: [], issue_custom_field_ids: [])
+      @source_project.issue_custom_fields << custom_fields(:custom_fields_001)
       @source_project.enable_module! :issue_sync
     end
 
@@ -41,14 +41,16 @@ module RedmineIssueSync
 
     test 'should copy sync params from project' do
       filter = %w[MySQL PostgreSQL]
-      @source_project.build_sync_param({ root: true, filter: filter })
+      @source_project.build_sync_param({ root: '1', filter: filter })
       @source_project.save
-      new_project = Project.copy_from(@source_project)
-      assert save_project(new_project)
-      new_project = Project.last
-      new_project.copy(@source_project)
-      assert new_project.sync_param.root
-      assert_equal filter, new_project.sync_param.filter
+      with_plugin_settings(@options) do
+        new_project = Project.copy_from(@source_project)
+        assert save_project(new_project)
+        new_project = Project.last
+        new_project.copy(@source_project)
+        assert new_project.sync_param.root
+        assert_equal filter, new_project.sync_param.filter
+      end
     end
 
     private
@@ -56,6 +58,7 @@ module RedmineIssueSync
     def save_project(project)
       project.identifier ||= 'new-project'
       project.name = 'New Project'
+      assert project.valid?, project.errors.full_messages.to_sentence
       project.save
     end
   end

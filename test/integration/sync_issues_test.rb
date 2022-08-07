@@ -24,6 +24,7 @@ module RedmineIssueSync
   class SyncIssuesTest < ActionDispatch::IntegrationTest
     extend RedmineIssueSync::LoadFixtures
     include RedmineIssueSync::AuthenticateUser
+    include RedmineIssueSync::TestObjectHelper
     include Redmine::I18n
 
     fixtures :projects, :members, :member_roles, :roles, :users,
@@ -32,11 +33,7 @@ module RedmineIssueSync
              :custom_fields_projects, :enumerations
 
     def setup
-      @plugin = Redmine::Plugin.find(:redmine_issue_sync)
-      @setting = Setting.plugin_redmine_issue_sync
-      @setting[:source_project] = '4'
-      @setting[:source_trackers] = ['1']
-      @setting[:custom_field] = '1'
+      super
       @manager = User.find(2)
       @manager_role = Role.find_by_name('Manager')
       @manager_role.add_permission! :manage_sync_settings
@@ -48,25 +45,30 @@ module RedmineIssueSync
     end
 
     def teardown
-      @setting = nil
+      super
+      Setting.clear_cache
     end
 
     test 'should sychronise issues and clear ignorable default attrs' do
-      defaults = @plugin.settings[:default]
-      defaults.each_key do |key|
-        @setting[key.to_s] = '1'
-      end
+      settings = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
+      defaults = plugin.settings[:default]
+      options = defaults.merge settings
+
       @project.sync_param.filter = ['MySQL']
       @project.sync_param.save
       source = Project.find(4)
       create_issues(source)
-      assert_difference '@project.issues.count', 2 do
-        post project_sync_issues_path(
-          @project,
-          params: { sync_issues: { selected_trackers: ['1'] } }
-        )
+
+      with_plugin_settings(options) do
+        assert_difference '@project.issues.count', 2 do
+          post project_issue_sync_index_path(
+            @project,
+            params: { issue_sync: { selected_trackers: ['1'] } }
+          )
+        end
+        assert_redirected_to project_issues_path(@project)
       end
-      assert_redirected_to project_issues_path(@project)
+
       last_issues = @project.issues.last(2)
       last_issues.each do |issue|
         assert_equal 0, issue.done_ratio
@@ -79,28 +81,31 @@ module RedmineIssueSync
     end
 
     test 'should sychronise issues and clear ignorable custom attrs' do
+      settings = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
+      custom = { done_ratio: '1', assigned_to: '1' }
+      options = custom.merge settings
+
       @project.sync_param.filter = ['MySQL']
       @project.sync_param.save
       source = Project.find(4)
-      custom = %i[done_ratio assigned_to]
-      custom.each do |key|
-        @setting[key.to_s] = '1'
-      end
       create_issues(source)
-      assert_difference '@project.issues.count', 2 do
-        post project_sync_issues_path(
-          @project,
-          params: { sync_issues: { selected_trackers: ['1'] } }
-        )
+
+      with_plugin_settings(options) do
+        assert_difference '@project.issues.count', 2 do
+          post project_issue_sync_index_path(
+            @project,
+            params: { issue_sync: { selected_trackers: ['1'] } }
+          )
+        end
+        assert_redirected_to project_issues_path(@project)
       end
-      assert_redirected_to project_issues_path(@project)
+
       last_issues = @project.issues.last(2)
       last_issues.each do |issue|
         assert_equal 0, issue.done_ratio
         assert_nil issue.assigned_to
       end
     end
-    
 
     private
 

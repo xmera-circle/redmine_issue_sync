@@ -20,6 +20,9 @@
 
 require 'forwardable'
 
+##
+# Defines what project params will be considered during synchronisations.
+#
 class SyncScope
   extend Forwardable
 

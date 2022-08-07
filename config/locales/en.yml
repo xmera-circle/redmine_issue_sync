@@ -1,7 +1,22 @@
-en: 
+en:
+  activemodel:
+    attributes:
+      sync_param_form:
+        filter: Possible values
+        root: System project
+
+  activerecord:
+    attributes:
+      synchronisation: 
+        filter: Possible values
+        source: Issue catalogue
+        project_module_issue_sync: Issue Sync
+        trackers: Trackers
+        system_project: System project
+
   label_redmine_issue_sync: Issue Sync # Plugin name
   project_module_issue_sync: Issue Sync # Project module name
-  tab_sync_issues: Synchronisation # Project module settings tab
+  tab_sync_params: Synchronisation # Project module settings tab
 
   permission_sync_issues: Synchronise issues
   permission_manage_sync_settings: Manage synchronisation settings
@@ -13,7 +28,9 @@ en:
   label_issue_catalogue: Issue Catalogue
   label_undefined_source: unknown
   label_all_trackers: All
+  label_all_custom_fields: All
   label_ignore_attributes: Attributes of tasks to be ignored
+  label_not_configured: not configured
 
   field_root: System project
   field_filter: Value
@@ -32,10 +49,18 @@ en:
   text_reset_sync_log: 'Here you can '
   text_could_be_synchronised: could be synchronised
   text_ignorable_attributes_setting: "Check those attributes where you don't want their values to be synchronised:"
-
+  text_restrict_trackers: You can restrict trackers in administration.
+  text_restrict_custom_fields: You can restrict custom fields in administration.
+  
   error_is_no_boolean: "needs to be true or false."
   error_is_no_filter: "%{value} is not valid."
   error_is_not_present: "needs to be selected."
   error_no_settings: "%{value} has no settings."
-  error_has_system_object: "%{value} will be synchronised via its parent project."
+  error_has_system_project: "%{value} will be synchronised via its parent project."
   error_synchronisation_impossible: The synchronisation is not possible because there is no source project selected.
+  ###
+  error_project_id_is_not_valid: "with %{value} is not valid."
+  error_project_module_issue_sync: "of %{value} needs to be enabled."
+  error_filter_blank: "of %{value} needs to be given."
+  error_trackers_blank: "of %{value} needs to be given."
+  error_system_project_invalid: "of %{value} is not valid without subprojects."
