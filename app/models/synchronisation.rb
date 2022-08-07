@@ -26,7 +26,7 @@ class Synchronisation < ActiveRecord::Base
   include NamedValues
 
   belongs_to :user
-  belongs_to :target, class_name: 'Project', foreign_key: :target_id
+  belongs_to :target, class_name: 'Project', inverse_of: :syncs
   has_many :items, class_name: 'SyncItem', dependent: :destroy
 
   safe_attributes :project_id

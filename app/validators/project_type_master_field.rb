@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 ##
-# Helper for validating custom field values of project type master objects by 
+# Helper for validating custom field values of project type master objects by
 # checking if its value is in the list of possible values.
 #
 class ProjectTypeMasterField

@@ -18,25 +18,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+require 'forwardable'
+
 class SyncValidator < ActiveModel::Validator
   include Redmine::I18n
+
+  def_delegators :issue_sync_setting, :source_unset?, :trackers_unset?, :custom_field_unset?
 
   def validate(record)
     self.record = record
     record.errors.add(:issue_catalogue, l(:error_synchronisation_impossible)) if source_unset?
   end
 
-  def source_unset?
-    issue_sync_setting.source_unset?
-  end
+  # def source_unset?
+  #   issue_sync_setting.source_unset?
+  # end
 
-  def trackers_unset?
-    issue_sync_setting.trackers_unset?
-  end
+  # def trackers_unset?
+  #   issue_sync_setting.trackers_unset?
+  # end
 
-  def custom_field_unset?
-    issue_sync_setting.custom_field_unset?
-  end
+  # def custom_field_unset?
+  #   issue_sync_setting.custom_field_unset?
+  # end
 
   private
 

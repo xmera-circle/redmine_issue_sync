@@ -62,9 +62,11 @@ module RedmineIssueSync
     end
 
     test 'should clear plugin settings' do
-      with_plugin_settings(@defaults) do
+      with_plugin_settings(source_trackers: %w[1 2]) do
         setting = SyncSetting.new
-        assert_not setting.clear
+        setting.clear
+        Setting.clear_cache
+        assert_equal plugin.settings[:default], Setting.plugin_redmine_issue_sync
       end
     end
   end

@@ -114,7 +114,8 @@ module RedmineIssueSync
     end
 
     def tracker_options_for_select
-      options_for_select(trackers.pluck(:name, :id).unshift([l(:label_all_trackers), :all]), selected: selected_trackers)
+      options_for_select(trackers.pluck(:name, :id).unshift([l(:label_all_trackers), :all]),
+                         selected: selected_trackers)
     end
 
     def warn_not_configured

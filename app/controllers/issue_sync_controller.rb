@@ -42,7 +42,7 @@ class IssueSyncController < ApplicationController
     if @synchronisation.errors.none?
       respond_to do |format|
         format.html { redirect_to project_issues_path(@project), notice: l(:notice_successful_synchronisation) }
-        format.js { head 200 }
+        format.js { head :ok }
       end
     else
       render :new

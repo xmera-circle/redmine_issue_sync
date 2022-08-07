@@ -109,7 +109,7 @@ module RedmineIssueSync
               if logger&.info?
                 logger.info(
                   "Project#copy_issues: issue ##{issue.id} could not be copied: " \
-                    "#{new_issue.errors.full_messages}"
+                  "#{new_issue.errors.full_messages}"
                 )
               end
             else
