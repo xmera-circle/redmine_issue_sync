@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require "active_support/core_ext/hash/indifferent_access"
+require 'active_support/core_ext/hash/indifferent_access'
 
 ##
 # Access point for plugin settings.
@@ -123,9 +123,9 @@ class SyncSetting
   #
   def clear
     Setting.find_by(name: plugin_setting_name).delete
-    puts "Deleted settings for #{plugin_setting_name}."
+    Rails.logger.info "Deleted settings for #{plugin_setting_name}."
   rescue NoMethodError
-    puts "There are no settings to delete for #{plugin_setting_name}."
+    Rails.logger.error "There are no settings to delete for #{plugin_setting_name}."
   end
 
   private
