@@ -63,4 +63,4 @@ en:
   error_project_module_issue_sync: "of %{value} needs to be enabled."
   error_filter_blank: "of %{value} needs to be given."
   error_trackers_blank: "of %{value} needs to be given."
-  error_system_project_invalid: "of %{value} is not valid without subprojects."
+  error_system_project_invalid: "is not valid since %{value} has no subprojects."

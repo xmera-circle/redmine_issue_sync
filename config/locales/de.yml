@@ -63,4 +63,4 @@ de:
   error_project_module_issue_sync: "von %{value} muss aktiviert werden."
   error_filter_blank: "von %{value} muss ausgefüllt werden."
   error_trackers_blank: "von %{value} muss ausgefüllt werden."
-  error_system_project_invalid: "von %{value} ist nicht gülitg, da es keine Unterprojekte gibt."
+  error_system_project_invalid: "ist nicht gülitg, da %{value} keine Unterprojekte gibt."
