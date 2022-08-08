@@ -52,13 +52,8 @@ en:
   text_restrict_trackers: You can restrict trackers in administration.
   text_restrict_custom_fields: You can restrict custom fields in administration.
   
-  error_is_no_boolean: "needs to be true or false."
-  error_is_no_filter: "%{value} is not valid."
-  error_is_not_present: "needs to be selected."
-  error_no_settings: "%{value} has no settings."
   error_has_system_project: "%{value} will be synchronised via its parent project."
   error_synchronisation_impossible: The synchronisation is not possible because there is no source project selected.
-  ###
   error_project_id_is_not_valid: "with %{value} is not valid."
   error_project_module_issue_sync: "of %{value} needs to be enabled."
   error_filter_blank: "of %{value} needs to be given."

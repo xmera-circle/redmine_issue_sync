@@ -19,7 +19,7 @@ de:
   tab_sync_params: Synchronisation # Project module settings tab
 
   permission_sync_issues: Tickets synchronisieren
-  permission_manage_sync_settings: Sychronisations-Einstellungen verwalten
+  permission_manage_sync_settings: Sychronisationseinstellungen verwalten
 
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
   label_issue_synchronisation: Ticket-Synchronisation  
@@ -52,15 +52,10 @@ de:
   text_restrict_trackers: Tracker können in der Administration eingeschränkt werden.
   text_restrict_custom_fields: Benutzerdefinierte Felder können in der Administration eingeschränkt werden.
 
-  # error_is_no_boolean: "muss wahr oder falsch sein."
-  # error_is_no_filter: "ist nicht gültig."
-  # error_is_not_present: "muss auswählt werden."
-  # error_no_settings: "%{value} hat keine Einstellungen."
   error_has_system_project: "%{value} wird über sein übergeordnetes Projekt synchronisiert."
   error_synchronisation_impossible: Die Synchronisation kann nicht durchgeführt werden, da kein Quellprojekt angegeben wurde.
-  ###
   error_project_id_is_not_valid: "mit %{value} ist nicht gültig."
   error_project_module_issue_sync: "von %{value} muss aktiviert werden."
   error_filter_blank: "von %{value} muss ausgefüllt werden."
   error_trackers_blank: "von %{value} muss ausgefüllt werden."
-  error_system_project_invalid: "ist nicht gülitg, da %{value} keine Unterprojekte gibt."
+  error_system_project_invalid: "ist nicht gülitg, da es für %{value} keine Unterprojekte gibt."
