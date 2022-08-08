@@ -1,0 +1,16 @@
+.issue-sync.icon.icon-warning {
+  color: #eabe1c;
+}
+
+.issue-sync.help-content {
+  color: #8b0000;
+  padding: 3px;
+}
+
+.issue-sync.sync-dialog {
+  text-align: center;
+}
+
+#issue_sync_selected_trackers_ {
+  margin: 0 0.5rem;
+}

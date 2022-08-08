@@ -1,0 +1,3 @@
+
+$('#ajax-modal').html('<%= escape_javascript(render :partial => 'issue_sync/form') %>');
+showModal('ajax-modal', '800px', '<%= escape_javascript l(:label_issue_synchronisation) %>');

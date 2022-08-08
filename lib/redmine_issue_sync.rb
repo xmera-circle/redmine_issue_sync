@@ -22,34 +22,105 @@
 require 'redmine_issue_sync/extensions/project_patch'
 require 'redmine_issue_sync/extensions/settings_helper_patch'
 
+# Hooks
+require 'redmine_issue_sync/hooks/view_layout_hooks'
+
 # Overrides
 require 'redmine_issue_sync/overrides/projects_helper_patch'
 require 'redmine_issue_sync/overrides/project_patch'
 
+# Utils
+require 'redmine_issue_sync/utils/compact'
+require 'redmine_issue_sync/utils/to_boolean'
+
+# Others
+require 'redmine_issue_sync/issue_attributes'
+
 ##
-# Define plugin default settings
+# Initialize some plugin requirements and definitions.
 #
 module RedmineIssueSync
-  module_function
+  ##
+  # Defines some default settings for issue synchronisation which will be used
+  # during plugin initialization and when rendering the corresponding view
+  # for plugin settings.
+  #
+  class DefaultSetting
+    extend IssueAttributes
 
-  def partial
-    'settings/redmine_issue_sync_settings'
+    def source_project
+      { source_project: '' }
+    end
+
+    def source_trackers
+      { source_trackers: [] }
+    end
+
+    def custom_field
+      { custom_field: '' }
+    end
+
+    def disabled_settings
+      [source_project, source_trackers, custom_field]
+    end
+
+    ##
+    # Enables some issue attributes to be ignored during synchronisation
+    # by default.
+    #
+    ignorables.each do |ignorable|
+      define_method(ignorable) do
+        { ignorable.to_sym => '1' }
+      end
+    end
   end
 
-  def defaults
-    attr = [source_project, source_trackers, custom_field]
-    attr.inject(&:merge)
-  end
+  class << self
+    def setup
+      add_helpers
+      autoload_presenters
+    end
 
-  def source_project
-    { source_project: '' }
-  end
+    def partial
+      'settings/redmine_issue_sync_settings'
+    end
 
-  def source_trackers
-    { source_trackers: [] }
-  end
+    def defaults
+      enabled_settings.inject(&:merge).merge(
+        disabled_settings.inject(&:merge)
+      )
+    end
 
-  def custom_field
-    { custom_field: '' }
+    private
+
+    def enabled_settings
+      setting.class.ignorables.map { |attr| setting.send attr }
+    end
+
+    def disabled_settings
+      setting.disabled_settings
+    end
+
+    def setting
+      DefaultSetting.new
+    end
+
+    def add_helpers
+      ActiveSupport::Reloader.to_prepare do
+        ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
+        ProjectsController.helper(SyncParamsHelper)
+        SettingsController.helper(SyncSettingHelper)
+      end
+    end
+
+    def autoload_presenters
+      plugin = Redmine::Plugin.find(:redmine_issue_sync)
+      Rails.application.configure do
+        config.autoload_paths << "#{plugin.directory}/app/presenters"
+        config.autoload_paths << "#{plugin.directory}/app/null_objects"
+        config.autoload_paths << "#{plugin.directory}/app/services"
+        config.autoload_paths << "#{plugin.directory}/app/forms"
+      end
+    end
   end
 end

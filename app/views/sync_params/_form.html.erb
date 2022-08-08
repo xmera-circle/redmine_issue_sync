@@ -1,0 +1,46 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Issue Sync.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<% @sync_param ||=
+  SyncParam.find_or_initialize_by(project_id: @project.id)%>
+
+<%= form_tag(project_sync_params_path(@project), method: :post, class: "tabular") do %>
+  <%= tag.div class: 'box tabular' do %>
+    <%= tag.p do %>
+      <%= show(@sync_param).root_label %>
+      <%= show(@sync_param).root_checkbox %>
+      <%= show(@sync_param).root_info %>
+    <% end %>
+    
+    <%= tag.p do %>
+      <%= show(@sync_param).tracker_label %>
+      <%= show(@sync_param).tracker_list %>
+    <% end %>
+  
+    <%= tag.p do %>
+      <%= show(@sync_param).filter_label %>
+      <%= show(@sync_param).filter_name %>
+      <%= show(@sync_param).filter_selection %> 
+    <% end %>
+  <% end %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

@@ -40,9 +40,9 @@ module RedmineIssueSync
         ##
         # Synchronise issues according to the project sync_param.
         #
-        def synchronise(issues:, scope:)
-          syncs.build(issues: issues,
-                      scope: scope,
+        def synchronise(issues_catalogue:, sync_scope:)
+          syncs.build(issues_catalogue: issues_catalogue,
+                      sync_scope: sync_scope,
                       user_id: User.current.id)
         end
 
@@ -69,7 +69,8 @@ module RedmineIssueSync
           # get copied before their children
           issue_selection.reorder('root_id, lft').each do |issue|
             new_issue = Issue.new
-            new_issue.copy_from(issue, subtasks: false, link: false, keep_status: true)
+            new_issue.copy_from(issue)
+            new_issue = sanitize_issue_attributes(new_issue)
             new_issue.project = self
             # Changing project resets the custom field values
             # TODO: handle this in Issue#project=
@@ -108,7 +109,7 @@ module RedmineIssueSync
               if logger&.info?
                 logger.info(
                   "Project#copy_issues: issue ##{issue.id} could not be copied: " \
-                    "#{new_issue.errors.full_messages}"
+                  "#{new_issue.errors.full_messages}"
                 )
               end
             else
@@ -169,6 +170,22 @@ module RedmineIssueSync
                                  issue_to_id: value.id,
                                  relation_type: 'relates')
           end
+        end
+
+        ##
+        # Sets all attributes of a new issue to nil if they
+        # should be ignored as defined in plugin setting.
+        #
+        def sanitize_issue_attributes(new_issue)
+          settings = SyncSetting.new
+          settings.attrs_to_be_ignored.each do |attr|
+            new_issue.send("#{attr}=", nil) unless collection?(new_issue, attr)
+          end
+          new_issue
+        end
+
+        def collection?(new_issue, attr)
+          new_issue.send(attr).is_a? ActiveRecord::Associations::CollectionProxy
         end
       end
     end

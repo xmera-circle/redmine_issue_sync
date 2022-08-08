@@ -1,16 +1,25 @@
 de:
-  activerecord:
-    models: 
-      sync_param: 
-        one: Synchronisationsparameter
-        other: Synchronisationsparameter
+  activemodel:
+    attributes:
+      sync_param_form:
+        filter: Mögliche Werte
+        root: Systemprojekt
 
+  activerecord:
+    attributes:
+      synchronisation: 
+        filter: Mögliche Werte
+        source: Ticket-Katalog
+        project_module_issue_sync: Ticket-Synchronisation
+        trackers: Tracker
+        system_project: Systemprojekt
+  
   label_redmine_issue_sync: Ticket-Synchronisation # Plugin name
   project_module_issue_sync: Ticket-Synchronisation # Project module name
-  tab_sync_issues: Synchronisation # Project module settings tab
+  tab_sync_params: Synchronisation # Project module settings tab
 
   permission_sync_issues: Tickets synchronisieren
-  permission_manage_sync_settings: Sychronisations-Einstellungen verwalten
+  permission_manage_sync_settings: Sychronisationseinstellungen verwalten
 
   label_redmine_issue_sync_description: Synchronisiere Tickets zwischen Projekten
   label_issue_synchronisation: Ticket-Synchronisation  
@@ -19,6 +28,9 @@ de:
   label_issue_catalogue: Ticket-Katalog
   label_undefined_source: unbekannt
   label_all_trackers: Alle
+  label_all_custom_fields: Alle
+  label_ignore_attributes: Zu ignorierende Attribute einer Aufgabe
+  label_not_configured: nicht konfiguriert
 
   field_root: Systemprojekt
   field_filter: Wert
@@ -36,10 +48,14 @@ de:
     Jedes synchronsierte Ticket wird daher dokumentiert.
   text_reset_sync_log: 'Protokoll jetzt'
   text_could_be_synchronised: können synchronisiert werden
+  text_ignorable_attributes_setting: 'Attribute ankreuzen, wenn ihre Werte beim Synchronisieren nicht übertragen werden sollen:'
+  text_restrict_trackers: Tracker können in der Administration eingeschränkt werden.
+  text_restrict_custom_fields: Benutzerdefinierte Felder können in der Administration eingeschränkt werden.
 
-  error_is_no_boolean: "muss wahr oder falsch sein."
-  error_is_no_filter: "ist nicht gültig."
-  error_is_not_present: "muss auswählt werden."
-  error_no_settings: "%{value} hat keine Einstellungen."
-  error_has_system_object: "%{value} wird über sein übergeordnetes Projekt synchronisiert."
+  error_has_system_project: "%{value} wird über sein übergeordnetes Projekt synchronisiert."
   error_synchronisation_impossible: Die Synchronisation kann nicht durchgeführt werden, da kein Quellprojekt angegeben wurde.
+  error_project_id_is_not_valid: "mit %{value} ist nicht gültig."
+  error_project_module_issue_sync: "von %{value} muss aktiviert werden."
+  error_filter_blank: "von %{value} muss ausgefüllt werden."
+  error_trackers_blank: "von %{value} muss ausgefüllt werden."
+  error_system_project_invalid: "ist nicht gülitg, da es für %{value} keine Unterprojekte gibt."

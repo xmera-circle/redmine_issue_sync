@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_issue_sync do
   name 'Redmine Issue Sync'
   author 'Liane Hampe, xmera'
   description 'Synchronise issues between projects'
-  version '0.1.6'
+  version '0.1.7'
   url 'https://circle.xmera.de/projects/redmine-issue-sync'
   author_url 'http://xmera.de'
 
@@ -36,15 +36,13 @@ Redmine::Plugin.register :redmine_issue_sync do
 
   project_module :issue_sync do
     permission :sync_issues,
-               { sync_issues: %w[new create show] },
+               { issue_sync: %w[new create show] },
                require: :member
     permission :manage_sync_settings,
-               { sync_issues: %w[settings reset_filter reset_log] },
+               { issue_sync: %w[reset_filter reset_log],
+                 sync_params: %w[update] },
                require: :member
   end
 end
 
-ActiveSupport::Reloader.to_prepare do
-  ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
-  ProjectsController.helper(SyncParamsHelper)
-end
+RedmineIssueSync.setup
