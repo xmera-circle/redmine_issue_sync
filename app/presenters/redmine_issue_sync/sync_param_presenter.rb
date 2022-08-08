@@ -65,8 +65,8 @@ module RedmineIssueSync
 
     def filter_selection
       if setting.custom_field_unset?
-        "» #{l(:label_all_custom_fields)}" +
-          tag.em(l(:text_restrict_custom_fields), class: 'icon icon-help info')
+        ("» #{l(:label_all_custom_fields)}" +
+          tag.em(l(:text_restrict_custom_fields), class: 'icon icon-help info')).html_safe
       else
         select_filter_value +
           filter_info
