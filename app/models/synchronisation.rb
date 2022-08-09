@@ -63,6 +63,10 @@ class Synchronisation < ActiveRecord::Base
     Issue.where(id: backlog_ids)
   end
 
+  def backlog_count?
+    backlog_count.positive?
+  end
+
   def backlog_count
     backlog_ids.uniq.count
   end

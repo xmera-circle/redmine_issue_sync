@@ -1,7 +1,7 @@
 <%=tag.ol do %>
-  <% backlog.each do |item| %>
+  <% synchronisation.backlog.each do |issue| %>
     <%=tag.li do %>
-      <%= link_to_issue(item, project: true) %>
+      <%= link_to_issue(issue, project: true) %>
     <% end %>
   <% end %>
 <% end %>
