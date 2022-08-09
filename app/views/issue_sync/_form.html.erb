@@ -9,7 +9,14 @@
       <%= show(@synchronisation).num_of_synchronisable_issues %>
       <%= show(@synchronisation).action_buttons %>
     </div>
-    <%= show(@synchronisation).render_details %>
+    <% if @synchronisation.backlog_count? %>
+      <%= tag.fieldset class: 'collapsible collapsed' do %>
+        <%= tag.legend(l(:label_details), onclick: 'toggleFieldset(this);', class: 'icon icon-collapsed') %>
+        <%= tag.div(id: 'issue_backlog') do %>
+          <%= render partial: 'details', locals: { synchronisation: @synchronisation } %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
 

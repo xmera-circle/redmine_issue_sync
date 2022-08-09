@@ -69,17 +69,6 @@ module RedmineIssueSync
       link_to_function(l(:button_cancel), 'hideModal(this);')
     end
 
-    def render_details
-      return unless backlog_count?
-
-      tag.fieldset class: 'collapsible collapsed' do
-        tag.legend(l(:label_details), onclick: 'toggleFieldset(this);', class: 'icon icon-collapsed') +
-          tag.div(id: 'issue_backlog') do
-            render partial: 'details', locales: { backlog: backlog }
-          end
-      end
-    end
-
     def render_js?(form)
       parent_system_project? || form.invalid?
     end
@@ -179,10 +168,6 @@ module RedmineIssueSync
 
     def values_expected?
       synchronisation.values_expected?
-    end
-
-    def backlog
-      synchronisation.backlog
     end
 
     def backlog_count?
