@@ -74,9 +74,10 @@
 <% end %>
 
 <%= tag.fieldset do %>
-  <%= show_setting(@settings).legend %>
-    <%= show_setting(@settings).info %>
-    <%= show_setting(@settings).attributes %>
+<% settings = show(@settings, RedmineIssueSync::IgnorableAttributesPresenter) %>
+  <%= settings.legend %>
+    <%= settings.info %>
+    <%= settings.attributes %>
 <% end %>
 
 <%= tag.fieldset do %>

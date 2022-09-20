@@ -29,10 +29,10 @@ module IssueSyncHelper
   # ApplicationHelper#present. Therefore, this needs to be
   # named IssueSyncHelper#show.
   #
-  def show(object, klass = nil)
-    klass ||= "RedmineIssueSync::#{object.class}Presenter".constantize
-    presenter = klass.new(object, self)
-    yield presenter if block_given?
-    presenter
-  end
+  # def show(object, klass = nil)
+  #   klass ||= "RedmineIssueSync::#{object.class}Presenter".constantize
+  #   presenter = klass.new(object, self)
+  #   yield presenter if block_given?
+  #   presenter
+  # end
 end
