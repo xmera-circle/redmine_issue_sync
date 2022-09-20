@@ -78,7 +78,8 @@ module RedmineIssueSync
   class << self
     def setup
       add_helpers
-      autoload_presenters
+      autoload_pathes
+      register_presenters
     end
 
     def partial
@@ -113,7 +114,7 @@ module RedmineIssueSync
       end
     end
 
-    def autoload_presenters
+    def autoload_pathes
       plugin = Redmine::Plugin.find(:redmine_issue_sync)
       Rails.application.configure do
         config.autoload_paths << "#{plugin.directory}/app/presenters"
@@ -121,6 +122,11 @@ module RedmineIssueSync
         config.autoload_paths << "#{plugin.directory}/app/services"
         config.autoload_paths << "#{plugin.directory}/app/forms"
       end
+    end
+
+    def register_presenters
+      AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SyncParamPresenter, SyncParam
+      AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SynchronisationPresenter, Synchronisation
     end
   end
 end
