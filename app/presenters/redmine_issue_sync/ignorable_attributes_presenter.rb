@@ -18,13 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_relative 'base_presenter'
-
 module RedmineIssueSync
   ##
   # Prepares all ignorable attribute components to be ready for rendering.
   #
-  class IgnorableAttributesPresenter < BasePresenter
+  class IgnorableAttributesPresenter < AdvancedPluginHelper::BasePresenter
     include ApplicationHelper
     include RedmineIssueSync::IssueAttributes
 

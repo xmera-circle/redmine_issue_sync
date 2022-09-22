@@ -22,7 +22,7 @@
 # Initializes presenters
 #
 module SyncSettingHelper
-  def show_setting(object)
-    ::RedmineIssueSync::IgnorableAttributesPresenter.new(object, self)
-  end
+  # def show_setting(object)
+  #   ::RedmineIssueSync::IgnorableAttributesPresenter.new(object, self)
+  # end
 end
