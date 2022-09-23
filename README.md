@@ -16,6 +16,15 @@ All plugins in the selection are compatible with [Redmine 4](https://redmine.org
 
 More information about xmera Omnia can be found at [xmera](https://xmera.de).
 
+## Requirements
+
+Make sure you have the following software installed:
+
+|Software                                                                        |Version |
+|--------------------------------------------------------------------------------|--------|
+|[Redmine](https://www.redmine.org/projects/redmine/wiki/Download)               |>= 4.2.0|
+|[Redmine Base Deface](https://github.com/jbbarth/redmine_base_deface)           | = 1.6.2|
+|[Advanced Plugin Helper](https://github.com/xmera-circle/advanced_plugin_helper)|>= 0.1.0|
 
 ## Installation
 
