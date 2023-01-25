@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,11 +18,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-##
-# Initializes presenters
-#
-module SyncSettingHelper
-  # def show_setting(object)
-  #   ::RedmineIssueSync::IgnorableAttributesPresenter.new(object, self)
-  # end
+module RedmineIssueSync
+  module ErrorHelper
+    def error_keys(form)
+      return form.errors.keys if Rails.version < '6'
+
+      form.errors.attribute_names
+    end
+
+    def error_messages(form)
+      form.errors.full_messages.to_sentence
+    end
+  end
 end

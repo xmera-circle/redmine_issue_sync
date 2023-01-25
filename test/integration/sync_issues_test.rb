@@ -59,7 +59,7 @@ module RedmineIssueSync
       source = Project.find(4)
       create_issues(source)
 
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         assert_difference '@project.issues.count', 2 do
           post project_issue_sync_index_path(
             @project,
@@ -90,7 +90,7 @@ module RedmineIssueSync
       source = Project.find(4)
       create_issues(source)
 
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         assert_difference '@project.issues.count', 2 do
           post project_issue_sync_index_path(
             @project,

@@ -60,7 +60,7 @@ module RedmineIssueSync
       source.enable_module!(:issues)
       create_issues(source)
       options = { source_project: source.id.to_s, source_trackers: %w[], custom_field: '' }
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         assert_difference '@project.issues.count', 3 do
           post project_issue_sync_index_path(
             @project
@@ -77,7 +77,7 @@ module RedmineIssueSync
       source = Project.find(4)
       create_issues(source)
 
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         assert_difference '@project.issues.count', 2 do
           post project_issue_sync_index_path(
             @project,
@@ -97,7 +97,7 @@ module RedmineIssueSync
       create_issues(source)
       child = child_project
       child.enable_module! :issue_sync
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         assert_no_difference '@project.issues.count' do
           post project_issue_sync_index_path(
             @project,

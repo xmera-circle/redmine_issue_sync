@@ -26,10 +26,12 @@ module RedmineIssueSync
     PLUGIN_NAME = 'redmine_issue_sync'
 
     def with_plugin_settings(**options, &block)
+      return if options.empty?
+
       Setting.send("#{plugin_setting_name}=", **options)
-      yield if block
+      yield block if block
     ensure
-      Setting.send("#{plugin_setting_name}=", default_settings)
+      Setting.send("#{plugin_setting_name}=", default_settings) if Setting.send(plugin_setting_name).empty?
     end
 
     def default_settings

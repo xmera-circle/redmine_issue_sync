@@ -44,7 +44,7 @@ module RedmineIssueSync
 
     test 'should render project settings when user allowed to' do
       options = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         get settings_project_path(@project, tab: 'sync_params')
 
         assert_response :success
@@ -66,7 +66,7 @@ module RedmineIssueSync
     test 'should update project settings' do
       options = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
       assert @sync_param.filter.blank? && @sync_param.root.is_a?(FalseClass)
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         post project_sync_params_path(@project),
              params: { sync_param: { root: '1', filter: ['MySQL'] } }
         assert_redirected_to settings_project_path(@project, tab: 'sync_params')
@@ -77,7 +77,7 @@ module RedmineIssueSync
 
     test 'should render errors when project settings invalid' do
       options = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         post project_sync_params_path(@project),
             params: { sync_param: { filter: ['wrong'] } }
         assert_redirected_to settings_project_path(@project, tab: 'sync_params')

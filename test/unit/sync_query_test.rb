@@ -55,7 +55,7 @@ module RedmineIssueSync
       issue = Issue.find(3)
       trackers = ['1']
       options = @options.merge(source_trackers: trackers)
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         catalogue = SyncQuery.new(selected_trackers: trackers)
         assert_equal issue, catalogue.send(:content, 'MySQL').first
       end
@@ -69,7 +69,7 @@ module RedmineIssueSync
       # Issue.find(3) has tracker 1
       issue2 = Issue.find(2) # has tracker 2
       add_custom_field_to(issue2)
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         catalogue = SyncQuery.new(selected_trackers: [trackers[1]])
         assert_equal 1, catalogue.send(:content, 'MySQL').size
         assert_equal issue2, catalogue.send(:content, 'MySQL').first
@@ -78,7 +78,7 @@ module RedmineIssueSync
 
     test 'should query the issue catalogue contents without given trackers' do
       issue = Issue.find(3)
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         catalogue = SyncQuery.new
         assert catalogue.send(:content, 'MySQL').include?(issue)
       end
@@ -87,7 +87,7 @@ module RedmineIssueSync
     test 'should give no contents with inconsistent settings' do
       options = @options.merge(source_trackers: ['2'])
       Issue.find(3)
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         catalogue = SyncQuery.new
         assert catalogue.send(:content, 'MySQL').size.zero?
       end

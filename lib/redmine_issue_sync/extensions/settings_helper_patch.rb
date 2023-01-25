@@ -48,10 +48,3 @@ module RedmineIssueSync
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless SettingsHelper.included_modules.include?(RedmineIssueSync::Extensions::SettingsHelperPatch)
-    SettingsController.include(RedmineIssueSync::Extensions::SettingsHelperPatch)
-  end
-end

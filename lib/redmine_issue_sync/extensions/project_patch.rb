@@ -191,10 +191,3 @@ module RedmineIssueSync
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless Project.included_modules.include?(RedmineIssueSync::Extensions::ProjectPatch)
-    Project.include(RedmineIssueSync::Extensions::ProjectPatch)
-  end
-end

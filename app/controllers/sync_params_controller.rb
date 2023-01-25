@@ -27,8 +27,6 @@ class SyncParamsController < ApplicationController
   before_action :find_project, only: :update
   before_action :authorize
 
-  helper :sync_params
-
   def update
     UpdateSyncParams.new(project: @project, params: params).call
     flash[:notice] = l(:notice_successful_update)

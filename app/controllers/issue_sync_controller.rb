@@ -26,8 +26,6 @@ class IssueSyncController < ApplicationController
   before_action :authorize, except: %w[reset_filter reset_log]
   before_action :authorize_global, only: %w[reset_filter reset_log]
 
-  helper IssueSyncHelper
-
   def new
     prepare_synchronisation
     respond_to do |format|

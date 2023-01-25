@@ -24,6 +24,6 @@ Deface::Override.new(
   name: 'add-issue-sync-button',
   replace: 'div.contextual',
   partial: 'issues/index_action_menu',
-  original: '410cfef2a0ffc79cdf3e2a54fad2ad9be2099a62',
+  original: 'df6bfd54992a72c2bce89a4ebac07951f7ffa146',
   namespaced: true
 )
