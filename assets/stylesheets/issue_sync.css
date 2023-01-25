@@ -14,3 +14,7 @@
 #issue_sync_selected_trackers_ {
   margin: 0 0.5rem;
 }
+
+body:not(.theme-Omnia) #issue-sync-form .icon-help {
+  background-image: none;
+}
