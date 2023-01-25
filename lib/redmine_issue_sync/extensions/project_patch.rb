@@ -69,7 +69,10 @@ module RedmineIssueSync
           # get copied before their children
           issue_selection.reorder('root_id, lft').each do |issue|
             new_issue = Issue.new
-            new_issue.copy_from(issue)
+            # new_issue.copy_from: Do not set watchers to true or remove the option since it would
+            # raise an exception about a missing watchable_id! This is since Redmine 5 with the
+            # users new pref.auto_watch_on
+            new_issue.copy_from(issue, watchers: false)
             new_issue = sanitize_issue_attributes(new_issue)
             new_issue.project = self
             # Changing project resets the custom field values
