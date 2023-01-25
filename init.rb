@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_issue_sync do
   name 'Redmine Issue Sync'
   author 'Liane Hampe, xmera'
   description 'Synchronise issues between projects'
-  version '0.1.11'
+  version '0.1.12'
   url 'https://circle.xmera.de/projects/redmine-issue-sync'
   author_url 'http://xmera.de'
 
