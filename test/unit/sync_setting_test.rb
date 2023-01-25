@@ -30,7 +30,7 @@ module RedmineIssueSync
     end
 
     test 'should return null objects without settings' do
-      with_plugin_settings(@defaults) do
+      with_plugin_settings(**@defaults) do
         setting = SyncSetting.new
         assert setting.source.is_a?(NullProject)
         assert_equal [true], (setting.trackers.map { |tracker| tracker.is_a?(NullTracker) })
@@ -39,7 +39,7 @@ module RedmineIssueSync
     end
 
     test 'should return issue attributes to be ignored by default' do
-      with_plugin_settings(@defaults) do
+      with_plugin_settings(**@defaults) do
         setting = SyncSetting.new
         assert_equal ignorables.sort, setting.attrs_to_be_ignored.sort
       end
@@ -47,15 +47,14 @@ module RedmineIssueSync
 
     test 'should return custom ignorables' do
       custom = { done_ratio: '1', assigned_to: '1' }
-      with_plugin_settings(custom) do
+      with_plugin_settings(**custom) do
         setting = SyncSetting.new
         assert_equal custom.keys.sort, setting.attrs_to_be_ignored.sort
       end
     end
 
     test 'should return no ignorables when all disabled' do
-      empty = {}
-      with_plugin_settings(empty) do
+      with_plugin_settings do
         setting = SyncSetting.new
         assert_equal [], setting.attrs_to_be_ignored
       end

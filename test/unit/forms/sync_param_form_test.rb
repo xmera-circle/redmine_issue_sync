@@ -24,6 +24,7 @@ module RedmineIssueSync
   class SyncParamFormTest < ActiveSupport::TestCase
     include Redmine::I18n
     include RedmineIssueSync::TestObjectHelper
+    include RedmineIssueSync::ErrorHelper
 
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values
@@ -38,33 +39,33 @@ module RedmineIssueSync
     end
 
     test 'filter is invalid when root is empty' do
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         form = SyncParamForm.new(root: '', filter: ['MySQL'])
         assert form.invalid?
-        assert_equal [:"System project"], form.errors.keys
+        assert_equal [:"System project"], error_keys(form)
       end
     end
 
     test 'filter is valid when custom field selected' do
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         form = SyncParamForm.new(root: '0', filter: ['MySQL'])
         assert form.valid?
       end
     end
 
     test 'filter must be set when custom field is selected' do
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         form = SyncParamForm.new(root: '1', filter: [''])
         assert form.invalid?
-        assert_equal [:filter], form.errors.keys
+        assert_equal [:filter], error_keys(form)
       end
     end
 
     test 'filter value must be in the list' do
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         form = SyncParamForm.new(root: '1', filter: ['wrong value'])
         assert form.invalid?
-        assert_equal [:filter], form.errors.keys
+        assert_equal [:filter], error_keys(form)
       end
     end
 
@@ -79,7 +80,7 @@ module RedmineIssueSync
       with_plugin_settings(custom_field: '') do
         form = SyncParamForm.new(root: '0', filter: ['no value expected'])
         assert form.invalid?
-        assert_equal [:filter], form.errors.keys
+        assert_equal [:filter], error_keys(form)
       end
     end
   end

@@ -28,6 +28,7 @@ require File.expand_path('../../../test/application_system_test_case', __dir__)
 require_relative 'load_fixtures'
 require_relative 'authenticate_user'
 require_relative 'test_object_helper'
+require_relative 'error_helper'
 
 # The gem minitest-reporters gives color to the command-line
 require 'minitest/reporters'

@@ -24,6 +24,7 @@ module RedmineIssueSync
   class RunIssueSyncTest < ActiveSupport::TestCase
     include Redmine::I18n
     include RedmineIssueSync::TestObjectHelper
+    include RedmineIssueSync::ErrorHelper
 
     fixtures :projects, :members, :member_roles, :roles, :users,
           :issues, :issue_statuses, :trackers, :projects_trackers,
@@ -47,9 +48,9 @@ module RedmineIssueSync
       target_project = prepare_project_sync_params(target_project, root: '0', filter: ['1'])
       target_project.reload
       attrs = { project: target_project, params: { issue_sync: { selected_trackers: %w[1 2] } } }
-      with_plugin_settings(options) do
-        _, form = ::RunIssueSync.new(attrs).call
-        assert_equal %i[base], form.errors.keys
+      with_plugin_settings(**options) do
+        _, form = ::RunIssueSync.new(**attrs).call
+        assert_equal %i[base], error_keys(form)
       end
     end
   end

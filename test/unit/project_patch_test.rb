@@ -43,7 +43,7 @@ module RedmineIssueSync
       filter = %w[MySQL PostgreSQL]
       @source_project.build_sync_param({ root: '1', filter: filter })
       @source_project.save
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         new_project = Project.copy_from(@source_project)
         assert save_project(new_project)
         new_project = Project.last
