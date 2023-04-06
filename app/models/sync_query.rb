@@ -77,7 +77,7 @@ class SyncQuery
   end
 
   def tracker_ids?
-    return false if tracker_ids.size.zero?
+    return false if tracker_ids.empty?
 
     tracker_ids.all?(&:positive?)
   end
