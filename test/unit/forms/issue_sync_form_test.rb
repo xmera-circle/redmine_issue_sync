@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@ module RedmineIssueSync
   class IssueSyncFormTest < ActiveSupport::TestCase
     include Redmine::I18n
     include RedmineIssueSync::TestObjectHelper
+    include RedmineIssueSync::ErrorHelper
 
     fixtures :projects, :members, :member_roles, :roles, :users,
              :custom_fields, :custom_fields_trackers, :custom_values,
@@ -42,7 +43,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: [''])
         assert form.valid?, error_messages(form)
       end
@@ -54,7 +55,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: '', selected_trackers: [''])
         assert form.invalid?, error_messages(form)
         assert_equal %i[project_id], error_keys(form)
@@ -67,7 +68,7 @@ module RedmineIssueSync
       target_project.issue_custom_fields << @custom_field
       target_project.trackers << [@tracker1, @tracker2]
       target_project = prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:source], error_keys(form)
@@ -80,7 +81,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       target_project = prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id)
         assert form.valid?, error_messages(form)
       end
@@ -92,7 +93,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       target_project = prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:selected_trackers], error_keys(form)
@@ -105,7 +106,7 @@ module RedmineIssueSync
       target_project.issue_custom_fields << @custom_field
       target_project.trackers << [@tracker1, @tracker2]
       target_project = prepare_project_sync_params(target_project, project_module: false, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:project_module_issue_sync], error_keys(form)
@@ -118,7 +119,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       target_project = prepare_project_sync_params(target_project, root: '0', filter: [''])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:filter], error_keys(form)
@@ -130,7 +131,7 @@ module RedmineIssueSync
       target_project = Project.generate!(tracker_ids: %w[], issue_custom_field_ids: %w[])
       target_project.issue_custom_fields << @custom_field
       target_project = prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:trackers], error_keys(form)
@@ -143,7 +144,7 @@ module RedmineIssueSync
       target_project.issue_custom_fields << @custom_field
       target_project.trackers << [@tracker1, @tracker2]
       target_project = prepare_project_sync_params(target_project, root: '1', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         assert form.invalid?, error_messages(form)
         assert_equal [:system_project], error_keys(form)
@@ -157,7 +158,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project = prepare_project_sync_params(target_project, root: '1', filter: ['1'])
       Project.generate!({ parent_id: target_project.id, tracker_ids: %w[], issue_custom_field_ids: %w[] })
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[1 2])
         target_project.children.reload
         assert form.invalid?, error_messages(form)
@@ -171,7 +172,7 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[3 4])
         assert form.invalid?, error_messages(form)
         assert_equal %i[selected_trackers], error_keys(form)
@@ -184,20 +185,10 @@ module RedmineIssueSync
       target_project.trackers << [@tracker1, @tracker2]
       target_project.issue_custom_fields << @custom_field
       prepare_project_sync_params(target_project, root: '0', filter: ['1'])
-      with_plugin_settings(options) do
+      with_plugin_settings(**options) do
         form = IssueSyncForm.new(project_id: target_project.id, selected_trackers: %w[all])
         assert form.valid?, error_messages(form)
       end
-    end
-
-    private
-
-    def error_keys(form)
-      form.errors.keys
-    end
-
-    def error_messages(form)
-      form.errors.full_messages.to_sentence
     end
   end
 end

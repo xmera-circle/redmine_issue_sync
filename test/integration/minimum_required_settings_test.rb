@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@ module RedmineIssueSync
     #   source.enable_module!(:issues)
     #   create_issues(source)
     #   options = { source_project: source.id.to_s, source_trackers: %w[], custom_field: '' }
-    #   with_plugin_settings(options) do
+    #   with_plugin_settings(**options) do
     #     assert_difference '@project.issues.count', 3 do
     #       post project_issue_sync_index_path(
     #         @project

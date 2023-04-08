@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,8 +25,6 @@ class IssueSyncController < ApplicationController
   before_action :find_project_by_project_id, except: %w[reset_filter reset_log]
   before_action :authorize, except: %w[reset_filter reset_log]
   before_action :authorize_global, only: %w[reset_filter reset_log]
-
-  helper IssueSyncHelper
 
   def new
     prepare_synchronisation

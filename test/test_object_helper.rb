@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,10 +26,12 @@ module RedmineIssueSync
     PLUGIN_NAME = 'redmine_issue_sync'
 
     def with_plugin_settings(**options, &block)
+      return if options.empty?
+
       Setting.send("#{plugin_setting_name}=", **options)
-      yield if block
+      yield block if block
     ensure
-      Setting.send("#{plugin_setting_name}=", default_settings)
+      Setting.send("#{plugin_setting_name}=", default_settings) if Setting.send(plugin_setting_name).empty?
     end
 
     def default_settings

@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -43,7 +43,7 @@ module RedmineIssueSync
       filter = %w[MySQL PostgreSQL]
       @source_project.build_sync_param({ root: '1', filter: filter })
       @source_project.save
-      with_plugin_settings(@options) do
+      with_plugin_settings(**@options) do
         new_project = Project.copy_from(@source_project)
         assert save_project(new_project)
         new_project = Project.last

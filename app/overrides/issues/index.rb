@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,6 +24,6 @@ Deface::Override.new(
   name: 'add-issue-sync-button',
   replace: 'div.contextual',
   partial: 'issues/index_action_menu',
-  original: '410cfef2a0ffc79cdf3e2a54fad2ad9be2099a62',
+  original: 'df6bfd54992a72c2bce89a4ebac07951f7ffa146',
   namespaced: true
 )

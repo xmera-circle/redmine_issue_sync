@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ require File.expand_path('../../../test/application_system_test_case', __dir__)
 require_relative 'load_fixtures'
 require_relative 'authenticate_user'
 require_relative 'test_object_helper'
+require_relative 'error_helper'
 
 # The gem minitest-reporters gives color to the command-line
 require 'minitest/reporters'

@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,8 +26,6 @@ class SyncParamsController < ApplicationController
 
   before_action :find_project, only: :update
   before_action :authorize
-
-  helper :sync_params
 
   def update
     UpdateSyncParams.new(project: @project, params: params).call

@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,19 +18,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_issue_sync'
+require File.expand_path('lib/redmine_issue_sync', __dir__)
 
 Redmine::Plugin.register :redmine_issue_sync do
   name 'Redmine Issue Sync'
   author 'Liane Hampe, xmera'
   description 'Synchronise issues between projects'
-  version '0.1.11'
+  version '0.1.12'
   url 'https://circle.xmera.de/projects/redmine-issue-sync'
   author_url 'http://xmera.de'
 
   requires_redmine version_or_higher: '4.1.0'
   requires_redmine_plugin :redmine_base_deface, version_or_higher: '1.6.2'
-  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.1.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.4.0'
 
   settings  partial: RedmineIssueSync.partial,
             default: RedmineIssueSync.defaults

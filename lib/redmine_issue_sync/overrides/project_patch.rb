@@ -45,10 +45,3 @@ module RedmineIssueSync
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless Project.included_modules.include?(RedmineIssueSync::Overrides::ProjectPatch)
-    Project.prepend RedmineIssueSync::Overrides::ProjectPatch
-  end
-end

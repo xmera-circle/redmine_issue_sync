@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -69,7 +69,10 @@ module RedmineIssueSync
           # get copied before their children
           issue_selection.reorder('root_id, lft').each do |issue|
             new_issue = Issue.new
-            new_issue.copy_from(issue)
+            # new_issue.copy_from: Do not set watchers to true or remove the option since it would
+            # raise an exception about a missing watchable_id! This is since Redmine 5 with the
+            # users new pref.auto_watch_on
+            new_issue.copy_from(issue, watchers: false)
             new_issue = sanitize_issue_attributes(new_issue)
             new_issue.project = self
             # Changing project resets the custom field values
@@ -189,12 +192,5 @@ module RedmineIssueSync
         end
       end
     end
-  end
-end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless Project.included_modules.include?(RedmineIssueSync::Extensions::ProjectPatch)
-    Project.include(RedmineIssueSync::Extensions::ProjectPatch)
   end
 end

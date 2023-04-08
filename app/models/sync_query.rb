@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -77,7 +77,7 @@ class SyncQuery
   end
 
   def tracker_ids?
-    return false if tracker_ids.size.zero?
+    return false if tracker_ids.empty?
 
     tracker_ids.all?(&:positive?)
   end

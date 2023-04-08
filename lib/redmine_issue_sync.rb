@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Issue Sync.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,22 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 # Extensions
-require 'redmine_issue_sync/extensions/project_patch'
-require 'redmine_issue_sync/extensions/settings_helper_patch'
+require_relative 'redmine_issue_sync/extensions/project_patch'
+require_relative 'redmine_issue_sync/extensions/settings_helper_patch'
 
 # Hooks
-require 'redmine_issue_sync/hooks/view_layout_hooks'
+require_relative 'redmine_issue_sync/hooks/view_layout_hooks'
 
 # Overrides
-require 'redmine_issue_sync/overrides/projects_helper_patch'
-require 'redmine_issue_sync/overrides/project_patch'
+require_relative 'redmine_issue_sync/overrides/projects_helper_patch'
+require_relative 'redmine_issue_sync/overrides/project_patch'
 
 # Utils
-require 'redmine_issue_sync/utils/compact'
-require 'redmine_issue_sync/utils/to_boolean'
+require_relative 'redmine_issue_sync/utils/compact'
+require_relative 'redmine_issue_sync/utils/to_boolean'
 
 # Others
-require 'redmine_issue_sync/issue_attributes'
+require_relative 'redmine_issue_sync/issue_attributes'
 
 ##
 # Initialize some plugin requirements and definitions.
@@ -77,9 +77,15 @@ module RedmineIssueSync
 
   class << self
     def setup
-      add_helpers
-      autoload_pathes
       register_presenters
+      %w[project_extension_patch settings_helper_patch
+         project_overrides_patch].each do |patch|
+        AdvancedPluginHelper::Patch.register(send(patch))
+      end
+      AdvancedPluginHelper::Patch.apply do
+        { klass: RedmineIssueSync,
+          method: :add_helpers }
+      end
     end
 
     def partial
@@ -94,6 +100,24 @@ module RedmineIssueSync
 
     private
 
+    def project_extension_patch
+      { klass: Project,
+        patch: RedmineIssueSync::Extensions::ProjectPatch,
+        strategy: :include }
+    end
+
+    def settings_helper_patch
+      { klass: SettingsController,
+        patch: RedmineIssueSync::Extensions::SettingsHelperPatch,
+        strategy: :include }
+    end
+
+    def project_overrides_patch
+      { klass: Project,
+        patch: RedmineIssueSync::Overrides::ProjectPatch,
+        strategy: :prepend }
+    end
+
     def enabled_settings
       setting.class.ignorables.map { |attr| setting.send attr }
     end
@@ -107,26 +131,13 @@ module RedmineIssueSync
     end
 
     def add_helpers
-      ActiveSupport::Reloader.to_prepare do
-        ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
-        ProjectsController.helper(SyncParamsHelper)
-        SettingsController.helper(SyncSettingHelper)
-      end
-    end
-
-    def autoload_pathes
-      plugin = Redmine::Plugin.find(:redmine_issue_sync)
-      Rails.application.configure do
-        config.autoload_paths << "#{plugin.directory}/app/presenters"
-        config.autoload_paths << "#{plugin.directory}/app/null_objects"
-        config.autoload_paths << "#{plugin.directory}/app/services"
-        config.autoload_paths << "#{plugin.directory}/app/forms"
-      end
+      ProjectsController.helper(RedmineIssueSync::Overrides::ProjectsHelperPatch)
     end
 
     def register_presenters
       AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SyncParamPresenter, SyncParam
       AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SynchronisationPresenter, Synchronisation
+      AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::IgnorableAttributesPresenter, Setting
     end
   end
 end
