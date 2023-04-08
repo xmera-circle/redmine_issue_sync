@@ -137,7 +137,7 @@ module RedmineIssueSync
     def register_presenters
       AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SyncParamPresenter, SyncParam
       AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::SynchronisationPresenter, Synchronisation
-      AdvancedPluginHelper::BasePresenter.register IgnorableAttributesPresenter, Setting
+      AdvancedPluginHelper::BasePresenter.register RedmineIssueSync::IgnorableAttributesPresenter, Setting
     end
   end
 end

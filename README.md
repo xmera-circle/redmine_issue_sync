@@ -2,7 +2,7 @@
 
 Synchronise issues between projects
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.11-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.x.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.12-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![develop](https://github.com/xmera-circle/redmine_issue_sync/actions/workflows/5-0-stable.yml/badge.svg)
 
 Redmine Issue Sync is a plugin which lets the user synchronise issues between projects assuming there is a kind of main issue catalogue defined.
 
@@ -13,6 +13,14 @@ Redmine Issue Sync is a plugin which lets the user synchronise issues between pr
 ## Usage example
 
 For more examples and usage, please refer to the [official documentation](https://circle.xmera.de/projects/redmine-issue-sync/wiki).
+
+### Dependencies
+
+To run the plugin you need the following dependencies installed:
+
+* [Redmine 5.0.z](https://github.com/redmine/redmine)
+* [Advanced Plugin Helper 0.4.z ](https://github.com/xmera-circle/advanced_plugin_helper)
+* [Redmine Base Deface master](https://github.com/jbbarth/redmine_base_deface)
 
 ## Installation
 

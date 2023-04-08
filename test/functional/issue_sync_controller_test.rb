@@ -35,8 +35,8 @@ module RedmineIssueSync
     def setup
       super
       @manager = User.find(2)
-      @manager.pref.auto_watch_on = ['issue_contributed_to']
-      @manager_role = Role.find_by_name('Manager')
+      @manager.pref.auto_watch_on = ['issue_contributed_to'] if Redmine::VERSION::MAJOR > 4
+      @manager_role = Role.find_by(name: 'Manager')
       @manager_role.add_permission! :sync_issues
       @project = Project.find(1)
       @project.enable_module! :issue_sync

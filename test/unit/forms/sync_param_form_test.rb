@@ -42,7 +42,7 @@ module RedmineIssueSync
       with_plugin_settings(**@options) do
         form = SyncParamForm.new(root: '', filter: ['MySQL'])
         assert form.invalid?
-        assert_equal [:"System project"], error_keys(form)
+        assert_equal [:'System project'], error_keys(form)
       end
     end
 
