@@ -160,23 +160,8 @@ module RedmineIssueSync
               new_issue.relations_to << new_issue_relation
             end
           end
-
-          # establish_relation(issues_map, link)
           # Return issues map to be used for logging in SyncItem
           issues_map
-        end
-
-        ##
-        # Create a relation between all synchronised issues.
-        #
-        def establish_relation(issues_map, link)
-          return unless link
-
-          issues_map.each do |key, value|
-            IssueRelation.create(issue_from_id: key.to_i,
-                                 issue_to_id: value.id,
-                                 relation_type: 'relates')
-          end
         end
 
         ##
