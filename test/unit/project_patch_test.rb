@@ -116,6 +116,29 @@ module RedmineIssueSync
       end
     end
 
+    test 'should not link to issues copied from source to other projects' do
+      @other_project = Project.generate!(tracker_ids: [], issue_custom_field_ids: [])
+      @other_project.issue_custom_fields << custom_fields(:custom_fields_001)
+      @other_project.trackers << @tracker
+      @other_project.enable_module! :issue_sync
+      @other_project.enable_module! :issue_tracking
+      issue = Issue.generate!(project: @source_project, subject: 'Source issue', tracker: @tracker, status: @status)
+      with_settings(link_copied_issue: 'yes', cross_project_issue_relations: '1') do
+        link = @sync_setting.link_copied_issue?
+        @other_project.copy_selected_issues(@source_project, [issue.id], link)
+        assert 1, issue.relations.count
+        assert 'copied_to', issue.relations.first.relation_type
+        @target_project.copy_selected_issues(@source_project, [issue.id], link)
+        @target_project.reload
+        issue.reload
+        assert_equal 2, issue.relations.count # includes the link to the copy in other project
+        copied_issues = @target_project.issues
+        assert_equal 1, copied_issues.count
+        assert_equal 1, copied_issues.first.relations.count
+        assert_equal %w[copied_to], copied_issues.first.relations.map(&:relation_type)
+      end
+    end
+
     private
 
     def save_project(project)

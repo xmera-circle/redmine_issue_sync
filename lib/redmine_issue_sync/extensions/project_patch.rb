@@ -139,6 +139,7 @@ module RedmineIssueSync
 
             # Relations
             issue.relations_from.each do |source_relation|
+              next if belongs_to_other_project?(issue, source_relation)
               new_issue_relation = IssueRelation.new
               new_issue_relation.attributes =
                 source_relation.attributes.dup.except('id', 'issue_from_id', 'issue_to_id')
@@ -160,8 +161,23 @@ module RedmineIssueSync
               new_issue.relations_to << new_issue_relation
             end
           end
+
           # Return issues map to be used for logging in SyncItem
           issues_map
+        end
+
+        ##
+        # Remove all 'copied_to' relations where the project is not self.
+        # This means copy history to other projects in source issues will
+        # be ignored when relations are created.
+        #
+        # @param issue [Issue] The source issue which should be copied.
+        # @param source_relation [IssueRelation] A relation of the issue.
+        #
+        def belongs_to_other_project?(issue, source_relation)
+          return false unless source_relation.relation_type == 'copied_to'
+
+          source_relation.other_issue(issue).project_id != id
         end
 
         ##
