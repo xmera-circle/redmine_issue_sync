@@ -19,7 +19,7 @@ class SyncSettingValidator < ActiveModel::EachValidator
   # module settings by the current user.
   #
   def valid?(value)
-    return if value.blank?
+    return true if value.blank?
 
     field_object = FieldObject.new(settings.custom_field).instance
     value.all? { |val| field_object.valid?(val) }

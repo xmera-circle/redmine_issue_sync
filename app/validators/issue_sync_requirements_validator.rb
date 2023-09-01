@@ -86,7 +86,7 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
   end
 
   def trackers_set_but_not_enabled?
-    return if trackers_unset?
+    return false if trackers_unset?
     return true if project_trackers.none?
 
     result = tracker_ids.reject { |id| project_tracker_ids.include? id }

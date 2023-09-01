@@ -128,6 +128,17 @@ class SyncSetting
     Rails.logger.error "There are no settings to delete for #{plugin_setting_name}."
   end
 
+  # Returns true if the issue copy should be linked
+  # to the original issue
+  def link_copied_issue?
+    case Setting.link_copied_issue
+    when 'yes'
+      true
+    when 'no', 'ask'
+      false
+    end
+  end
+
   private
 
   attr_reader :setting

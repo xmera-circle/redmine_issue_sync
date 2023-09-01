@@ -54,13 +54,13 @@ class RunIssueSync
   end
 
   def check_if_project_is_syncable
-    return unless parent_is_system_project?
+    return false unless parent_is_system_project?
 
     form.errors.add(:base, :invalid, message: l(:error_has_system_project, value: project))
   end
 
   def parent_is_system_project?
-    return unless parent
+    return false unless parent
 
     parent.sync_param&.root
   end

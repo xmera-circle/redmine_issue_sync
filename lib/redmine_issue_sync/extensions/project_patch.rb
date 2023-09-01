@@ -47,11 +47,15 @@ module RedmineIssueSync
         end
 
         ##
-        # Copy selected issues from a given project.
+        # Copy selected issues from a given source project.
+        #
+        # @param project [Project] The source project having the issues to be copied.
+        # @param ids [Array(Integer)] The ids of all issues to be copied.
+        # @param link [Boolean] Should a copied issue be linked with its source issue?
         #
         # @note Similar to Project#copy_issues
         #
-        def copy_selected_issues(project, ids)
+        def copy_selected_issues(project, ids, link)
           # Select only those issues which are given by ids
           issue_selection = project.issues.where(id: ids)
 
@@ -72,7 +76,7 @@ module RedmineIssueSync
             # new_issue.copy_from: Do not set watchers to true or remove the option since it would
             # raise an exception about a missing watchable_id! This is since Redmine 5 with the
             # users new pref.auto_watch_on
-            new_issue.copy_from(issue, watchers: false)
+            new_issue.copy_from(issue, watchers: false, link: link)
             new_issue = sanitize_issue_attributes(new_issue)
             new_issue.project = self
             # Changing project resets the custom field values
@@ -135,6 +139,7 @@ module RedmineIssueSync
 
             # Relations
             issue.relations_from.each do |source_relation|
+              next if belongs_to_other_project?(issue, source_relation)
               new_issue_relation = IssueRelation.new
               new_issue_relation.attributes =
                 source_relation.attributes.dup.except('id', 'issue_from_id', 'issue_to_id')
@@ -157,22 +162,22 @@ module RedmineIssueSync
             end
           end
 
-          establish_relation(issues_map)
           # Return issues map to be used for logging in SyncItem
           issues_map
         end
 
         ##
-        # Create a relation between all synchronised issues.
+        # Remove all 'copied_to' relations where the project is not self.
+        # This means copy history to other projects in source issues will
+        # be ignored when relations are created.
         #
-        def establish_relation(issues_map)
-          return if Setting.link_copied_issue != 'yes'
+        # @param issue [Issue] The source issue which should be copied.
+        # @param source_relation [IssueRelation] A relation of the issue.
+        #
+        def belongs_to_other_project?(issue, source_relation)
+          return false unless source_relation.relation_type == 'copied_to'
 
-          issues_map.each do |key, value|
-            IssueRelation.create(issue_from_id: key.to_i,
-                                 issue_to_id: value.id,
-                                 relation_type: 'relates')
-          end
+          source_relation.other_issue(issue).project_id != id
         end
 
         ##
