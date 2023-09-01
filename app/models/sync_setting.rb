@@ -35,12 +35,6 @@ class SyncSetting
     @setting = plugin_settings
   end
 
-  # def setting=(attributes)
-  #   raise UnknownAttributeError unless attributes.is_a?(Hash)
-
-  #   Setting.send "#{plugin_setting_name}=", attributes
-  # end
-
   def source_unset?
     source.is_a? NullProject
   end
