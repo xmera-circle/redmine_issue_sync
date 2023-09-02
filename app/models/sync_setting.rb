@@ -35,12 +35,6 @@ class SyncSetting
     @setting = plugin_settings
   end
 
-  # def setting=(attributes)
-  #   raise UnknownAttributeError unless attributes.is_a?(Hash)
-
-  #   Setting.send "#{plugin_setting_name}=", attributes
-  # end
-
   def source_unset?
     source.is_a? NullProject
   end
@@ -126,6 +120,17 @@ class SyncSetting
     Rails.logger.info "Deleted settings for #{plugin_setting_name}."
   rescue NoMethodError
     Rails.logger.error "There are no settings to delete for #{plugin_setting_name}."
+  end
+
+  # Returns true if the issue copy should be linked
+  # to the original issue
+  def link_copied_issue?
+    case Setting.link_copied_issue
+    when 'yes'
+      true
+    when 'no', 'ask'
+      false
+    end
   end
 
   private

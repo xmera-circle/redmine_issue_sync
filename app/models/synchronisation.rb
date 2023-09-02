@@ -116,8 +116,13 @@ class Synchronisation < ActiveRecord::Base
     ids.flatten
   end
 
+  def link
+    plugin_settings.link_copied_issue?
+  end
+
+  # @see ProjectPatch#copy_selected_issues
   def copy_issues
-    target.copy_selected_issues(source, backlog_ids)
+    target.copy_selected_issues(source, backlog_ids, link)
   end
 
   def log_issues(mapping)
