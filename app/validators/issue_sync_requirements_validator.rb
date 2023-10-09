@@ -114,7 +114,7 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
   def filter
     return [] unless sync_param.presence
 
-    @filter = sync_param.filter.delete_if(&:blank?)
+    @filter = sync_param.filter&.delete_if(&:blank?)
   end
 
   def system_project?
