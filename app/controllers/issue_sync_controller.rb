@@ -53,7 +53,7 @@ class IssueSyncController < ApplicationController
   end
 
   def reset_log
-    SyncItem.all.delete_all
+    SyncItem.delete_all
     redirect_to plugin_settings_path(:redmine_issue_sync)
   end
 
