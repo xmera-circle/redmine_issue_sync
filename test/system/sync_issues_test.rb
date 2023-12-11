@@ -34,6 +34,7 @@ class SyncIssuesTest < ApplicationSystemTestCase
   def setup
     super
     prepare_test
+    @source = Project.find(2)
     Capybara.current_session.reset!
     log_user('jsmith', 'jsmith')
   end
@@ -45,32 +46,30 @@ class SyncIssuesTest < ApplicationSystemTestCase
   test 'should display sync issues form' do
     visit project_issues_path @project
     page.first(:css, 'span.icon-only.icon-actions').click
-    assert page.has_content? l(:button_synchronise)
+    assert_content l(:button_synchronise)
     within('.drdn-content') do
       page.first(:css, 'a.icon.icon-reload').click
     end
-    assert page.has_content? l(:label_issue_synchronisation)
+    assert_content l(:label_issue_synchronisation)
   end
 
   test 'should update sync issue form' do
-    source = Project.find(4)
-    create_issues(source)
+    add_filter_to_project(['MySQL', 'PostgreSQL'])
+    create_issues
     visit project_issues_path @project
     page.first(:css, 'span.icon-only.icon-actions').click
     within('.drdn-content') do
       page.first(:css, 'a.icon.icon-reload').click
     end
     page.find('select option', text: Tracker.find(1).name).click
-    assert page.has_content? "3 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
+    assert_content "3 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
     page.find('select option', text: Tracker.find(2).name).click
-    assert page.has_content? "1 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
+    assert_content "1 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
   end
 
   test 'should synchronise issues' do
-    @project.sync_param.filter = ['MySQL']
-    @project.sync_param.save
-    source = Project.find(4)
-    create_issues(source)
+    add_filter_to_project(['MySQL'])
+    create_issues
     issues_count_before = @project.issues.count
     visit project_issues_path @project
     page.first(:css, 'span.icon-only.icon-actions').click
@@ -78,20 +77,59 @@ class SyncIssuesTest < ApplicationSystemTestCase
       page.first(:css, 'a.icon.icon-reload').click
     end
     page.find('select option', text: Tracker.find(1).name).click
-    page.find('input[name=commit]').click
+    click_button('Synchronise')
     assert_equal 2, @project.issues.count - issues_count_before
   end
 
   test 'should close sync issues form' do
     visit project_issues_path @project
     page.first(:css, 'span.icon-only.icon-actions').click
-    assert page.has_content? l(:button_synchronise)
+    assert_content l(:button_synchronise)
     within('.drdn-content') do
       page.first(:css, 'a.icon.icon-reload').click
     end
-    assert page.has_content? l(:label_issue_synchronisation)
+    assert_content l(:label_issue_synchronisation)
     page.first(:css, '.ui-button-icon.ui-icon.ui-icon-closethick').click
     assert page.has_no_content? l(:label_issue_synchronisation)
+  end
+
+  test 'should render error when system project has no filter params' do
+    source = Project.find(2)
+    create_issues(source)
+    project = prepare_system_project
+    child = prepare_child_project(project)
+
+    visit project_issues_path project
+    page.first(:css, 'span.icon-only.icon-actions').click
+    assert_content l(:button_synchronise)
+    within('.drdn-content') do
+      page.first(:css, 'a.icon.icon-reload').click
+    end
+    assert_content l(:label_issue_synchronisation)
+    page.find('select option', text: Tracker.find(1).name).click
+    click_button('Synchronise')
+
+    error_msg = l('activemodel.attributes.sync_param_form.filter') + ' ' + l(:error_filter_blank, project.name)
+    assert_content error_msg
+  end
+
+  test 'should render error when system project has no child projects' do
+    source = Project.find(2)
+    create_issues(source)
+    project = prepare_system_project(filter: ['PostgreSQL'])
+
+    visit project_issues_path project
+    page.first(:css, 'span.icon-only.icon-actions').click
+    assert_content l(:button_synchronise)
+    within('.drdn-content') do
+      page.first(:css, 'a.icon.icon-reload').click
+    end
+    assert_content l(:label_issue_synchronisation)
+    page.find('select option', text: Tracker.find(1).name).click
+    click_button('Synchronise')
+
+    error_msg = l('activerecord.attributes.synchronisation.system_project') + ' ' + l(:error_system_project_invalid, project.name)
+    assert_content error_msg
   end
 
   private
@@ -100,11 +138,12 @@ class SyncIssuesTest < ApplicationSystemTestCase
     prepare_setting
     prepare_role
     prepare_project
+    prepare_custom_field
   end
 
   def prepare_setting
     @setting = Setting.plugin_redmine_issue_sync
-    @setting[:source_project] = '4'
+    @setting[:source_project] = '2'
     @setting[:source_trackers] = %w[1 2]
     @setting[:custom_field] = '1'
   end
@@ -122,7 +161,38 @@ class SyncIssuesTest < ApplicationSystemTestCase
     @sync_param = @project.create_sync_param(root: false, filter: [''])
   end
 
-  def create_issues(source)
+  def prepare_custom_field
+    database_cf = CustomField.find(1)
+    database_cf.trackers << Tracker.find(2)
+  end
+
+  def add_filter_to_project(filter)
+    raise "Filter needs to be an Array" unless filter.is_a?(Array)
+
+    @project.sync_param.filter = filter
+    @project.sync_param.save!
+  end
+
+  # Has no filter params yet!
+  def prepare_system_project(filter: [''])
+    system_project = Project.generate!(name: 'Sytem Project')
+    User.add_to_project(@manager, system_project, @manager_role)
+    system_project.enable_module! :issue_sync
+    system_project.enable_module! :issue_tracking
+    sync_param = system_project.create_sync_param(root: true, filter: filter)
+    system_project.reload
+    system_project
+  end
+
+  def prepare_child_project(parent)
+    child = Project.generate_with_parent!(parent, { tracker_ids: %w[1 2] })
+    User.add_to_project(@manager, child, @manager_role)
+    child.enable_module! :issue_tracking
+    child.enable_module! :issue_sync
+    child.create_sync_param(root: false, filter: ['PostgreSQL'])
+  end
+
+  def create_issues(source = @source)
     2.times do
       issue = Issue.generate!(tracker_id: 1,
                               status_id: 1,

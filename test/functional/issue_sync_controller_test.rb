@@ -109,6 +109,27 @@ module RedmineIssueSync
       end
     end
 
+    test 'should not synchronise when systemobject has no filter params' do
+      options = { source_project: '4', source_trackers: %w[1], custom_field: '1' }
+      @project.sync_param.root = true
+      @project.sync_param.save
+      source = Project.find(4)
+      create_issues(source)
+      child = child_project
+      User.add_to_project(@manager, child, @manager_role)
+      child.enable_module! :issue_sync
+      child.create_sync_param(root: false, filter: ['PostgreSQL'])
+      with_plugin_settings(**options) do
+        assert_no_difference '@project.issues.count' do
+          post project_issue_sync_index_path(
+            @project,
+            params: { issue_sync: { selected_trackers: ['1'] } }
+          )
+        end
+        assert @project.syncs.blank?
+      end
+    end
+
     private
 
     def create_issues(source)
