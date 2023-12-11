@@ -22,6 +22,9 @@
 # Checks whether a given tracker id is in the list of allowed trackers depending
 # on source_trackers.
 #
+# @Note All attributes where errors will be added to need to be available from
+#       Synchronisation objects. That is, Sychronisation.new needs to respond to them.
+#
 class IssueSyncRequirementsValidator < ActiveModel::Validator
   include Redmine::I18n
   include RedmineIssueSync::Utils::Compact

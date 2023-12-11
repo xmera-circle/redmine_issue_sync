@@ -35,11 +35,13 @@ class Synchronisation < ActiveRecord::Base
   scope :history, ->(target) { where(target_id: target.id).includes(:items) }
 
   delegate :trackers, :custom_field, :source, to: :@plugin_settings
-  delegate :content_ids, to: :@issues_catalogue
+  delegate :content_ids, :selected_trackers, to: :@issues_catalogue
   delegate :projects, :values, to: :@sync_scope
   delegate :parent, to: :target
+  delegate :filter, to: :@sync_param
 
   attr_reader :issues_catalogue, :sync_scope
+  attr_accessor :project_module_issue_sync, :system_project
 
   def initialize(attributes = nil, *_args)
     @issues_catalogue = attributes&.delete(:issues_catalogue)
