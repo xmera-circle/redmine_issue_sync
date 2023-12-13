@@ -13,6 +13,7 @@ en:
         project_module_issue_sync: Issue Sync
         trackers: Trackers
         system_project: System project
+        selected_trackers: Selected trackers
 
   label_redmine_issue_sync: Issue Sync # Plugin name
   project_module_issue_sync: Issue Sync # Project module name
@@ -57,5 +58,5 @@ en:
   error_project_id_is_not_valid: "with %{value} is not valid."
   error_project_module_issue_sync: "of %{value} needs to be enabled."
   error_filter_blank: "of %{value} needs to be given."
-  error_trackers_blank: "of %{value} needs to be given."
+  error_trackers_blank: "of %{value} need to be enabled."
   error_system_project_invalid: "is not valid since %{value} has no subprojects."

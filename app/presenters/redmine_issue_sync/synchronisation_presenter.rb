@@ -68,7 +68,7 @@ module RedmineIssueSync
     end
 
     def render_js?(form)
-      parent_system_project? || form.invalid?
+      synchable? && form.valid?
     end
 
     private
@@ -89,15 +89,30 @@ module RedmineIssueSync
 
     def tracker_select_tag
       tag.p do
-        ("#{l(:field_tracker)}:" +
+        ("#{l(:field_tracker)} <span class=\"required\">*</span>:" +
         select_tag('issue_sync[selected_trackers][]',
                    tracker_options_for_select,
-                   size: multiple_trackers? ? 4 : 1,
-                   class: 'expandable',
-                   multiple: multiple_trackers?,
-                   onchange: 'updateIssueBacklog(this);') +
+                   tracker_select_tag_options) +
         tag.span(class: 'toggle-multiselect icon-only')).html_safe
       end
+    end
+
+    # @note The prompt in combination with required is very important here!
+    #       It forces the user to select a value what again triggers the javascript onchange event.
+    #       The updateIssueBacklog() method again submits via XHR (AJAX). Otherwise, new.html.erb
+    #       would be rendered instead of new.js.erb.
+    #       This hack is necessary since the form initially opens with form_with option local: true.
+    #       This option means the form submits via HTTP requests. But as long as the form is
+    #       not checked as valid it should submit remote (XHR). Without the 'Please select' field the
+    #       user can keep the first selection 'All' and click to submit the form. With some validation
+    #       errors the from would be rerendered as HTML when the prompt would not have been integrated!
+    def tracker_select_tag_options
+      { prompt: "--- #{l(:actionview_instancetag_blank_option)} ---",
+        size: multiple_trackers? ? 4 : 1,
+        class: 'expandable',
+        multiple: multiple_trackers?,
+        required: true,
+        onchange: 'updateIssueBacklog(this);' }
     end
 
     def tracker_options_for_select
@@ -150,6 +165,12 @@ module RedmineIssueSync
       return false unless selected_trackers
 
       selected_trackers.any?
+    end
+
+    # Should mean that the project can be synched since there is no
+    # parent project what is marked as system project.
+    def synchable?
+      !parent_system_project?
     end
 
     def parent_system_project?

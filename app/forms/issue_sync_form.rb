@@ -38,11 +38,14 @@ class IssueSyncForm
 
   ##
   # Cases:
-  # i)  no source_trackers are defined ==> issues should not be restricted by tracker
+  # i)  independent of the source ==> selected trackers need to be enabled in the target project
+  #
+  # ii)  no source_trackers are defined ==> issues should not be restricted by tracker
   #     ==> no tracker expected!
-  # ii) source_trackers are defined ==> issues are allowed to be restricted further
+  # iii) source_trackers are defined ==> issues are allowed to be restricted further
   #     with a tracker from the list of defined source trackers
   #     ==> no tracker required but if given it should be any of defined source_trackers.
+  #
   validates :selected_trackers, allowed_tracker: true, allow_nil: true
 
   def project

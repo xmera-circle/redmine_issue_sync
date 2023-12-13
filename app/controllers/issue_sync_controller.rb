@@ -43,7 +43,7 @@ class IssueSyncController < ApplicationController
         format.js { head :ok }
       end
     else
-      render :new
+      render :new, format: :js
     end
   end
 
