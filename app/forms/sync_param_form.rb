@@ -47,6 +47,6 @@ class SyncParamForm
   end
 
   def setting
-    @setting = SyncSetting.new # [xmera]
+    @setting = SyncSetting.new
   end
 end
