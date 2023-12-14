@@ -46,8 +46,12 @@ module RedmineIssueSync
       assert sync.respond_to? :projects
       assert sync.respond_to? :values
       assert sync.respond_to? :parent
+      assert sync.respond_to? :filter
       assert sync.respond_to? :issues_catalogue
       assert sync.respond_to? :sync_scope
+      assert sync.respond_to? :project_module_issue_sync
+      assert sync.respond_to? :system_project
+      assert sync.respond_to? :selected_trackers
       assert sync.respond_to? :exec
       assert sync.respond_to? :backlog
       assert sync.respond_to? :backlog_count
