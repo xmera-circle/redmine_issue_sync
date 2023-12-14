@@ -19,27 +19,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 ##
-# Checks whether a given tracker id is in the list of allowed trackers depending
-# on source_trackers.
+# Checks whether all issue sync requirements outside of a form will be met.
+# That is, plugin and project settings will be checked against.
 #
-# @Note All attributes where errors will be added to need to be available from
-#       Synchronisation objects. That is, Sychronisation.new needs to respond to them.
+# @note Validation will run even when the new.js.erb is loaded first.
+#       When doing so, selected_trackers will always be nil since no user interaction
+#       will take place at this point. Therefore, selected_trackers should not be used
+#       during validation. Instead they will be validated in AllowedTrackerValidator.
+#
+#       All attributes adding errors to record need to be known to
+#       the record. Since the records errors will be copied to
+#       the current Sychronisation object it needs to respond to them too.
 #
 class IssueSyncRequirementsValidator < ActiveModel::Validator
   include Redmine::I18n
   include RedmineIssueSync::Utils::Compact
 
+  # @param record [IssueSyncForm] An IssueSyncForm object.
   def validate(record)
-    # validation will run first when the new.js.erb is loaded
-    # when doing so, selected_trackers will always be nil
-    # therefore, selected_trackers should not be used during validation
     self.record = record
 
     return unless project
     return error_no_source_given(record) if source_unset?
     return error_module_disabled(record) unless project_module_enabled?
 
-    validate_filter_and_tracker(record)
+    validate_filter(record)
     return unless system_project?
     return error_system_project_without_children(record) unless children?
 
@@ -60,9 +64,8 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
     object
   end
 
-  def validate_filter_and_tracker(object)
+  def validate_filter(object)
     object.errors.add(:filter, :blank, message: message[:filter]) if custom_field_set_but_filter_param_not?
-    object.errors.add(:trackers, :blank, message: message[:trackers]) if trackers_set_but_not_enabled?
     object
   end
 
@@ -83,25 +86,8 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
     {
       project_module_issue_sync: l(:error_project_module_issue_sync, project.name),
       filter: l(:error_filter_blank, project.name),
-      trackers: l(:error_trackers_blank, project.name),
       system_project: l(:error_system_project_invalid, project.name)
     }.freeze
-  end
-
-  def trackers_set_but_not_enabled?
-    return false if trackers_unset?
-    return true if project_trackers.none?
-
-    result = tracker_ids.reject { |id| project_tracker_ids.include? id }
-    !result.empty?
-  end
-
-  def project_tracker_ids
-    project_trackers.map(&:id)
-  end
-
-  def project_trackers
-    @project_trackers = project.trackers
   end
 
   def project_module_enabled?
@@ -117,7 +103,7 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
   def filter
     return [] unless sync_param.presence
 
-    @filter = sync_param.filter&.delete_if(&:blank?)
+    @filter = compact(sync_param.filter)
   end
 
   def system_project?
@@ -146,16 +132,6 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
     record.project_id
   end
 
-  def tracker_ids
-    return [] if trackers_unset?
-
-    setting.tracker_ids
-  end
-
-  def trackers_unset?
-    setting.trackers_unset?
-  end
-
   def custom_field_unset?
     setting.custom_field_unset?
   end
@@ -165,6 +141,6 @@ class IssueSyncRequirementsValidator < ActiveModel::Validator
   end
 
   def setting
-    @setting = SyncSetting.new # [xmera]
+    @setting = SyncSetting.new
   end
 end

@@ -41,6 +41,7 @@ class SyncIssuesTest < ApplicationSystemTestCase
 
   def teardown
     @setting = nil
+    @source = nil
   end
 
   test 'should display sync issues form' do
@@ -63,6 +64,7 @@ class SyncIssuesTest < ApplicationSystemTestCase
     end
     page.find('select option', text: Tracker.find(1).name).click
     assert_content "3 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
+
     page.find('select option', text: Tracker.find(2).name).click
     assert_content "1 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
   end
@@ -78,7 +80,57 @@ class SyncIssuesTest < ApplicationSystemTestCase
     end
     page.find('select option', text: Tracker.find(1).name).click
     click_button('Synchronise')
+
     assert_equal 2, @project.issues.count - issues_count_before
+  end
+
+  test 'should synchronise issues when only a subset of allowed trackers is enabled' do
+    add_filter_to_project(['MySQL', 'PostgreSQL'])
+    create_issues
+    @project.trackers = []
+    @project.trackers << Tracker.find(2)
+    @project.save!
+    @project.reload
+    assert_equal 1, @project.trackers.map(&:id).size
+
+    issues_count_before = @project.issues.count
+    visit project_issues_path @project
+    page.first(:css, 'span.icon-only.icon-actions').click
+    within('.drdn-content') do
+      page.first(:css, 'a.icon.icon-reload').click
+    end
+    page.find('select option', text: Tracker.find(2).name).click
+    assert_content "1 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
+
+    click_button('Synchronise')
+
+    assert_equal 1, @project.issues.count - issues_count_before
+  end
+
+  test 'should not synchronise issues when the required tracker is not enabled' do
+    add_filter_to_project(['MySQL', 'PostgreSQL'])
+    create_issues
+    @project.trackers = []
+    @project.trackers << Tracker.find(2)
+    @project.save!
+    @project.reload
+    assert_equal 1, @project.trackers.map(&:id).size
+
+    issues_count_before = @project.issues.count
+    visit project_issues_path @project
+    page.first(:css, 'span.icon-only.icon-actions').click
+    within('.drdn-content') do
+      page.first(:css, 'a.icon.icon-reload').click
+    end
+    page.find('select option', text: Tracker.find(1).name).click
+    assert_content "3 #{l(:label_issue_plural)} #{l(:text_could_be_synchronised)}"
+
+    click_button('Synchronise')
+    error_msg = + l('activerecord.attributes.synchronisation.selected_trackers')
+    error_msg += " (Bug) "
+    error_msg +=  l(:error_trackers_blank, @project.name)
+    assert_content error_msg
+    assert_equal 0, @project.issues.count - issues_count_before
   end
 
   test 'should close sync issues form' do
@@ -94,8 +146,7 @@ class SyncIssuesTest < ApplicationSystemTestCase
   end
 
   test 'should render error when system project has no filter params' do
-    source = Project.find(2)
-    create_issues(source)
+    create_issues
     project = prepare_system_project
     child = prepare_child_project(project)
 
@@ -114,8 +165,7 @@ class SyncIssuesTest < ApplicationSystemTestCase
   end
 
   test 'should render error when system project has no child projects' do
-    source = Project.find(2)
-    create_issues(source)
+    create_issues
     project = prepare_system_project(filter: ['PostgreSQL'])
 
     visit project_issues_path project

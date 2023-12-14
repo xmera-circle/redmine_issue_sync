@@ -39,6 +39,10 @@ Metrics/MethodLength:
   Exclude:
     - 'test/**/*'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'app/presenters/redmine_issue_sync/synchronisation_presenter.rb'
+
 Layout/LineLength:
   Max: 120
 

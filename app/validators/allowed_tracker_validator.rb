@@ -19,46 +19,112 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 ##
-# Checks whether a given tracker id is in the list of allowed trackers depending
-# on source_trackers.
+# Checks whether given tracker ids are defined in the source project and enabled
+# in the target project.
+#
+# There are several cases to check:
+#
+# (1) Selected trackers are valid if no trackers submitted and nil is allowed.
+# (2) Selected trackers are valid if given trackers are all included in the
+#     source project list of accepted trackers.
+# (3) Selected trackers are valid if they are enabled in the target project.
 #
 class AllowedTrackerValidator < ActiveModel::EachValidator
   include Redmine::I18n
   include RedmineIssueSync::Utils::Compact
 
+  # @param record [IssueSyncForm] An IssueSyncForm object.
+  # @param attribute [IssueSyncForm#selected_trackers] The selected_trackers attribute of record.
+  # @param value [Array] An array with tracker ids selected by the user in the IssueSyncForm.
   def validate_each(record, attribute, value)
-    allow_nil = @options[:allow_nil]
-    self.values = value == %w[all] ? setting.all_tracker_ids : value
-
+    assign_attrs(record, value, @options[:allow_nil])
     return true if allow_nil && compact(values).empty?
 
-    record.errors.add(attribute, :inclusion) unless all_included?
+    record.errors.add(attribute, :inclusion) unless all_given_trackers_included?
+    record.errors.add(attribute, tracker_error_message) if trackers_given_but_not_enabled?
   end
 
   private
 
-  attr_accessor :values
+  attr_accessor :record, :values, :allow_nil
+
+  def assign_attrs(record, value, allow_nil)
+    self.record = record
+    self.values = value == all ? setting.all_tracker_ids : value
+    self.allow_nil = allow_nil
+  end
+
+  def tracker_error_message
+    "(#{list_missing_trackers}) #{l(:error_trackers_blank, project.name)}"
+  end
+
+  def list_missing_trackers
+    list = Tracker.where(id: trackers_given_but_not_enabled).pluck(:name)
+    return unless list
+
+    list.join(', ')
+  end
 
   ##
-  # Will return false if no trackers are set in SyncSetting but given in
+  # Will return false if no trackers are set in SyncSetting but some are given in
   # IssueSyncForm.
   #
-  def all_included?
-    return false if setting.trackers_unset?
+  def all_given_trackers_included?
+    return false if trackers_unset?
 
     values.all? { |value| tracker_ids.include?(value.to_i) }
   end
 
-  ##
-  # @note Even if no trackers given in SyncSetting there will be 'all' in
-  #       tracker_ids.
-  # @return [Array(Integer)] A list of tracker ids given as Integer.
-  #
+  def trackers_unset?
+    setting.trackers_unset?
+  end
+
   def tracker_ids
     setting.tracker_ids
   end
 
+  def trackers_given_but_not_enabled?
+    ids = trackers_given_but_not_enabled
+    return ids unless ids.is_a?(Array)
+
+    ids.any?
+  end
+
+  def trackers_given_but_not_enabled
+    return true if project_trackers.none?
+
+    tracker_ids_to_check.reject { |id| project_tracker_ids.include? id.to_i }
+  end
+
+  def tracker_ids_to_check
+    if compact(selected_trackers).empty? || (selected_trackers == all)
+      tracker_ids
+    else
+      selected_trackers
+    end
+  end
+
+  def all
+    %w[all]
+  end
+
+  def selected_trackers
+    record.selected_trackers
+  end
+
+  def project_tracker_ids
+    project_trackers.map(&:id)
+  end
+
+  def project_trackers
+    @project_trackers = project.trackers
+  end
+
+  def project
+    record.project
+  end
+
   def setting
-    @setting = SyncSetting.new # [xmera]
+    @setting = SyncSetting.new
   end
 end

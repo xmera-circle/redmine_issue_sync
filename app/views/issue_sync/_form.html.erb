@@ -1,6 +1,6 @@
 <%= tag.div id: 'issue-sync-form' do %>
-  <%= form_for @synchronisation, url: project_issue_sync_index_path(@project), 
-        remote: show(@synchronisation).render_js?(@form) do |f| %>
+  <%= form_with model: @synchronisation, url: project_issue_sync_index_path(@project), 
+        local: show(@synchronisation).render_js?(@form) do |f| %>
     <%= error_messages_for 'synchronisation' %>
     <div class='issue-sync sync-dialog' >
       <%= show(@synchronisation).headline %>
