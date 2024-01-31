@@ -39,6 +39,7 @@ module RedmineIssueSync
       @manager_role.add_permission! :manage_sync_settings
       @manager_role.add_permission! :sync_issues
       @project = Project.find(1)
+      @project.issues.delete_all
       @project.enable_module! :issue_sync
       @sync_param = @project.create_sync_param(root: false, filter: [''])
       log_user('jsmith', 'jsmith')
