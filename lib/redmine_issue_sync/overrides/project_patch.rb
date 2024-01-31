@@ -35,8 +35,8 @@ module RedmineIssueSync
         #
         def copy_from(project)
           copy = super(project)
-          project = project.is_a?(Project) ? project : Project.find(project)
-          return copy unless project.module_enabled? :issue_sync
+          project = Project.find(project) unless project.is_a?(Project)
+          return copy unless project.module_enabled?(:issue_sync)
 
           copy.build_sync_param(project.sync_param&.settings)
           copy
