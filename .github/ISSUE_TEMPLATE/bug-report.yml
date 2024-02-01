@@ -84,7 +84,8 @@ body:
         - 0.1.13
         - 0.1.14
         - 0.1.15
-        - 0.2.0 (Latest)
+        - 0.2.0
+        - 0.2.1 (Latest)
     validations:
       required: true
   - type: dropdown
